@@ -14,9 +14,10 @@ var soundOn = true;
 var winningWorm;
 var longestWormSize;
 var longestWorm;
+var wormIsInHole = false;
 
 /* How Will Worm Move */
-var startingSpeed = 0;
+var startingSpeed = 10;
 var speedingIncrementSpeed = 5;
 var intervalMiliSeconds = 1000;
 var speed = 0;
@@ -25,6 +26,7 @@ var basicFPSValue = 20;
 var wormSize = 4; 		/* The size of the circle */
 var angleStepSize = 1; 	/* How much will it turn */
 var sizeMultiplier = 3; //2;	/* How much will the worm move every interval */
+var currentRound = 1;
 
 /* Canvas and Js Vars */
 var xMax = 640; //800;
@@ -59,15 +61,65 @@ var worms = new Array(6);
 var players = new Array(6);
 var colors = new Array(6); 
 var rgbColors = new Array(6);
+
+
+function drawImage() {
+	var img = new Image();
+	img.src = 'img/red_1.png';
+	context.drawImage(img, 20, 20);
+	//alert(img.width + 'x' + img.height);
+	
+	/*
+		context.drawImage(img,1,1);
+		context.drawImage(img,2,2);
+		context.drawImage(img,3,3);
+		context.drawImage(img,4,4);
+		context.drawImage(img,5,5);
+		context.beginPath();
+		context.moveTo(30,96);
+		context.lineTo(70,66);
+		context.lineTo(103,76);
+		context.lineTo(170,15);
+		context.stroke();
+	}
+	//alert("W: "+img.width);height
+	//alert("data: "+img.width());
+	
+	var img2 = new Image();
+	img2.src = 'http://www.google.com/intl/en_ALL/images/logo.gif';
+	alert(img2.width + 'x' + img2.height);
+	
+		
+  //img.removeAttr("width"); 
+  //img.removeAttr("height");
+
+  //alert( pic.width() );
+  //alert( pic.height() );
+		*/
+}
+	
+function clearKeys()
+{
+	keysBeenPressed = new Array(512);
+}	
 	
 $(document).ready(function()
+{
+	startGame();
+});
+
+function startGame()
 {
 	context = loadCanvasContext();
 	marker = loadMarkerCanvas();
 	setArrays();
+	//drawImage();
 	
 	if(context && marker)
 	{
+		isNewRound = false;
+		$("#speed").text("");
+		$("#rounds").text("");
 		start();
 		isNewRound = true;
 		explainHowToMove();
@@ -78,7 +130,7 @@ $(document).ready(function()
 	{
 		alert("Cannot Load Canvas");
 	}
-});
+}
 
 document.onkeyup = function(event)
 {
@@ -92,15 +144,15 @@ document.onkeyup = function(event)
 
 document.onkeydown = function(event)
 {  
-	/* Set and unset pause */
-	if(keyCode == 32)
-		pause();
-		
 	if(event == null)
 		keyCode = window.event.keyCode; 
 	else 
 		keyCode = event.keyCode; 
 	
+	/* Set and unset pause */
+	if(keyCode == 32)
+		pause();
+		
 	keysBeenPressed[keyCode] = true;
 }
 
@@ -165,15 +217,13 @@ function modifyWormsAngle()
 
 function explainHowToMove()
 {
-	message = "How To Move The Worms";
-	message += "\n---------------------";
-	message += "\nRed Worm\t<-[\\]\t[1]->";
+	message += "Red Worm\t<-[\\]\t[1]->";
 	message += "\nBlue Worm\t<-[z]\t[x]->";
 	message += "\nGreen Worm\t<-[v]\t[b]->";
 	message += "\nPurple Worm\t<-[6]\t[7]->";
 	message += "\nCyan Worm\t<-[']\t[\¡]->";
 	message += "\nYellow Worm\t<-[V]\t[->]->";
-	addMessage(message);
+	addMessage(message, "howto");
 }
 
 function changeAngle(direction, currentWorm)
@@ -197,7 +247,7 @@ function setArrays()
 {
 	/* Who is playing */
 	players[0] = true;
-	players[1] = true;
+	players[1] = false;
 	players[2] = false;
 	players[3] = false;
 	players[4] = false;
@@ -234,11 +284,33 @@ function worm()
 	this.color;
 	this.x;
     this.y;
+	this.previousX = new Array(10);
+	this.previousY = new Array(10);
 	this.angle;
 	this.alive = true;
 	this.playing = false;
 	this.score = 0;
 	this.length = 0;
+	this.lastHoleStarted = 0;
+	
+	/*
+	this.xMinus1;
+	this.yMinus1;
+	this.xMinus2;
+	this.yMinus2;
+	this.xMinus3;
+	this.yMinus3;
+	this.xMinus4;
+	this.yMinus4;
+	this.xMinus5;
+	this.yMinus5;
+	this.xMinus6;
+	this.yMinus6;
+	this.xMinus7;
+	this.yMinus7;
+	this.xMinus8;
+	this.yMinus8;
+	*/
 }
 
 function setContextProperties()
@@ -307,13 +379,14 @@ function changeInterval(speed)
 function speeding()
 {
 	oneSpeeding = Math.floor(Math.random()*200);
-	getSpeeding = Math.floor(Math.random()*200);
+	getSpeeding = 100;
+	//getSpeeding = Math.floor(Math.random()*200);
 	if(oneSpeeding == getSpeeding)
 	{
 		playSound("speeding");
 		speed += speedingIncrementSpeed;
 		changeInterval(speed);
-		addMessage("Current Speed: "+(speed));
+		addMessage("Current Speed: "+(speed), "speed");
 	}
 }
 
@@ -374,7 +447,39 @@ function getScoreToWin()
 	}
 }
 
-function getWormHit(currentWorm)
+function isWormInHole(currentWorm)
+{
+	radians = currentWorm.angle*(Math.PI/180);
+	sin = Math.sin(radians*sizeMultiplier);
+	cos = Math.cos(radians*sizeMultiplier);
+
+	x = currentWorm.x+(cos*(Math.PI*2));
+	y = currentWorm.y+(sin*(Math.PI*2));
+
+	imageArray = context.getImageData(x, y, 1, 1);
+	var redValue = imageArray.data[0];
+	var greenValue = imageArray.data[1];
+	var blueValue = imageArray.data[2];
+	var alphaValue = imageArray.data[3];
+	
+	
+	//if(redValue == 0 && greenValue == 0 && currentWorm.length > 200 && currentWorm.length < 250)
+	//	showPixelInfo(currentWorm, imageArray);
+		
+	
+	if(redValue == 1 && greenValue == 1 && blueValue == 1)
+	{	
+		//alert(blueValue);
+		//alert("#000001");
+		//playSound("yabass");
+		showPixelInfo(currentWorm, imageArray, next);
+		return true;
+	}
+	return false;
+	
+}
+
+function isWormHit(currentWorm)
 {
 	radians = currentWorm.angle*(Math.PI/180);
 	sin = Math.sin(radians*sizeMultiplier);
@@ -392,15 +497,34 @@ function getWormHit(currentWorm)
 	//alert("current.x: "+currentWorm.x+"\ncurrent.y: "+currentWorm.y+"\nnext.x: "+x+"\nnext.y: "+y+"\nred: "+imageArray.data[0]+"\ngreen: "+imageArray.data[1]+"\nblue: "+imageArray.data[2]+"\nalpha: "+imageArray.data[3]);
 	
 	if(redValue != 0 || greenValue != 0 || blueValue != 0)
-		return true;
+	{
+		//showPixelInfo(currentWorm, imageArray);
+		if(redValue != 1 || greenValue != 1 || blueValue != 1)
+		{
+			//if(redValue != 10 || greenValue != 10 || blueValue != 10)
+			return true;
+		}
+	}
+			
 	return false;
 	
+}
+
+function setRound()
+{
+	currentRound++;
+	addMessage("Current Round: "+currentRound, "rounds");
 }
 
 function moveWorm(currentWorm)
 {
 	
-	wormHasCrush = getWormHit(currentWorm);
+	wormHasCrush = isWormHit(currentWorm);
+	wormIsInHole = isWormInHole(currentWorm);
+	
+	if(wormIsInHole)
+		playSound("yabass");
+		
 	if(	currentWorm.x+wormSize > xMax || 
 		currentWorm.x-wormSize < 0 || 
 		currentWorm.y+wormSize > yMax || 
@@ -413,32 +537,41 @@ function moveWorm(currentWorm)
 		currentWorm.alive = false;
 		addScore();
 		getWormsAlive();
+		setRound();
+				
 		if(wormsAlive < 2)
 		{
+			clearKeys();
 			getMaxScore();
 			getScoreToWin();
 			if(maxScore >= scoreToWin)
 			{
 				playSound("winning");
-				alert("Game Over\nMax Score: "+maxScore+"\nScore To Win: "+scoreToWin);
+				alert("Winner!\nThe Winner Worm with "+maxScore+" points is....\n"+colors[winningWorm]);
+				currentRound = 0;
 				isNewRound = false;
+				startGame();
 			}
-			roundNumber++;
-			yMarker = 0;
-			
-			if(winningWorm == 0) 
-				playSound("red");
-			else if(winningWorm == 1) 
-				playSound("blue");
-			else if(winningWorm == 2) 
-				playSound("green");
-			else if(winningWorm == 3) 
-				playSound("purple");
-			else if(winningWorm == 4) 
-				playSound("cyan");
-			else if(winningWorm == 5) 
-				playSound("yellow");
-			start();
+			else
+			{
+				roundNumber++;
+				yMarker = 0;
+				
+				if(winningWorm == 0) 
+					playSound("red");
+				else if(winningWorm == 1) 
+					playSound("blue");
+				else if(winningWorm == 2) 
+					playSound("green");
+				else if(winningWorm == 3) 
+					playSound("purple");
+				else if(winningWorm == 4) 
+					playSound("cyan");
+				else if(winningWorm == 5) 
+					playSound("yellow");
+				
+				start();
+			}
 		}
 		drawMarkers();
 		drawScore();
@@ -448,10 +581,57 @@ function moveWorm(currentWorm)
 		radians = currentWorm.angle*(Math.PI/180);
 		sin = Math.sin(radians*sizeMultiplier);
 		cos = Math.cos(radians*sizeMultiplier);
+		
+		storePreviuosCoordinates(currentWorm);
 		currentWorm.y += sin;
 		currentWorm.x += cos;
+		
 		drawWorm(currentWorm);
 	}	
+}
+
+function storePreviuosCoordinates(currentWorm)
+{
+	for(var i = 9; i > 0; i--)
+	{
+		currentWorm.previousX[i] = currentWorm.previousX[i-1];
+		currentWorm.previousY[i] = currentWorm.previousY[i-1];
+	}
+	currentWorm.previousX[0] = currentWorm.x;
+	currentWorm.previousY[0] = currentWorm.y;
+	
+	/*
+	alert(  "currentWorm.coords: "+currentWorm.x+" | "+currentWorm.y+
+			"\ncurrentWorm.previous [0]: "+currentWorm.previousX[0]+" | "+currentWorm.previousY[0]+
+			"\ncurrentWorm.previous [1]: "+currentWorm.previousX[1]+" | "+currentWorm.previousY[1]+
+			"\ncurrentWorm.previous [2]: "+currentWorm.previousX[2]+" | "+currentWorm.previousY[2]+
+			"\ncurrentWorm.previous [3]: "+currentWorm.previousX[3]+" | "+currentWorm.previousY[3]+
+			"\ncurrentWorm.previous [4]: "+currentWorm.previousX[4]+" | "+currentWorm.previousY[4]+
+			"\ncurrentWorm.previous [5]: "+currentWorm.previousX[5]+" | "+currentWorm.previousY[5]+
+			"\ncurrentWorm.previous [6]: "+currentWorm.previousX[6]+" | "+currentWorm.previousY[6]+
+			"\ncurrentWorm.previous [7]: "+currentWorm.previousX[7]+" | "+currentWorm.previousY[7]+
+			"\ncurrentWorm.previous [8]: "+currentWorm.previousX[8]+" | "+currentWorm.previousY[8]+
+			"\ncurrentWorm.previous [9]: "+currentWorm.previousX[9]+" | "+currentWorm.previousY[9]);
+	*/
+	
+	/*
+	currentWorm.xMinus8 = currentWorm.xMinus7;
+	currentWorm.yMinus8 = currentWorm.yMinus7;
+	currentWorm.xMinus7 = currentWorm.xMinus6;
+	currentWorm.yMinus7 = currentWorm.yMinus6;
+	currentWorm.xMinus6 = currentWorm.xMinus5;
+	currentWorm.yMinus6 = currentWorm.yMinus5;
+	currentWorm.xMinus5 = currentWorm.xMinus4;
+	currentWorm.yMinus5 = currentWorm.yMinus4;
+	currentWorm.xMinus4 = currentWorm.xMinus3;
+	currentWorm.yMinus4 = currentWorm.yMinus3; 
+	currentWorm.xMinus3 = currentWorm.xMinus2;
+	currentWorm.yMinus3 = currentWorm.yMinus2;
+	currentWorm.xMinus2 = currentWorm.xMinus1
+	currentWorm.yMinus2 = currentWorm.yMinus1;
+	currentWorm.yMinus1 = currentWorm.y;
+	currentWorm.xMinus1 = currentWorm.x;
+	*/
 }
 
 function drawMarkers()
@@ -503,15 +683,27 @@ function drawWorm(currentWorm)
 	//addMessage("drawWorm", currentWorm.color);
 	//getPixelColor(currentWorm.x, currentWorm.y, 1, 1);
 	
-	if(!isHole(currentWorm))
-	{
+	//if(!isHole(currentWorm))
+	//{
 		context.beginPath();
 		context.fillStyle = currentWorm.color;
 		context.arc(currentWorm.x, currentWorm.y, wormSize, 0, Math.PI*2, true);
 		//context.stroke();
 		context.fill();
 		context.closePath();
-	}
+		
+		if(isHole(currentWorm))
+		{
+			//alert(currentWorm.previousX[8]+ " | " +currentWorm.previousY[8]);
+			context.beginPath();
+			context.fillStyle = "rgb(2, 2, 2)"; //""#0000"; // black"; //currentWorm.color;
+			//alert(currentWorm.xMinus4);
+			context.arc(currentWorm.previousX[8], currentWorm.previousY[8], wormSize+1, 0, Math.PI*2, true);
+			//context.stroke();
+			context.fill();
+			context.closePath();
+		}
+	//}
 	
 	currentWorm.length++;
 }
@@ -571,40 +763,11 @@ function startWorm(color)
 	//addMessage("startWorm", color);
 }
 
-function addMessage(message) //fun, ext1)
+function addMessage(message, id) //fun, ext1)
 {
-	$("#message").text($("#message").text()+"\n"+message);
-	/*
-	if(showMessages)
-	{
-		switch(fun)
-		{
-			case "drawWorm":
-				message+="\n["+actionCounter+"] drawWorm "+ext1; // Score: "+currentWorm.score;
-				$("#message").text(message);
-				break;
-			case "startWorm":
-				message+="\n["+actionCounter+"] startWorm "+ext1;
-				$("#message").text(message);
-			case "moveWorm":	
-				message+="\n["+actionCounter+"] "+ext1+" - Round ["+roundNumber+"] Lost... "; // Score: "+currentWorm.score;
-				$("#message").text(message);
-			default:
-				break;
-		}
-		actionCounter++;
-	}
-	*/
-}
-
-function getWormByColor(color)
-{
-	//alert("getWormByColor - color: "+color);		
-	//for(var i = 0; i < worms.length; i++)
-	//{
-	//	if(worms[i].color == color)
-	//		return worms[i];
-	//}
+	if(id == "howto") $("#howto").text(message);
+	else if(id == "speed") $("#speed").text(message);
+	else if(id == "rounds") $("#rounds").text(message);	
 }
 
 function showWormInfo(currentWorm)
@@ -616,9 +779,22 @@ function showWormInfo(currentWorm)
 			"\nalive: "+currentWorm.alive+
 			"\nplaying: "+currentWorm.playing+
 			"\nscore: "+currentWorm.score+
-			"\nength: "+currentWorm.length);		
+			"\nlength: "+currentWorm.length);		
 }  
  
+function showPixelInfo(currentWorm, imageArray)
+{
+	alert(	"current.x: "+currentWorm.x+
+			"\ncurrent.y: "+currentWorm.y+
+			"\nnext.x: "+x+
+			"\nnext.y: "+y+
+			"\nred: "+imageArray.data[0]+
+			"\ngreen: "+imageArray.data[1]+
+			"\nblue: "+imageArray.data[2]+
+			"\nalpha: "+imageArray.data[3]+
+			"\nlength: "+currentWorm.length);
+} 
+
 /*
 * Sound Functions
 */
@@ -671,8 +847,12 @@ function playSound(action)
 			break;	
 	}
 	
+	//if(action == 'yabass')
+		//alert("Action: "+action+"\nURL: "+url);
+	
 	if(soundOn)
-		document.getElementById(action).innerHTML= '<object type="audio/x-wav" data="sounds/'+url+'" hidden="true"></object>';
+		document.getElementById(action).innerHTML= '<object type="audio/x-wav" data="sounds/'+url+'" width="5" height="5" hidden="true"></object>';
+	
 }	
 
 /*

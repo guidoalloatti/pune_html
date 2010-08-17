@@ -24,8 +24,15 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 						This text is displayed if our browser does not support HTML5 Canvas.
 					</canvas>
 				</td>
-				<td align="top">
-					<textarea id="message" name="message" rows="8" cols="29"></textarea>
+				<td>
+					<table>
+						<tr><td>How to move the Worms</td></tr>
+						<tr><td><textarea id="howto" name="howto" rows="6" cols="30"></textarea></td></tr>
+						<tr><td>Speed</td></tr>
+						<tr><td><textarea id="speed" name="speed" rows="2" cols="30"></textarea></td></tr>
+						<tr><td>Rounds</td></tr>
+						<tr><td><textarea id="rounds" name="rounds" rows="2" cols="30"></textarea></td></tr>
+					</table>
 				</td>
 			</tr>
 		</table>
@@ -37,54 +44,30 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 					<td><input id="pauseButton" type="button" value="Pause Off" onclick="pause();" /></td>
 				</tr>
 			</table>
-			<table>
+		</div>
+			
+		<div>
+			<table border="0">
 				<tr>
-					<td><span id="die"></span></td>
-					<td><span id="winning"></span></td>
-					<td><span id="speeding"></span></td>
-					<td><span id="yabass"></span></td>
-					<td><span id="red"></span></td>
-					<td><span id="blue"></span></td>
-					<td><span id="green"></span></td>
-					<td><span id="purple"></span></td>
-					<td><span id="cyan"></span></td>
-					<td><span id="yellow"></span></td>
+					<td id="die"></td>
+					<td id="winning"></td>
+					<td id="speeding"></td>
+					<td id="yabass"></td>
+					<td id="red"></td>
+					<td id="blue"></td>
+					<td id="green"></td>
+					<td id="purple"></td>
+					<td id="cyan"></td>
+					<td id="yellow"></td>
 				</tr>
 			</table>
 		</div>
 		
 		<!--
-		<table>
-			<tr>
-				<td><input type="button" value="Start" onclick="start();" /></td>
-				
-				<td><input type="button" value="Restart" onclick="restart();" /></td>
-				<td><input type="label" id="angle" size="10"/></td>
-				<td><input type="label" id="x" size="10"/></td>
-				<td><input type="label" id="y" size="10"/></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><input type="button" value="Up" onclick="moveUp();" /></td>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-			<tr>
-				<td>
-					<input type="button" value="Left" onclick="moveLeft();" />
-				</td>
-				<td>
-					<input type="button" value="Down" onclick="moveDown();" />
-				</td>
-				<td>
-					<input type="button" value="Right" onclick="moveRight();" />
-				</td>
-			</tr>
-		</table>
-		</div>
+		<input type="button" value="Start" onclick="start();" />
+		<input type="button" value="Restart" onclick="restart();" />
 		-->
+		
 	</body>
 </html>';			
 			
