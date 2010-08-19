@@ -3,14 +3,15 @@
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
 <html> 
     <head> 
-        <title>jQuery|HTML5 Canvas|gameQuery Experiment</title> 
+        <title>Pune! - Html5, Canvas, jQuery Game</title> 
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> 
         <meta content="javascript, game, games, jquery, gamequery, game engine, framework, development" name="keywords"> 
         <link rel="icon" href="/favicon.gif" type="image/gif"> 
         <script src="js/jquery-1.4.2.js" type="text/javascript"></script> 
 		<script src="js/game.js" type="text/javascript"></script> 
+		<script src="js/settings.js" type="text/javascript"></script> 
 	</head>
-    <body> 
+    <body>
 		<div id="canvas_div"> 
 		<table>
 			<tr>
@@ -42,12 +43,13 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 				<tr>
 					<td><input id="soundButton" type="button" value="Sound On" onclick="soundSwitcher();" /></td>
 					<td><input id="pauseButton" type="button" value="Pause Off" onclick="pause();" /></td>
+					<td><input id="configButton" type="button" value="Settings" onclick="settings();" /></td>
 				</tr>
 			</table>
 		</div>
 			
 		<div>
-			<table border="0">
+			<table>
 				<tr>
 					<td id="die"></td>
 					<td id="winning"></td>
@@ -61,13 +63,7 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 					<td id="yellow"></td>
 				</tr>
 			</table>
-		</div>
-		
-		<!--
-		<input type="button" value="Start" onclick="start();" />
-		<input type="button" value="Restart" onclick="restart();" />
-		-->
-		
+		</div>		
 	</body>
 </html>';			
 			

@@ -1,3 +1,6 @@
+
+var set = "sss";
+
 /* Game Vars */
 var showMessages = false;
 var holeSize = 30;
@@ -17,15 +20,15 @@ var longestWorm;
 var wormIsInHole = false;
 
 /* How Will Worm Move */
-var startingSpeed = 10;
+var startingSpeed = 15;
 var speedingIncrementSpeed = 5;
 var intervalMiliSeconds = 1000;
 var speed = 0;
 var fps; // speed+basicFPSValue;
 var basicFPSValue = 20;
-var wormSize = 4; 		/* The size of the circle */
-var angleStepSize = 1; 	/* How much will it turn */
-var sizeMultiplier = 3; //2;	/* How much will the worm move every interval */
+var wormSize = 4; 			/* The size of the circle */
+var angleStepSize = 1; 		/* How much will it turn */
+var sizeMultiplier = 2;		/* How much will the worm move every interval */
 var currentRound = 1;
 
 /* Canvas and Js Vars */
@@ -247,11 +250,11 @@ function setArrays()
 {
 	/* Who is playing */
 	players[0] = true;
-	players[1] = false;
-	players[2] = false;
-	players[3] = false;
-	players[4] = false;
-	players[5] = false;
+	players[1] = true;
+	players[2] = true;
+	players[3] = true;
+	players[4] = true;
+	players[5] = true;
 	
 	/* Which are they colors */
 	colors[0] = "red"; 
@@ -284,8 +287,8 @@ function worm()
 	this.color;
 	this.x;
     this.y;
-	this.previousX = new Array(10);
-	this.previousY = new Array(10);
+	this.previousX = new Array(20);
+	this.previousY = new Array(20);
 	this.angle;
 	this.alive = true;
 	this.playing = false;
@@ -293,24 +296,6 @@ function worm()
 	this.length = 0;
 	this.lastHoleStarted = 0;
 	
-	/*
-	this.xMinus1;
-	this.yMinus1;
-	this.xMinus2;
-	this.yMinus2;
-	this.xMinus3;
-	this.yMinus3;
-	this.xMinus4;
-	this.yMinus4;
-	this.xMinus5;
-	this.yMinus5;
-	this.xMinus6;
-	this.yMinus6;
-	this.xMinus7;
-	this.yMinus7;
-	this.xMinus8;
-	this.yMinus8;
-	*/
 }
 
 function setContextProperties()
@@ -378,12 +363,11 @@ function changeInterval(speed)
 
 function speeding()
 {
-	oneSpeeding = Math.floor(Math.random()*200);
-	getSpeeding = 100;
-	//getSpeeding = Math.floor(Math.random()*200);
-	if(oneSpeeding == getSpeeding)
+	random_1 = Math.floor(Math.random()*(300+speed));
+	random_2 = (300+speed) - Math.floor(Math.random()*(300+speed));
+	if(random_1 == random_2)
 	{
-		playSound("speeding");
+		playSound("speed");
 		speed += speedingIncrementSpeed;
 		changeInterval(speed);
 		addMessage("Current Speed: "+(speed), "speed");
@@ -447,38 +431,6 @@ function getScoreToWin()
 	}
 }
 
-function isWormInHole(currentWorm)
-{
-	radians = currentWorm.angle*(Math.PI/180);
-	sin = Math.sin(radians*sizeMultiplier);
-	cos = Math.cos(radians*sizeMultiplier);
-
-	x = currentWorm.x+(cos*(Math.PI*2));
-	y = currentWorm.y+(sin*(Math.PI*2));
-
-	imageArray = context.getImageData(x, y, 1, 1);
-	var redValue = imageArray.data[0];
-	var greenValue = imageArray.data[1];
-	var blueValue = imageArray.data[2];
-	var alphaValue = imageArray.data[3];
-	
-	
-	//if(redValue == 0 && greenValue == 0 && currentWorm.length > 200 && currentWorm.length < 250)
-	//	showPixelInfo(currentWorm, imageArray);
-		
-	
-	if(redValue == 1 && greenValue == 1 && blueValue == 1)
-	{	
-		//alert(blueValue);
-		//alert("#000001");
-		//playSound("yabass");
-		showPixelInfo(currentWorm, imageArray, next);
-		return true;
-	}
-	return false;
-	
-}
-
 function isWormHit(currentWorm)
 {
 	radians = currentWorm.angle*(Math.PI/180);
@@ -494,14 +446,15 @@ function isWormHit(currentWorm)
 	var blueValue = imageArray.data[2];
 	var alphaValue = imageArray.data[3];
 	
-	//alert("current.x: "+currentWorm.x+"\ncurrent.y: "+currentWorm.y+"\nnext.x: "+x+"\nnext.y: "+y+"\nred: "+imageArray.data[0]+"\ngreen: "+imageArray.data[1]+"\nblue: "+imageArray.data[2]+"\nalpha: "+imageArray.data[3]);
-	
 	if(redValue != 0 || greenValue != 0 || blueValue != 0)
 	{
 		//showPixelInfo(currentWorm, imageArray);
-		if(redValue != 1 || greenValue != 1 || blueValue != 1)
+		if(redValue == 1 && greenValue == 1 && blueValue == 1)
 		{
-			//if(redValue != 10 || greenValue != 10 || blueValue != 10)
+			playSound("yabass");
+		}
+		else
+		{
 			return true;
 		}
 	}
@@ -518,12 +471,7 @@ function setRound()
 
 function moveWorm(currentWorm)
 {
-	
 	wormHasCrush = isWormHit(currentWorm);
-	wormIsInHole = isWormInHole(currentWorm);
-	
-	if(wormIsInHole)
-		playSound("yabass");
 		
 	if(	currentWorm.x+wormSize > xMax || 
 		currentWorm.x-wormSize < 0 || 
@@ -546,7 +494,7 @@ function moveWorm(currentWorm)
 			getScoreToWin();
 			if(maxScore >= scoreToWin)
 			{
-				playSound("winning");
+				playSound("win");
 				alert("Winner!\nThe Winner Worm with "+maxScore+" points is....\n"+colors[winningWorm]);
 				currentRound = 0;
 				isNewRound = false;
@@ -592,7 +540,7 @@ function moveWorm(currentWorm)
 
 function storePreviuosCoordinates(currentWorm)
 {
-	for(var i = 9; i > 0; i--)
+	for(var i = 19; i > 0; i--)
 	{
 		currentWorm.previousX[i] = currentWorm.previousX[i-1];
 		currentWorm.previousY[i] = currentWorm.previousY[i-1];
@@ -600,38 +548,6 @@ function storePreviuosCoordinates(currentWorm)
 	currentWorm.previousX[0] = currentWorm.x;
 	currentWorm.previousY[0] = currentWorm.y;
 	
-	/*
-	alert(  "currentWorm.coords: "+currentWorm.x+" | "+currentWorm.y+
-			"\ncurrentWorm.previous [0]: "+currentWorm.previousX[0]+" | "+currentWorm.previousY[0]+
-			"\ncurrentWorm.previous [1]: "+currentWorm.previousX[1]+" | "+currentWorm.previousY[1]+
-			"\ncurrentWorm.previous [2]: "+currentWorm.previousX[2]+" | "+currentWorm.previousY[2]+
-			"\ncurrentWorm.previous [3]: "+currentWorm.previousX[3]+" | "+currentWorm.previousY[3]+
-			"\ncurrentWorm.previous [4]: "+currentWorm.previousX[4]+" | "+currentWorm.previousY[4]+
-			"\ncurrentWorm.previous [5]: "+currentWorm.previousX[5]+" | "+currentWorm.previousY[5]+
-			"\ncurrentWorm.previous [6]: "+currentWorm.previousX[6]+" | "+currentWorm.previousY[6]+
-			"\ncurrentWorm.previous [7]: "+currentWorm.previousX[7]+" | "+currentWorm.previousY[7]+
-			"\ncurrentWorm.previous [8]: "+currentWorm.previousX[8]+" | "+currentWorm.previousY[8]+
-			"\ncurrentWorm.previous [9]: "+currentWorm.previousX[9]+" | "+currentWorm.previousY[9]);
-	*/
-	
-	/*
-	currentWorm.xMinus8 = currentWorm.xMinus7;
-	currentWorm.yMinus8 = currentWorm.yMinus7;
-	currentWorm.xMinus7 = currentWorm.xMinus6;
-	currentWorm.yMinus7 = currentWorm.yMinus6;
-	currentWorm.xMinus6 = currentWorm.xMinus5;
-	currentWorm.yMinus6 = currentWorm.yMinus5;
-	currentWorm.xMinus5 = currentWorm.xMinus4;
-	currentWorm.yMinus5 = currentWorm.yMinus4;
-	currentWorm.xMinus4 = currentWorm.xMinus3;
-	currentWorm.yMinus4 = currentWorm.yMinus3; 
-	currentWorm.xMinus3 = currentWorm.xMinus2;
-	currentWorm.yMinus3 = currentWorm.yMinus2;
-	currentWorm.xMinus2 = currentWorm.xMinus1
-	currentWorm.yMinus2 = currentWorm.yMinus1;
-	currentWorm.yMinus1 = currentWorm.y;
-	currentWorm.xMinus1 = currentWorm.x;
-	*/
 }
 
 function drawMarkers()
@@ -680,11 +596,6 @@ function isHole(currentWorm)
 
 function drawWorm(currentWorm)
 {
-	//addMessage("drawWorm", currentWorm.color);
-	//getPixelColor(currentWorm.x, currentWorm.y, 1, 1);
-	
-	//if(!isHole(currentWorm))
-	//{
 		context.beginPath();
 		context.fillStyle = currentWorm.color;
 		context.arc(currentWorm.x, currentWorm.y, wormSize, 0, Math.PI*2, true);
@@ -694,12 +605,16 @@ function drawWorm(currentWorm)
 		
 		if(isHole(currentWorm))
 		{
-			//alert(currentWorm.previousX[8]+ " | " +currentWorm.previousY[8]);
 			context.beginPath();
-			context.fillStyle = "rgb(2, 2, 2)"; //""#0000"; // black"; //currentWorm.color;
-			//alert(currentWorm.xMinus4);
+			context.fillStyle = "rgb(0, 0, 0)";
 			context.arc(currentWorm.previousX[8], currentWorm.previousY[8], wormSize+1, 0, Math.PI*2, true);
-			//context.stroke();
+			context.fill();
+			context.closePath();
+			
+			context.beginPath();
+			//context.fillStyle = "rgb(220, 80, 100)";
+			context.fillStyle = "rgb(2, 2, 2)";
+			context.arc(currentWorm.previousX[11], currentWorm.previousY[11], 2, 0, Math.PI*2, true);
 			context.fill();
 			context.closePath();
 		}
@@ -811,47 +726,48 @@ function soundSwitcher()
 
 function playSound(action) 
 {
-	var url = '';
+	/*
+	var url = 
 	
 	switch(action)
 	{
 		case "die":
-			url = "DIEING.WAV";
+			url = "die";
 			break;
 		case "yabass":
-			url = "AH-Y-BAS.WAV";
+			url = "yabass";
 			break;
 		case "winning":
-			url = "WINNING.WAV";
+			url = "win";
 			break;
 		case "speeding":
-			url = "SPEEDING.WAV";
+			url = "speed";
 			break;		
 		case "red":
-			url = "G_RED.WAV";
+			url = "red";
 			break;	
 		case "blue":
-			url = "G_BLUE.WAV";
+			url = "blue";
 			break;	
 		case "green":
-			url = "G_GREEN.WAV";
+			url = "green";
 			break;	
 		case "purple":
-			url = "G_PURPLE.WAV";
+			url = "purple";
 			break;	
 		case "cyan":
-			url = "G_CYAN.WAV";
+			url = "cyan";
 			break;	
 		case "yellow":
-			url = "G_YELLOW.WAV";
+			url = "yellow";
 			break;	
 	}
 	
 	//if(action == 'yabass')
 		//alert("Action: "+action+"\nURL: "+url);
-	
+	*/
 	if(soundOn)
-		document.getElementById(action).innerHTML= '<object type="audio/x-wav" data="sounds/'+url+'" width="5" height="5" hidden="true"></object>';
+		document.getElementById(action).innerHTML= '<object data="sounds/'+action+'.mp3" width="5" height="5" hidden="true"></object>';
 	
 }	
 
