@@ -1,5 +1,43 @@
 <?php
 
+/*
+include_once("./xml.class.php");
+
+$config_array = array(	"hole_size" 			=> "", 
+						"hole_spacing" 			=> "",
+						"longestWormEver" 		=> "",	
+						"startingSpeed"			=> "",
+						"speedingIncrementSpeed" => "",
+						"intervalMiliSeconds" 	=> "",
+						"speed"					=> "",
+						"fps"					=> "",
+						"basicFPSValue"		 	=> "",
+						"wormSize"				=> "",
+						"angleStepSize"			=> "",
+						"sizeMultiplier"		=> "");
+
+$xmlFile = './config.xml';
+$manageXML = new manageXML();
+
+/*
+echo "<br/>config_array[0]: ".$config_array[0];
+echo "<br/>config_array[1]: ".$config_array[1];
+echo "<br/>config_array['hole_size']: ".$config_array["hole_size"];
+echo "<br/>config_array['hole_spacing']: ".$config_array["hole_spacing"];
+$key = array_search(20, $config_array); 
+echo "<br/>key: ".$key;  
+*/
+
+/*
+foreach($config_array as $key=>$value) //$config)
+	$config_array[$key] = $manageXML->getXmlValue($key, $xmlFile);
+
+foreach($config_array as $key=>$value)
+	echo "<br/>config_array['".$key."']: ".$value;
+
+die();
+*/
+
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
 <html> 
     <head> 
@@ -10,6 +48,8 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
         <script src="js/jquery-1.4.2.js" type="text/javascript"></script> 
 		<script src="js/game.js" type="text/javascript"></script> 
 		<script src="js/settings.js" type="text/javascript"></script> 
+		<script src="js/include.js" type="text/javascript"></script>
+		<!-- <link href="css/style.css" rel="stylesheet" type="text/css"> -->
 	</head>
     <body>
 		<div id="canvas_div"> 
@@ -33,6 +73,8 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 						<tr><td><textarea id="speed" name="speed" rows="2" cols="30"></textarea></td></tr>
 						<tr><td>Rounds</td></tr>
 						<tr><td><textarea id="rounds" name="rounds" rows="2" cols="30"></textarea></td></tr>
+						<tr><td>Game Log</td></tr>
+						<tr><td><textarea id="log" name="log" rows="5" cols="30"></textarea></td></tr>
 					</table>
 				</td>
 			</tr>
@@ -51,6 +93,10 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 		<div>
 			<table>
 				<tr>
+					<td>
+					</td>
+				</tr>
+				<tr>
 					<td id="die"></td>
 					<td id="winning"></td>
 					<td id="speeding"></td>
@@ -61,6 +107,7 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 					<td id="purple"></td>
 					<td id="cyan"></td>
 					<td id="yellow"></td>
+					<td id="pause"></td>
 				</tr>
 			</table>
 		</div>		

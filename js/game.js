@@ -1,12 +1,10 @@
 
-var set = "sss";
-
 /* Game Vars */
 var showMessages = false;
 var holeSize = 30;
 var spaceBetweenHoles = 100;
 var isNewRound = false;
-var roundNumber = 1;
+var roundNumber = 0;
 var onPause = false;
 var wormsAlive;
 var scoreToWin;
@@ -29,7 +27,7 @@ var basicFPSValue = 20;
 var wormSize = 4; 			/* The size of the circle */
 var angleStepSize = 1; 		/* How much will it turn */
 var sizeMultiplier = 2;		/* How much will the worm move every interval */
-var currentRound = 1;
+var currentRound = 0;		/* Set initial value for round, previous start */
 
 /* Canvas and Js Vars */
 var xMax = 640; //800;
@@ -66,41 +64,6 @@ var colors = new Array(6);
 var rgbColors = new Array(6);
 
 
-function drawImage() {
-	var img = new Image();
-	img.src = 'img/red_1.png';
-	context.drawImage(img, 20, 20);
-	//alert(img.width + 'x' + img.height);
-	
-	/*
-		context.drawImage(img,1,1);
-		context.drawImage(img,2,2);
-		context.drawImage(img,3,3);
-		context.drawImage(img,4,4);
-		context.drawImage(img,5,5);
-		context.beginPath();
-		context.moveTo(30,96);
-		context.lineTo(70,66);
-		context.lineTo(103,76);
-		context.lineTo(170,15);
-		context.stroke();
-	}
-	//alert("W: "+img.width);height
-	//alert("data: "+img.width());
-	
-	var img2 = new Image();
-	img2.src = 'http://www.google.com/intl/en_ALL/images/logo.gif';
-	alert(img2.width + 'x' + img2.height);
-	
-		
-  //img.removeAttr("width"); 
-  //img.removeAttr("height");
-
-  //alert( pic.width() );
-  //alert( pic.height() );
-		*/
-}
-	
 function clearKeys()
 {
 	keysBeenPressed = new Array(512);
@@ -124,6 +87,8 @@ function startGame()
 		$("#speed").text("");
 		$("#rounds").text("");
 		start();
+		setRound();
+		doSpeeding();
 		isNewRound = true;
 		explainHowToMove();
 		speed = startingSpeed;
@@ -252,9 +217,9 @@ function setArrays()
 	players[0] = true;
 	players[1] = true;
 	players[2] = true;
-	players[3] = true;
-	players[4] = true;
-	players[5] = true;
+	players[3] = false;
+	players[4] = false;
+	players[5] = false;
 	
 	/* Which are they colors */
 	colors[0] = "red"; 
@@ -352,6 +317,7 @@ function startWorms()
 		if(players[i])
 			startWorm(colors[i]);
 	}	
+	drawScore();
 }
 
 function changeInterval(speed)
@@ -361,17 +327,20 @@ function changeInterval(speed)
 	interval = setInterval(moveWorms, intervalMiliSeconds/fps);
 }
 
+function doSpeeding()
+{
+	playSound("speed");
+	speed += speedingIncrementSpeed;
+	changeInterval(speed);
+	addMessage("Current Speed: "+(speed), "speed");
+}
+
 function speeding()
 {
 	random_1 = Math.floor(Math.random()*(300+speed));
 	random_2 = (300+speed) - Math.floor(Math.random()*(300+speed));
 	if(random_1 == random_2)
-	{
-		playSound("speed");
-		speed += speedingIncrementSpeed;
-		changeInterval(speed);
-		addMessage("Current Speed: "+(speed), "speed");
-	}
+		doSpeeding();
 }
 
 function moveWorms()
@@ -485,13 +454,13 @@ function moveWorm(currentWorm)
 		currentWorm.alive = false;
 		addScore();
 		getWormsAlive();
-		setRound();
 				
 		if(wormsAlive < 2)
 		{
 			clearKeys();
 			getMaxScore();
 			getScoreToWin();
+			setRound();
 			if(maxScore >= scoreToWin)
 			{
 				playSound("win");
@@ -502,7 +471,6 @@ function moveWorm(currentWorm)
 			}
 			else
 			{
-				roundNumber++;
 				yMarker = 0;
 				
 				if(winningWorm == 0) 
@@ -574,15 +542,21 @@ function drawScore()
 {
 	for(var i = 0; i < worms.length; i++)
 	{
+		var score = "00";
+		marker.beginPath();
+		marker.font = "40pt serif";
+		marker.fillStyle = "black";
 		if(players[i])
 		{
-			marker.beginPath();
-			marker.fillStyle = "white";
-			marker.fillText(worms[i].score, 15, (42+(i*(yMax/6))));
-			marker.fillStyle = "black";
-			marker.fillText(worms[i].score, 17, (44+(i*(yMax/6))));
-			marker.closePath();
+			if(worms[i].score < 10)
+				score = "0"+worms[i].score;
+			else
+				score = worms[i].score;
 		}
+		marker.fillText(score, 13, (42+(i*(yMax/6))));
+		marker.fillStyle = "white";
+		marker.fillText(score, 11, (40+(i*(yMax/6))));	
+		marker.closePath();
 	}
 }
 
@@ -726,49 +700,8 @@ function soundSwitcher()
 
 function playSound(action) 
 {
-	/*
-	var url = 
-	
-	switch(action)
-	{
-		case "die":
-			url = "die";
-			break;
-		case "yabass":
-			url = "yabass";
-			break;
-		case "winning":
-			url = "win";
-			break;
-		case "speeding":
-			url = "speed";
-			break;		
-		case "red":
-			url = "red";
-			break;	
-		case "blue":
-			url = "blue";
-			break;	
-		case "green":
-			url = "green";
-			break;	
-		case "purple":
-			url = "purple";
-			break;	
-		case "cyan":
-			url = "cyan";
-			break;	
-		case "yellow":
-			url = "yellow";
-			break;	
-	}
-	
-	//if(action == 'yabass')
-		//alert("Action: "+action+"\nURL: "+url);
-	*/
 	if(soundOn)
 		document.getElementById(action).innerHTML= '<object data="sounds/'+action+'.mp3" width="5" height="5" hidden="true"></object>';
-	
 }	
 
 /*
@@ -777,9 +710,16 @@ function playSound(action)
 function pause()
 {
 	onPause = !onPause;
+	playSound("pause");
 	
 	if(!onPause)
+	{
 		$("#pauseButton").val("Pause Off");
+		$("#log").text($("#log").text()+"\nPause Removed");
+	}
 	else
+	{
 		$("#pauseButton").val("Pause On");
+		$("#log").text($("#log").text()+"\nGame Paused");
+	}
 }
