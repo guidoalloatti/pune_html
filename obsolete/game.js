@@ -1,5 +1,6 @@
+/*
 
-/* Game Vars */
+// Game Vars
 var showMessages = false;
 var holeSize = 30;
 var spaceBetweenHoles = 100;
@@ -11,25 +12,25 @@ var scoreToWin;
 var maxScore = 0;
 var wormHasCrush = false;
 var imageArray;
-var soundOn = true;
+//var soundOn = true;
 var winningWorm;
 var longestWormSize;
 var longestWorm;
 var wormIsInHole = false;
 
-/* How Will Worm Move */
-var startingSpeed = 15;
+// How Will Worm Move
+var startingSpeed = 15;		// How fast will worms start moving
 var speedingIncrementSpeed = 5;
 var intervalMiliSeconds = 1000;
 var speed = 0;
-var fps; // speed+basicFPSValue;
 var basicFPSValue = 20;
-var wormSize = 4; 			/* The size of the circle */
-var angleStepSize = 1; 		/* How much will it turn */
-var sizeMultiplier = 2;		/* How much will the worm move every interval */
-var currentRound = 0;		/* Set initial value for round, previous start */
+var fps; 					// Is defined by speed+basicFPSValue
+var wormSize = 4; 			// The size of the circle
+var angleStepSize = 1; 		// How much will it turn
+var sizeMultiplier = 2;		// How much will the worm move every interval
+var currentRound = 0;		// Set initial value for round, previous start
 
-/* Canvas and Js Vars */
+// Canvas and Js Vars
 var xMax = 640; //800;
 var yMax = 480; //600;
 var angleMax = 360;
@@ -38,30 +39,79 @@ var context;
 var marker;
 var keyCode;
 var i;
+var score_x = 13;
+var score_y = 42;
 
-/* Math Vars */
+// Math Vars
 var sin;
 var cos;
 var angle;
 var x;
 var y;
 
-/* Information Vars */
+// Information Vars
 var message = '';
 var actionCounter = 0;
 
-/* Marker Vars */
+// Marker Vars
 var xMarker = 0; //xMax+5;
 var yMarker = 0;
 var wMarker = yMax/6;
 var hMarker = yMax/6;
 
-/* Arrays Declarations */
+// Arrays Declarations
 var keysBeenPressed = new Array(512);
 var worms = new Array(6);
 var players = new Array(6);
 var colors = new Array(6); 
 var rgbColors = new Array(6);
+
+// XML Settings
+var xmlFileDir = "/xml";
+var xmlFileName = "xml_jquery.xml"
+//var xmlFileName = "config.xml"
+
+// Variables Declarations Finished
+
+// XML Functionality
+
+function testXML()
+{
+	loadValuesFromXml();
+}
+
+function loadValuesFromXml()
+{
+  $.ajax({
+    type: "GET",
+    url: xmlFileName,
+    dataType: "xml",
+    success: parseXml
+  });
+}
+
+function parseXml(xml)
+{
+
+	$(xml).find("Tutoria").each(function()
+	{
+	  $("#log").append("\n"+$(this).find("Title").text());
+	  $(this).find("Category").each(function()
+	  {
+		$("#log").append("\n"+$(this).text());
+	  });
+		$("#log").append("\n");
+	});
+
+	//find every Tutorial and print the author
+	//$(xml).find("Configuration").each(function()
+	//{
+    //$("#log").append("\n"+$(this).attr("Game"));
+	//$("#log").append(": " + $(this).find("Title").text() + "<br />");
+	//});
+}
+
+
 
 
 function clearKeys()
@@ -83,15 +133,15 @@ function startGame()
 	
 	if(context && marker)
 	{
+		//alert("Starting New Match");
 		isNewRound = false;
-		$("#speed").text("");
-		$("#rounds").text("");
 		start();
 		setRound();
 		doSpeeding();
 		isNewRound = true;
 		explainHowToMove();
 		speed = startingSpeed;
+		$("#rounds").text("1");
 		changeInterval(speed);
 	}
 	else
@@ -117,7 +167,7 @@ document.onkeydown = function(event)
 	else 
 		keyCode = event.keyCode; 
 	
-	/* Set and unset pause */
+	// Set and unset pause 
 	if(keyCode == 32)
 		pause();
 		
@@ -127,7 +177,7 @@ document.onkeydown = function(event)
 function modifyWormsAngle()
 {
 	
-	/* Red Worm Moving */
+	// Red Worm Moving 
 	if(players[0])
 	{
 		if(keysBeenPressed[49])
@@ -136,7 +186,7 @@ function modifyWormsAngle()
 			worms[0] = changeAngle("left", worms[0]);	
 	}
 	
-	/* Blue Worm Moving */
+	// Blue Worm Moving
 	if(players[1])
 	{
 		if(keysBeenPressed[88])
@@ -145,7 +195,7 @@ function modifyWormsAngle()
 			worms[1] = changeAngle("left", worms[1]);
 	}
 	
-	/* Green Worm Moving */
+	// Green Worm Moving
 	if(players[2])
 	{
 		if(keysBeenPressed[86])
@@ -154,7 +204,7 @@ function modifyWormsAngle()
 			worms[2] = changeAngle("left", worms[2]);
 	}
 	
-	/* Purple Worm Moving */
+	// Purple Worm Moving
 	if(players[3])
 	{
 		if(keysBeenPressed[54])
@@ -163,7 +213,7 @@ function modifyWormsAngle()
 			worms[3] = changeAngle("left", worms[3]);
 	}
 		
-	/* Cyan Worm Moving */
+	// Cyan Worm Moving
 	if(players[4])
 	{
 		if(keysBeenPressed[222])
@@ -172,7 +222,7 @@ function modifyWormsAngle()
 			worms[4] = changeAngle("left", worms[4]);
 	}
 			
-	/* Yellow Worm Moving */
+	// Yellow Worm Moving
 	if(players[5])
 	{
 		if(keysBeenPressed[39])
@@ -213,15 +263,15 @@ function changeAngle(direction, currentWorm)
 
 function setArrays()
 {
-	/* Who is playing */
+	// Who is playing
 	players[0] = true;
 	players[1] = true;
-	players[2] = true;
+	players[2] = false;
 	players[3] = false;
 	players[4] = false;
 	players[5] = false;
 	
-	/* Which are they colors */
+	// Which are they colors
 	colors[0] = "red"; 
 	colors[1] = "blue"; 
 	colors[2] = "green";
@@ -246,7 +296,7 @@ function loadMarkerCanvas()
 	return false;
 }
 
-/* Worm Object Definition */
+// Worm Object Definition
 function worm()
 {
 	this.color;
@@ -259,8 +309,7 @@ function worm()
 	this.playing = false;
 	this.score = 0;
 	this.length = 0;
-	this.lastHoleStarted = 0;
-	
+	this.lastHoleStarted = 0;	
 }
 
 function setContextProperties()
@@ -277,7 +326,6 @@ function setMarkerProperties()
 	marker.font = '48px arial';
 	marker.textAlign = 'left';
 	marker.textBaseline = 'middle';
-	//marker.fillStyle = "rgb(100,20,70)";
 }
 
 function getPixelColor(x, y, w, h)
@@ -293,18 +341,19 @@ function start()
 	context.fillRect(0, 0, xMax, yMax);
 	marker.fillRect(xMax, 0, xMax+100, yMax);
 	drawMarkers();
+	$("#speed").text("Current Speed: "+speed);
 	startWorms();
 }
 
 function getLongestWorm()
 {
 	longestWormSize = 0;
-	longestWorm = 0;
+
 	for(var i = 0; i < worms.length; i++)
 	{
 		if(players[i] && worms[i].size >= longestWormSize)
 		{
-			longestWorm = i;
+			longestWorm = worms[i];
 			longestWormSize = worms[i].size;
 		}
 	}
@@ -329,7 +378,7 @@ function changeInterval(speed)
 
 function doSpeeding()
 {
-	playSound("speed");
+	playSound("speeding");
 	speed += speedingIncrementSpeed;
 	changeInterval(speed);
 	addMessage("Current Speed: "+(speed), "speed");
@@ -388,6 +437,7 @@ function getMaxScore()
 			winningWorm = i;
 		}
 	}
+	
 }
 
 function getScoreToWin()
@@ -419,13 +469,9 @@ function isWormHit(currentWorm)
 	{
 		//showPixelInfo(currentWorm, imageArray);
 		if(redValue == 1 && greenValue == 1 && blueValue == 1)
-		{
 			playSound("yabass");
-		}
 		else
-		{
 			return true;
-		}
 	}
 			
 	return false;
@@ -453,25 +499,27 @@ function moveWorm(currentWorm)
 		changeInterval(speed);
 		currentWorm.alive = false;
 		addScore();
-		getWormsAlive();
-				
+		getWormsAlive();	
+		
 		if(wormsAlive < 2)
 		{
 			clearKeys();
 			getMaxScore();
 			getScoreToWin();
 			setRound();
+
 			if(maxScore >= scoreToWin)
 			{
 				playSound("win");
-				alert("Winner!\nThe Winner Worm with "+maxScore+" points is....\n"+colors[winningWorm]);
 				currentRound = 0;
 				isNewRound = false;
+				alert("Winner!\nThe Winner Worm with "+maxScore+" points is....\nThe Glorious "+colors[winningWorm]+" Worm!!");
 				startGame();
 			}
 			else
 			{
 				yMarker = 0;
+				start();
 				
 				if(winningWorm == 0) 
 					playSound("red");
@@ -486,8 +534,7 @@ function moveWorm(currentWorm)
 				else if(winningWorm == 5) 
 					playSound("yellow");
 				
-				start();
-			}
+			}	
 		}
 		drawMarkers();
 		drawScore();
@@ -543,9 +590,6 @@ function drawScore()
 	for(var i = 0; i < worms.length; i++)
 	{
 		var score = "00";
-		marker.beginPath();
-		marker.font = "40pt serif";
-		marker.fillStyle = "black";
 		if(players[i])
 		{
 			if(worms[i].score < 10)
@@ -553,9 +597,13 @@ function drawScore()
 			else
 				score = worms[i].score;
 		}
-		marker.fillText(score, 13, (42+(i*(yMax/6))));
+		
+		marker.beginPath();
+		marker.font = "40pt serif";
+		marker.fillStyle = "black";
+		marker.fillText(score, score_x, (score_y+(i*(yMax/6))));
 		marker.fillStyle = "white";
-		marker.fillText(score, 11, (40+(i*(yMax/6))));	
+		marker.fillText(score, score_x-2, (score_y-2+(i*(yMax/6))));	
 		marker.closePath();
 	}
 }
@@ -592,8 +640,6 @@ function drawWorm(currentWorm)
 			context.fill();
 			context.closePath();
 		}
-	//}
-	
 	currentWorm.length++;
 }
 
@@ -627,7 +673,7 @@ function getWormIndexByColor(color)
 
 function startWorm(color)
 {
-	/* Getting Random Postitions and Angle */
+	// Getting Random Postitions and Angle
 	x = Math.floor(Math.random()*xMax);
 	y = Math.floor(Math.random()*yMax);
 	angle = Math.floor(Math.random()*angleMax);
@@ -654,9 +700,9 @@ function startWorm(color)
 
 function addMessage(message, id) //fun, ext1)
 {
-	if(id == "howto") $("#howto").text(message);
-	else if(id == "speed") $("#speed").text(message);
-	else if(id == "rounds") $("#rounds").text(message);	
+	if		(id == "howto") 	$("#howto").text(message);
+	else if	(id == "speed") 	$("#speed").text(message);
+	else if	(id == "rounds") 	$("#rounds").text(message);	
 }
 
 function showWormInfo(currentWorm)
@@ -686,7 +732,7 @@ function showPixelInfo(currentWorm, imageArray)
 
 /*
 * Sound Functions
-*/
+*
 function soundSwitcher()
 {
 	soundOn = !soundOn;		
@@ -701,8 +747,9 @@ function soundSwitcher()
 function playSound(action) 
 {
 	if(soundOn)
-		document.getElementById(action).innerHTML= '<object data="sounds/'+action+'.mp3" width="5" height="5" hidden="true"></object>';
+		document.getElementById(action).innerHTML= '<object data="sounds/'+action+'.mp3" type="audio/mpeg" width="5" height="5" hidden="true"></object>';
 }	
+*/
 
 /*
 * Pause Function

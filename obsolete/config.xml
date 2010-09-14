@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<configs>
-	<game>
-		<hole_size>20</hole_size>
-		<hole_spacing>100</hole_spacing>
-		<longestWormEver>1000</longestWormEver>
-		<startingSpeed>15</startingSpeed>
+<Pune>
+	<Configuration>
+		<Game hole_size="20"></hole_size>
+		<Game hole_spacing="100"></hole_spacing>
+		<Game longestWormEver="1000"></longestWormEver>
+		<Game startingSpeed="15"></startingSpeed>
+	</Configuration>
+</Pune>
+
+
+<!--
 		<speedingIncrementSpeed>5</speedingIncrementSpeed>
 		<intervalMiliSeconds>1000</intervalMiliSeconds>
 		<speed>0</speed>
@@ -16,3 +21,4 @@
 		<sizeMultiplier>2</sizeMultiplier>
 	</game>
 </configs>
+-->

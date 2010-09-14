@@ -37,8 +37,9 @@ foreach($config_array as $key=>$value)
 
 die();
 */
+?>
 
-echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
 <html> 
     <head> 
         <title>Pune! - Html5, Canvas, jQuery Game</title> 
@@ -47,9 +48,13 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
         <link rel="icon" href="/favicon.gif" type="image/gif"> 
         <script src="js/jquery-1.4.2.js" type="text/javascript"></script> 
 		<script src="js/game.js" type="text/javascript"></script> 
+		<script src="js/sounds.js" type="text/javascript"></script> 
+		<!--
+		<script src="js/graphics.js" type="text/javascript"></script> 
 		<script src="js/settings.js" type="text/javascript"></script> 
 		<script src="js/include.js" type="text/javascript"></script>
-		<!-- <link href="css/style.css" rel="stylesheet" type="text/css"> -->
+		<link href="css/style.css" rel="stylesheet" type="text/css"> 
+		-->
 	</head>
     <body>
 		<div id="canvas_div"> 
@@ -86,6 +91,8 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 					<td><input id="soundButton" type="button" value="Sound On" onclick="soundSwitcher();" /></td>
 					<td><input id="pauseButton" type="button" value="Pause Off" onclick="pause();" /></td>
 					<td><input id="configButton" type="button" value="Settings" onclick="settings();" /></td>
+					<td><input id="testXML" type="button" value="Test XML" onclick="testXML();" /></td>
+					<td><input type="button" value="Click" id="button" onclick="playSound('speeding');"></td>
 				</tr>
 			</table>
 		</div>
@@ -98,7 +105,7 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 				</tr>
 				<tr>
 					<td id="die"></td>
-					<td id="winning"></td>
+					<td id="win"></td>
 					<td id="speeding"></td>
 					<td id="yabass"></td>
 					<td id="red"></td>
@@ -112,6 +119,4 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 			</table>
 		</div>		
 	</body>
-</html>';			
-			
-?>
+</html>
