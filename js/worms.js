@@ -33,12 +33,12 @@ function startGame()
 // This Function Shows how to move (should be shown from the XML)
 function explainHowToMove()
 {
-	message += "Red Worm\t<-[\\]\t[1]->";
-	message += "\nBlue Worm\t<-[z]\t[x]->";
-	message += "\nGreen Worm\t<-[v]\t[b]->";
-	message += "\nPurple Worm\t<-[6]\t[7]->";
-	message += "\nCyan Worm\t<-[']\t[\¡]->";
-	message += "\nYellow Worm\t<-[V]\t[->]->";
+	message += "Red";
+	message += "\nBlue";
+	message += "\nGreen";
+	message += "\nPurple";
+	message += "\nCyan";
+	message += "\nYellow";
 	addMessage(message, "howto");
 }
 
@@ -426,8 +426,8 @@ function getWormIndexByColor(color)
 function addMessage(message, id)
 {
 	if		(id == "howto") 	$("#howto").text(message);
-	else if	(id == "speed") 	$("#speed").text(message);
-	else if	(id == "rounds") 	$("#rounds").text(message);	
+	else if	(id == "speed") 	$("#speed").val(message);
+	else if	(id == "rounds") 	$("#rounds").val(message);	
 }
 
 // This function shows the current worm info

@@ -2,7 +2,7 @@
 * Sound Functions
 */
 
-//var soundOn = true;
+var soundOn = true;
 
 function soundSwitcher()
 {
@@ -18,7 +18,9 @@ function soundSwitcher()
 function playSound(action) 
 {
 	if(soundOn)
-		document.getElementById(action).innerHTML= '<object data="sounds/'+action+'.mp3" type="audio/mpeg" width="5" height="5" hidden="true"></object>';
+		document.getElementById(action).innerHTML = '<object data="sounds/'+action+'.mp3" type="audio/mpeg" width="4" height="4"></object>';
+		
+		//alert(action);
 }
 
 

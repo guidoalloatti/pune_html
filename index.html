@@ -35,38 +35,142 @@
 					</canvas>
 				</td>
 				<td>
-					<table>
-						<tr><td>How to move the Worms</td></tr>
-						<tr><td><textarea id="howto" name="howto" rows="6" cols="30"></textarea></td></tr>
-						<tr><td>Speed</td></tr>
-						<tr><td><textarea id="speed" name="speed" rows="2" cols="30"></textarea></td></tr>
-						<tr><td>Rounds</td></tr>
-						<tr><td><textarea id="rounds" name="rounds" rows="2" cols="30"></textarea></td></tr>
-						<tr><td>Game Log</td></tr>
-						<tr><td><textarea id="log" name="log" rows="5" cols="30"></textarea></td></tr>
-					</table>
+					<table cellspacing=0 cellpadding=5 width=400 border=0 align="center">
+					<tbody> 
+					<tr valign=top> 
+					  <td colspan=5></td>
+					  <td bgcolor=#ffcccc width="54">&nbsp;</td>
+					  <td colspan=2></td>
+					</tr>
+					<tr valign=top> 
+					  <td width="6"></td>
+					  <td bgcolor=#88bbbb width="56">&nbsp;</td>
+					  <td colspan=2></td>
+					  <td bgcolor=#cc3333 colspan=2 rowspan=2> 
+						<p><font face="Arial, Helvetica, sans-serif" size="2" color="#FFFFFF"><b><font color="#FFCFCE">
+						Game Handling<br></font></b>
+								<input id="soundButton" type="button" value="Sound On" onclick="soundSwitcher();" />
+								<input id="pauseButton" type="button" value="Pause Off" onclick="pause();" />
+								<input id="configButton" type="button" value="Settings" onclick="settings();" />
+								<input id="testXML" type="button" value="Test XML" onclick="testXML();" />
+								<input id="button" type="button" value="Sound Test [Nasty!]" onclick="playSound('burp');">
+							</font></p>
+					  </td>
+					  <td bgcolor=#ddaaaa width="3">&nbsp;</td>
+					  <td></td>
+					</tr>
+					<tr valign=top> 
+					  <td bgcolor=#99cccc width="6">&nbsp;</td>
+					  <td bgcolor=#006666 colspan=2 rowspan=2> 
+						<p><font face="Arial, Helvetica, sans-serif" size="2" color="#8CBABD"><b>Moving Worms!<br>
+						  </b></font><font face="Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">
+						  Worm . . . . . . Left . . Right
+						  <textarea id="howto" name="howto" rows="6" cols="8" style="resize: none; border: 3px solid #cccccc; padding: 3px; font-family: Tahoma, sans-serif;" readonly></textarea>
+						  <textarea id="howto1" name="howto1" rows="6" cols="1" style="resize: none; border: 3px solid #cccccc; padding: 3px; font-family: Tahoma, sans-serif;" readonly></textarea>
+						  <textarea id="howto2" name="howto2" rows="6" cols="1" style="resize: none; border: 3px solid #cccccc; padding: 3px; font-family: Tahoma, sans-serif;" readonly></textarea>
+						  </font></p>
+					  </td>
+					  <td width="20">
+					  <img src="worm.png" width="100" height="120">
+					  </td>
+					  <td colspan=2 rowspan=2>&nbsp;</td>
+					</tr>
+					<tr valign=top> 
+					  <td width="6"></td>
+					  <td bgcolor=#254D78 colspan=3 rowspan=3> 
+						<p align="center"><font face="Arial, Helvetica, sans-serif" color="#FFFFFF" size="+3"><b><font size="+2">Sounds<br/>Game & Worms!</font></b></font></p>
+						<p align="center"><font face="Arial, Helvetica, sans-serif" size="3"><b><font color="#A5C5E2">
+						
+						<table border="0">
+				<tr>
+					<td>Die</td>
+					<td>Win</td>
+					<td>Speed</td>
+					<td>Yabass</td>
+				</tr>
+				<tr>
+					<td id="die"></td>
+					<td id="win"></td>
+					<td id="speeding"></td>
+					<td id="yabass"></td>
+				<tr>
+					<td>Red</td>
+					<td>Blue</td>
+					<td>Green</td>
+					<td>Purple</td>
+				</tr>
+				<tr>	
+					<td id="red"></td>
+					<td id="blue"></td>
+					<td id="green"></td>
+					<td id="purple"></td>
+				<tr>
+					<td>Cyan</td>
+					<td>Yellow</td>
+					<td>Pause</td>
+					<td>Burp</td>
+				</tr>
+				<tr>	
+					<td id="cyan"></td>
+					<td id="yellow"></td>
+					<td id="pause"></td>
+					<td id="burp"></td>
+						
+					<!--	
+						Die Win Speeding
+						<br/>Yabass Burp Pause
+						<br/>Red Blue Green
+						<br/>Purple Cyan Yellow
+					-->
+				</tr>
+						
+			</table>
+						</font></b></font></p>
+					  </td>
+					</tr>
+					<tr valign=top> 
+					  <td colspan=2></td>
+					  <td bgcolor=#77aaaa width="54">&nbsp;</td>
+					  <td bgcolor=#B9D3EC colspan=2 rowspan=2>&nbsp;</td>
+					</tr>
+					<tr valign=top> 
+					  <td width="6">&nbsp;</td>
+					  <td bgcolor=#FFCF63 colspan=2 rowspan=4> 
+						<p><font face="Arial, Helvetica, sans-serif" size="2" color="#FFF4DF"><b><font color="#FFF5DF">Game Log</font><br>
+						  </b></font><font face="Arial, Helvetica, sans-serif" size="2">
+						  <textarea id="log" name="log" rows="10" cols="20"></textarea>
+						  </font></p>
+					  </td>
+					</tr>
+					<tr valign=top> 
+					  <td bgcolor=#FFE3AD width="6" rowspan="3">&nbsp;</td>
+					  <td rowspan=3 width="20"> 
+						<p>&nbsp;</p>
+					  </td>
+					  <td width="10" bgcolor=#BDD3EF></td>
+					  <td colspan=3 bgcolor=#357CC4 rowspan=3><font face="Arial, Helvetica, sans-serif" size="2" color="#BDD3EF"><b>Speed and Round</b> </font><font face="Arial, Helvetica, sans-serif" size="2"><br>
+						<font color="#FFFFFF">
+						<input type="label" id="speed" readonly/>
+						<hr/>
+						<input type="label" id="rounds" readonly/>
+						
+						</font></font></td>
+					</tr>
+					<tr valign=top> 
+					  <td width="1" bgcolor="#BDD3EF">&nbsp;</td>
+					</tr>
+					<tr valign=top> 
+					  <td width="1">&nbsp;</td>
+					</tr>
+					</tbody> 
+				  </table>
 				</td>
 			</tr>
 		</table>
-		</div> 
-		<div>
-			<table>
-				<tr>
-					<td><input id="soundButton" type="button" value="Sound On" onclick="soundSwitcher();" /></td>
-					<td><input id="pauseButton" type="button" value="Pause Off" onclick="pause();" /></td>
-					<td><input id="configButton" type="button" value="Settings" onclick="settings();" /></td>
-					<td><input id="testXML" type="button" value="Test XML" onclick="testXML();" /></td>
-					<td><input type="button" value="Click" id="button" onclick="playSound('speeding');"></td>
-				</tr>
-			</table>
+		
 		</div>
-			
 		<div>
-			<table>
-				<tr>
-					<td>
-					</td>
-				</tr>
+			<table border="0">
 				<tr>
 					<td id="die"></td>
 					<td id="win"></td>
@@ -79,8 +183,10 @@
 					<td id="cyan"></td>
 					<td id="yellow"></td>
 					<td id="pause"></td>
+					<td id="burp"></td>
 				</tr>
 			</table>
-		</div>		
+		</div>		      
+		
 	</body>
 </html>
