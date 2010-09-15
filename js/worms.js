@@ -10,10 +10,10 @@ function startGame()
 {
 	context = loadCanvasContext();
 	marker = loadMarkerCanvas();
-	setArrays();
 	
 	if(context && marker)
 	{
+		setArrays();
 		isNewRound = false;
 		start();
 		setRound();
@@ -66,10 +66,10 @@ function setArrays()
 	// Who is playing
 	players[0] = true;
 	players[1] = true;
-	players[2] = false;
-	players[3] = false;
-	players[4] = false;
-	players[5] = false;
+	players[2] = true; //false; //true;
+	players[3] = true; //false; //true;
+	players[4] = true; //false;	//true;
+	players[5] = true; //false; //true;
 	
 	// Which are they colors
 	colors[0] = "red"; 
@@ -86,8 +86,9 @@ function worm()
 	this.color;
 	this.x;
     this.y;
-	this.previousX = new Array(20);
-	this.previousY = new Array(20);
+	this.previousX 		= new Array(histotyDotsSaved);
+	this.previousY 		= new Array(histotyDotsSaved);
+	this.previousHole 	= new Array(histotyDotsSaved);
 	this.angle;
 	this.alive = true;
 	this.playing = false;
@@ -140,7 +141,8 @@ function startWorm(color)
 	worms[i].color = color;
 	worms[i].alive = true;
 	worms[i].playing = true;
-	worms[i].length = 31;
+	worms[i].length = 0; //31;
+	
 	drawWorm(worms[i]);
 }
 
@@ -148,13 +150,19 @@ function startWorm(color)
 function getLongestWorm()
 {
 	longestWormSize = 0;
-
+	longestWorm = "";
+	
 	for(var i = 0; i < worms.length; i++)
 	{
-		if(players[i] && worms[i].size >= longestWormSize)
+		if(players[i])
 		{
-			longestWorm = worms[i];
-			longestWormSize = worms[i].size;
+			//alert(i+" "+worms[i].length+" "+longestWormSize);
+			if(worms[i].length >= longestWormSize)
+			{
+				longestWorm = worms[i];
+				longestWormSize = worms[i].length;
+				//alert(worms[i].length);
+			}
 		}
 	}
 }
@@ -326,6 +334,13 @@ function wormCrushes(currentWorm)
 
 	drawMarkers();
 	drawScore();
+	
+	getLongestWorm();
+	message = "Longest Worm: "+longestWorm.color;
+	addMessage(message, "longest");
+	message = "Size: "+longestWormSize;  
+	addMessage(message, "longest_size");
+	
 }
 			
 // The last worm is dead, needs to start a new round and maybe a new match
@@ -425,9 +440,24 @@ function getWormIndexByColor(color)
 // This function adds a message to different textareas
 function addMessage(message, id)
 {
-	if		(id == "howto") 	$("#howto").text(message);
-	else if	(id == "speed") 	$("#speed").val(message);
-	else if	(id == "rounds") 	$("#rounds").val(message);	
+	switch (id)
+	{
+		case "howto":
+			$("#howto").text(message);
+			break;
+		case "speed":
+			$("#speed").val(message);
+			break;
+		case "rounds":
+			$("#rounds").val(message);	
+			break;
+		case "longest":
+			$("#longest").val(message);
+			break;
+		case "longest_size":
+			$("#longest_size").val(message);
+			break;
+	}
 }
 
 // This function shows the current worm info
@@ -456,6 +486,56 @@ function showPixelInfo(currentWorm, imageArray)
 			"\nalpha: "+imageArray.data[3]+
 			"\nlength: "+currentWorm.length);
 } 
+
+// Render Screen: This function draws all
+function renderScreen()
+{
+	// draw canvas
+	for(var i = 0; i < worms.length; i++)
+	{
+		if(players[i] && worms[i].score > maxScore)
+		{
+			renderWorm(worms[i]);
+			//maxScore = worms[i].score;
+		}
+	}
+}
+
+// Render Worm: This function render one specific worm
+function renderWorm(currentWorm)
+{
+	context.fillStyle = currentWorm.color;
+	
+	for(var i = 0; i < currentWorm.lenght; i++)
+	{
+	
+		context.beginPath();
+		context.arc(currentWorm.x, currentWorm.y, wormSize, 0, Math.PI*2, true);
+		//context.stroke();
+		context.fill();
+		context.closePath();
+	
+		if(isHole(currentWorm))
+		{
+			context.beginPath();
+			context.fillStyle = "rgb(0, 0, 0)";
+			context.arc(currentWorm.previousX[8], currentWorm.previousY[8], wormSize+1, 0, Math.PI*2, true);
+			context.fill();
+			context.closePath();
+		
+			context.beginPath();
+			//context.fillStyle = "rgb(220, 80, 100)";
+			context.fillStyle = "rgb(2, 2, 2)";
+			context.arc(currentWorm.previousX[11], currentWorm.previousY[11], 2, 0, Math.PI*2, true);
+			context.fill();
+			context.closePath();
+		}
+	}
+	
+	//currentWorm.length++;
+	
+	
+}
 
 //Pause Function 
 function pause()

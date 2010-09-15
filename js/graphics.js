@@ -63,8 +63,15 @@ function drawWorm(currentWorm)
 		context.arc(currentWorm.previousX[11], currentWorm.previousY[11], 2, 0, Math.PI*2, true);
 		context.fill();
 		context.closePath();
+		
+		currentWorm.previousHole[currentWorm.length] = true;
 	}
+	else
+		currentWorm.previousHole[currentWorm.length] = false;
+
 	currentWorm.length++;
+	
+
 }
 
 function getPixelColor(x, y, w, h)

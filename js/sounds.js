@@ -18,7 +18,7 @@ function soundSwitcher()
 function playSound(action) 
 {
 	if(soundOn)
-		document.getElementById(action).innerHTML = '<object data="sounds/'+action+'.mp3" type="audio/mpeg" width="4" height="4"></object>';
+		document.getElementById(action).innerHTML = '<object data="sounds/'+action+'.mp3" type="audio/mpeg" width="30" height="4" style="color: '+action+';"></object>';
 		
 		//alert(action);
 }
