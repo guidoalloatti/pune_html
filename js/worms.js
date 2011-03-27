@@ -66,10 +66,10 @@ function setArrays()
 	// Who is playing
 	players[0] = true;
 	players[1] = true;
-	players[2] = true; //false; //true;
-	players[3] = true; //false; //true;
-	players[4] = true; //false;	//true;
-	players[5] = true; //false; //true;
+	players[2] = false; //true;
+	players[3] = false; //true;
+	players[4] = false;	//true;
+	players[5] = false; //true;
 	
 	// Which are they colors
 	colors[0] = "red"; 
@@ -323,8 +323,10 @@ function wormIsAlive(currentWorm)
 function wormCrushes(currentWorm)
 {
 	playSound("die");
-	speed = startingSpeed;
-	changeInterval(speed);
+	
+	//speed = startingSpeed;
+	//changeInterval(speed);
+	
 	currentWorm.alive = false;
 	addScore();
 	getWormsAlive();	
@@ -508,15 +510,19 @@ function renderWorm(currentWorm)
 	
 	for(var i = 0; i < currentWorm.lenght; i++)
 	{
-	
+		if(currentWorm.previousHole[i])
+		{
+			//setColor...
+			context.fillStyle = "rgb(2, 2, 2)";
+		}
+		
 		context.beginPath();
-		context.arc(currentWorm.x, currentWorm.y, wormSize, 0, Math.PI*2, true);
+		context.arc(currentWorm.previousX[i], currentWorm.previousY[i], wormSize, 0, Math.PI*2, true);
 		//context.stroke();
 		context.fill();
 		context.closePath();
-	
-		if(isHole(currentWorm))
-		{
+		
+		/*
 			context.beginPath();
 			context.fillStyle = "rgb(0, 0, 0)";
 			context.arc(currentWorm.previousX[8], currentWorm.previousY[8], wormSize+1, 0, Math.PI*2, true);
@@ -530,6 +536,7 @@ function renderWorm(currentWorm)
 			context.fill();
 			context.closePath();
 		}
+		*/
 	}
 	
 	//currentWorm.length++;
