@@ -1,0 +1,27 @@
+<head>
+  <script type="text/javascript" src="jquery-1.4.2.js"></script>
+  <script type="text/javascript" src="jquery.jplayer.min.js"></script>
+  
+  <script>
+  $(document).ready(function() { 
+  
+  
+	$("#jpId").jPlayer( {
+    
+		ready: function () {
+		// Directly access this instance's jPlayer methods. (Does not support chaining.)
+
+		alert("entro");
+
+		this.setFile("../sounds/die.mp3", "..sounds/die.ogg"); // Defines the counterpart mp3 and ogg files
+		this.play(); // Auto-Plays the file
+		},
+    
+		oggSupport: true
+	});
+  
+</script>
+</head>
+<body>
+  <div id="jpId"></div>
+</body>
