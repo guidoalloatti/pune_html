@@ -1,16 +1,23 @@
 
-// Starting the Game when page is Ready
+var colorMatrix = new Array();
+
+
+/**
+ * Starting the Game when page is Ready
+ */
 $(document).ready(function()
 {
 	startGame();
 });
 
-// The Function that starts the game including canvas and game
-function startGame()
+/**
+ * The Function that starts the game including canvas and game
+ */
+ function startGame()
 {
 	context = loadCanvasContext();
 	marker = loadMarkerCanvas();
-	
+
 	if(context && marker)
 	{
 		setArrays();
@@ -30,7 +37,9 @@ function startGame()
 	}
 }
 
-// This Function Shows how to move (should be shown from the XML)
+/**
+ * This Function Shows how to move (should be shown from the XML)
+ */
 function explainHowToMove()
 {
 	message += "Red";
@@ -42,8 +51,10 @@ function explainHowToMove()
 	addMessage(message, "howto");
 }
 
-// Function that modify the angle of the moving worm
-function changeAngle(direction, currentWorm)
+/**
+ * Function that modify the angle of the moving worm
+ */
+ function changeAngle(direction, currentWorm)
 {
 	if(direction == "left")
 	{
@@ -94,7 +105,7 @@ function worm()
 	this.playing = false;
 	this.score = 0;
 	this.length = 0;
-	this.lastHoleStarted = 0;	
+	this.lastHoleStarted = 0;
 }
 
 // Starting the contexts, set speeding and start Worms
