@@ -92,6 +92,7 @@ function setArrays()
 }
 
 // Worm Object Definition
+/*
 function worm()
 {
 	this.color;
@@ -107,12 +108,13 @@ function worm()
 	this.length = 0;
 	this.lastHoleStarted = 0;
 }
+*/
 
 // Starting the contexts, set speeding and start Worms
 function start()
 {	
 	setContextProperties();
-	setMarkerProperties();	
+	setMarkerProperties();
 	context.fillRect(0, 0, xMax, yMax);
 	marker.fillRect(xMax, 0, xMax+100, yMax);
 	drawMarkers();
@@ -127,13 +129,14 @@ function startWorms()
 	{
 		if(players[i])
 			startWorm(colors[i]);
-	}	
+	}
 	drawScore();
 }
 
 // Start a worm each round
 function startWorm(color)
 {
+	// TODO: Limit the place and border proximity to avoid fast death
 	// Getting Random Postitions and Angle
 	x = Math.floor(Math.random()*xMax);
 	y = Math.floor(Math.random()*yMax);
