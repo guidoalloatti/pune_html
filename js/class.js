@@ -1,3 +1,9 @@
+Match = function () {
+	var fields = new Array();
+	fields['started'] = "";
+	fields['ended'] = "";
+	fields['players'] = 0;
+}
 
 Score = function () {
 	var scoreArea;
@@ -66,19 +72,29 @@ Game = function () {
 }
 
 Worm = function (color) {
-	var color = color;
-	var currentMove = 0;
-	var angle = 0;
-	var isAlive = true;
-	var isPlaying = false;
-	var score = 0;
-	var length = 0;
-	var historicalMoves = [];
-	var historicalHoles = [];
-	var lastHoleStarted = 0;
+	var fields = new Array();
+	fields['color'] = color;
+	fields['currentMove'] = 0;
+	fields['angle'] = 0;
+	fields['isAlive'] = true;
+	fields['isPlaying'] = false;
+	fields['score'] = 0;
+	fields['length'] = 0;
+	fields['historicalMoves'] = [];
+	fields['historicalHoles'] = [];
+	fields['lastHoleStarted'] = 0;
 
 	return {
-		draw: function () {
+		startRound : function() {
+			// Getting Random Postitions and Angle
+			var wormPosition = new WormPosition();
+			wormPosition.setOne("wormColor", fields['color']);
+			wormPosition.setOne("x", Math.floor(Math.random()*xMax-30));
+			wormPosition.setOne("y", Math.floor(Math.random()*yMax-20));
+			fields['historicalMoves'].push(wormPosition);
+			fields['angle'] = Math.floor(Math.random()*angleMax);
+		},
+		draw : function () {
 			$.each(historicalMoves, function (){
 				if(!this.isHole) {
 					context.beginPath();
@@ -92,17 +108,39 @@ Worm = function (color) {
 					context.closePath();
 				}
 			});
+		},
+		setOne : function(key, value) {
+			fields[key] = value;
+		},
+		getOne : function(key) {
+			return fields[key];
+		},
+		getAll : function() {
+			return fields;
 		}
 	}
 }
 
 WormPosition = function () {
-	var movementId; 		// Movement Identification (PK)
-	var wormColor;			// The Worm Color (A letter maybe)
-	var isHole;				// Boolean Determines if have to print
-	var x;					// The Horizontal Position of the pixel
-	var y;					// The Vertical Position of the pixel
-	var matchId;			// Identifies the Unique Game identifier
-	var roundNumber;		// The number of the rounds in the game
-	var movementNumber;		// The number of movement in the round
+	var fields = new Array();
+	fields['movementId'] = 0; 		// Movement Identification (PK)
+	fields['wormColor'] = "";		// The Worm Color (A letter maybe)
+	fields['isHole'] = false;		// Boolean Determines if have to print
+	fields['x'] = 0;				// The Horizontal Position of the pixel
+	fields['y'] = 0;				// The Vertical Position of the pixel
+	fields['matchId'] = 0;			// Identifies the Unique Game identifier
+	fields['roundNumber'] = 0;		// The number of the rounds in the game
+	fields['movementNumber'] = 0;	// The number of movement in the round
+
+	return {
+		setOne : function(key, value) {
+			fields[key] = value;
+		},
+		getOne : function(key) {
+			return fields[key];
+		},
+		getAll : function() {
+			return fields;
+		}
+	}
 }

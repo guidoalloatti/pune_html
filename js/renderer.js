@@ -2,7 +2,7 @@
  * Defining the global variables
  */
 var playingWorms;
-var playingWormsObjetcs = [];
+var playingWormsObjetcs = new Array();
 var currentWorm;
 
 var wormRed;

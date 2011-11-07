@@ -1,14 +1,4 @@
-/**
- * Global variables that will be moved to vars.js
- */
-var colors 	= new Array("red", "blue", "green", "purple", "cyan", "yellow");
-var players = new Array(true, true, false, false, false, false)
-var redWorm;
-var blueWorm;
-var greenWorm;
-var purpleWorm;
-var cyanWorm;
-var yellowWorm;
+
 
 
 /**
@@ -23,41 +13,63 @@ $(document).ready(function()
 	$("#startGame").click(function () {
 		startGame();
 	});
-
-	setupGame();
-	
 });
 
 /**
  * The Function that setups the game including canvas and game
  */
 function setupGame () {
-	drawGameArea();
-	drawScoreArea();
+	//drawGameArea();
+	//drawScoreArea();
 	setupWorms();
 }
 
+
+
 function startGame() {
-	
+	setupGame();
+
+	$.each(playingWormsObjetcs, function(index, worm){
+		worm.startRound();
+		console.log(worm.getAll());
+		
+		/*
+		var colorOne = worm.getOne("color");
+		console.log(colorOne);
+
+		worm.setOne("color", "blue");
+		colorOne = worm.getOne("color");
+		console.log(colorOne);
+		*/
+
+		/*
+		console.log(worm.getOne("red"));
+		//console.log(this);
+		//console.log(index);
+		console.log(worm);
+		*/
+	});
+
+	//console.log(playingWormsObjetcs.color);
+
 }
 
 function drawGameArea () {
-	var game = new Game();
-	game.load();
-	game.set();
-	game.draw();
+	var gameArea = new Game();
+	gameArea.load();
+	gameArea.set();
+	gameArea.draw();
 }
 
 function drawScoreArea () {
-	var score = new Score();
-	score.load();
-	score.set();
-	score.draw();
+	var scoreArea = new Score();
+	scoreArea.load();
+	scoreArea.set();
+	scoreArea.draw();
 }
 
 function getPlayingWorms () {
-	
-	return PlayingWorms;
+	return playingWorms;
 }
 
 /**
@@ -67,34 +79,10 @@ function getPlayingWorms () {
 function setupWorms()
 {
 	var playingWorms = getPlayingWorms();
-	$.each(playingWorms, function(color, active){
-
-		playingWormsObjetcs.push(currentWorm);
-
-		switch(color) {
-			case "red":
-				wormRed = new Worm("red");
-				break;
-			case "blue":
-				wormBlue = currentWorm;
-				break;
-			case "green":
-				wormGreen = currentWorm;
-				break;
-			case "purple":
-				wormPurple = currentWorm;
-				break;
-			case "cyan":
-				wormCyan = currentWorm;
-				break;
-			case "yellow":
-				wormYellow = currentWorm;
-				break;
-			default:
-				break;
-		}
-		if(active) {
-			currentWorm = setupWorm(color);
+	$.each(playingWorms, function(index, worm) {
+		if(worm.active) {
+			var currentWorm = new Worm(worm.color);
+			playingWormsObjetcs.push(currentWorm);
 		}
 	});
 }

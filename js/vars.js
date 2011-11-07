@@ -63,13 +63,36 @@ var hMarker = yMax/6;
 /* Arrays Declarations */
 var keysBeenPressed = new Array(512);
 var worms = new Array(6);
-var players = new Array(6);
-var colors = new Array(6); 
+//var players = new Array(6);
+//var colors = new Array(6);
 var rgbColors = new Array(6);
 
 /* XML Settings */
 var xmlFileDir = "/xml";
 var xmlFileName = "xml_jquery.xml"
 //var xmlFileName = "config.xml"
+
+/**
+ * Global variables that will be moved to vars.js
+ */
+var playingWorms = new Array({color : "red", 	active : true},
+							 {color : "blue",	active : false},
+							 {color : "green",	active : false},
+							 {color : "purple",	active : false},
+							 {color : "cyan",	active : true},
+							 {color : "yellow",	active : false});
+
+var playingWormsObjetcs = new Array();
+
+/*
+var colors 	= new Array("red", "blue", "green", "purple", "cyan", "yellow");
+var players = new Array(true, true, false, false, false, false)
+var redWorm;
+var blueWorm;
+var greenWorm;
+var purpleWorm;
+var cyanWorm;
+var yellowWorm;
+*/
 
 /* Variables Declarations Finished */
