@@ -5,7 +5,7 @@ Match = function () {
 	fields['players'] = 0;
 }
 
-Score = function () {
+ScoreArea = function () {
 	var scoreArea;
 	return {
 		load: function () {
@@ -53,7 +53,7 @@ Score = function () {
 	}
 }
 
-Game = function () {
+GameArea = function () {
 	var gameArea;
 	return {
 		load: function () {
@@ -72,27 +72,42 @@ Game = function () {
 }
 
 Worm = function (color) {
+	// Class Atributes
 	var fields = new Array();
-	fields['color'] = color;
-	fields['currentMove'] = 0;
-	fields['angle'] = 0;
-	fields['isAlive'] = true;
-	fields['isPlaying'] = false;
-	fields['score'] = 0;
-	fields['length'] = 0;
-	fields['historicalMoves'] = [];
-	fields['historicalHoles'] = [];
-	fields['lastHoleStarted'] = 0;
 
 	return {
+		initialize : function() {
+			fields = {	"color" 		: color ,
+						"currentMove" 	: 0,
+						"angle" 		: 0,
+						"isAlive"		: true,
+						"score"			: 0,
+						"length"		: 0,
+						"historicalMoves" : new Array(),
+						"historicalHoles" : new Array(),
+						"lastHoleStarted" : 0
+			};
+		},
 		startRound : function() {
-			// Getting Random Postitions and Angle
+			// Getting Random Positions and Angle
 			var wormPosition = new WormPosition();
-			wormPosition.setOne("wormColor", fields['color']);
-			wormPosition.setOne("x", Math.floor(Math.random()*xMax-30));
-			wormPosition.setOne("y", Math.floor(Math.random()*yMax-20));
-			fields['historicalMoves'].push(wormPosition);
-			fields['angle'] = Math.floor(Math.random()*angleMax);
+			wormPosition.initialize();
+
+			var params = {
+				"wormColor" 		: fields["color"],
+				"x"					: Math.floor(Math.random()*xMax-30),
+				"y"					: Math.floor(Math.random()*yMax-20),
+				"matchId"			: getMatchId(),
+				"isHole"			: false,
+				"movementNumber" 	: 1,
+				"movementId"		: getNewMovementId(),
+				"roundNumber"		: getRoundNumber()
+			};
+
+			wormPosition.add(params);
+
+			fields.historicalMoves.push(wormPosition);
+			fields.angle = Math.floor(Math.random()*angleMax);
 		},
 		draw : function () {
 			$.each(historicalMoves, function (){
@@ -123,16 +138,19 @@ Worm = function (color) {
 
 WormPosition = function () {
 	var fields = new Array();
-	fields['movementId'] = 0; 		// Movement Identification (PK)
-	fields['wormColor'] = "";		// The Worm Color (A letter maybe)
-	fields['isHole'] = false;		// Boolean Determines if have to print
-	fields['x'] = 0;				// The Horizontal Position of the pixel
-	fields['y'] = 0;				// The Vertical Position of the pixel
-	fields['matchId'] = 0;			// Identifies the Unique Game identifier
-	fields['roundNumber'] = 0;		// The number of the rounds in the game
-	fields['movementNumber'] = 0;	// The number of movement in the round
 
 	return {
+		initialize : function() {
+			fields = {	"movementId" 		: 0,		// Movement Identification (PK)
+						"wormColor"			: "",		// The Worm Color (A letter maybe)
+						"isHole"			: false,	// Boolean Determines if have to print
+						"x"					: 0,		// The Horizontal Position of the pixel
+						"y"					: 0,		// The Vertical Position of the pixel
+						"matchId"			: 0,		// Identifies the Unique Game identifier
+						"roundNumber"		: 0,		// The number of the rounds in the game
+						"movementNumber"	: 0			// The number of movement in the round
+			};
+		},
 		setOne : function(key, value) {
 			fields[key] = value;
 		},
@@ -141,6 +159,11 @@ WormPosition = function () {
 		},
 		getAll : function() {
 			return fields;
+		},
+		add : function(params) {
+			$.each(params, function(key, value) {
+				fields[key] = value;
+			});
 		}
 	}
 }

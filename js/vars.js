@@ -16,6 +16,8 @@ var winningWorm;
 var longestWormSize;
 var longestWorm;
 var wormIsInHole = false;
+var matchId = Math.floor(Math.random());
+var lastMovementId = 0;
 
 /* How Will Worm Move */
 var speedingChance = 500;
