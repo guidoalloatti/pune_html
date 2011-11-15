@@ -81,7 +81,7 @@ var playingWorms = new Array({color : "red", 	active : true},
 							 {color : "blue",	active : false},
 							 {color : "green",	active : false},
 							 {color : "purple",	active : false},
-							 {color : "cyan",	active : true},
+							 {color : "cyan",	active : false},
 							 {color : "yellow",	active : false});
 
 var playingWormsObjetcs = new Array();

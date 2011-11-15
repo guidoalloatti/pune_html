@@ -7,13 +7,31 @@
 $(document).ready(function()
 {
 	$("#hideShowOptions").click(function () {
-		$("#helperDiv").toggle("slow");
+		toogleOptions();
+	});
+
+	$("#startGame").click(function () {
+		showSettings();
 	});
 
 	$("#startGame").click(function () {
 		startGame();
 	});
+
+	toogleOptions();
 });
+
+
+function showSettings() {
+	// TODO:
+	// * Turn backend gray and reload after save
+	// * Build modal with options
+	// * Save options and make them accesible
+}
+
+function toogleOptions() {
+	$("#helperDiv").toggle("slow");
+}
 
 /**
  * The Function that setups the game including canvas and game
@@ -25,34 +43,38 @@ function setupGame () {
 }
 
 
-
-function startGame() {
-	setupGame();
-
-	$.each(playingWormsObjetcs, function(index, worm) {
+function playWormRound(index, worm) {
 		worm.initialize();
 		worm.startRound();
 
-		var wormMovement = new WormPosition();
-		wormMovement.initialize();
-
 		var nextPosition = new NextWormPosition(worm);
-
+		nextPosition.initialize();
 
 		var params = {
-			"wormColor" 		: worm.getOne["color"],
-			"x"					: nextPosition.getOne("x"),
-			"y"					: nextPosition.getOne("y"),
+			"wormColor" 		: worm.getOne("color"),
+			"x"					: nextPosition.getX(), //getOne("x"),
+			"y"					: nextPosition.getY(), //One("y"),
 			"matchId"			: matchId,
 			"isHole"			: false, //getIsHole(),
-			"movementNumber" 	: nextPosition.getOne("movementNumber"), // worm.lastMovement[movementNumber]+1,
+			"movementNumber" 	: nextPosition.getMovementId(), // One("movementNumber"), // worm.lastMovement[movementNumber]+1,
 			"movementId"		: getNewMovementId(),
 			"roundNumber"		: getRoundNumber()
 		};
 
-		wormMovement.add(params);
+		var wormMovement = new WormPosition(params);
 
-		console.log(wormMovement.getAll());
+		console.log("MOVEMENT OBJECT: WormPosition");
+		console.log(wormMovement.getAllParams());
+
+
+		//console.log(w.getAllParams());
+		//console.log("NEXT POSITION: NextWormPosition");
+		//console.log(nextPosition.getAll());
+
+		/*
+		//console.log(wormMovement.getAll());
+		//console.log(nextPosition.getAll());
+		*/
 
 		/*
 		var wormInstance = worm.getAll();
@@ -80,8 +102,18 @@ function startGame() {
 		 console.log(worm.getAll());
 		 console.log(playingWormsObjetcs.color);
 		*/
-	});
+}
 
+
+function playRound() {
+		$.each(playingWormsObjetcs, function(index, worm) {
+			playWormRound(index, worm);
+	});
+}
+
+
+function startGame() {
+	setupGame();
 
 
 }

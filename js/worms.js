@@ -112,7 +112,7 @@ function worm()
 
 // Starting the contexts, set speeding and start Worms
 function start()
-{	
+{
 	setContextProperties();
 	setMarkerProperties();
 	context.fillRect(0, 0, xMax, yMax);

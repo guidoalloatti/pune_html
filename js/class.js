@@ -1,9 +1,12 @@
+
+
 Match = function () {
 	var fields = new Array();
 	fields['started'] = "";
 	fields['ended'] = "";
 	fields['players'] = 0;
 }
+
 
 ScoreArea = function () {
 	var scoreArea;
@@ -46,12 +49,12 @@ ScoreArea = function () {
 					scoreArea.fillStyle = "white";
 					scoreArea.fillText(score, score_x-2, (score_y-2+(i*(yMax/6))));
 					scoreArea.closePath();
-
 				}
 			});
 		}
 	}
 }
+
 
 GameArea = function () {
 	var gameArea;
@@ -71,9 +74,12 @@ GameArea = function () {
 	}
 }
 
+
 Worm = function (color) {
 	// Class Atributes
 	var fields = new Array();
+	var currentPosition = null;
+	var lastPosition = null;
 
 	return {
 		initialize : function() {
@@ -88,10 +94,15 @@ Worm = function (color) {
 						"lastHoleStarted" : 0
 			};
 		},
+		getCurrentPosition : function() {
+			return currentPosition;
+		},
+		getLastPosition : function() {
+
+		},
 		startRound : function() {
 			// Getting Random Positions and Angle
 			var wormPosition = new WormPosition();
-			wormPosition.initialize();
 
 			var params = {
 				"wormColor" 		: fields["color"],
@@ -104,7 +115,7 @@ Worm = function (color) {
 				"roundNumber"		: getRoundNumber()
 			};
 
-			wormPosition.add(params);
+			wormPosition.setAllParams(params);
 
 			fields.historicalMoves.push(wormPosition);
 			fields.angle = Math.floor(Math.random()*angleMax);
@@ -124,6 +135,9 @@ Worm = function (color) {
 				}
 			});
 		},
+		doOneStep : function() {
+			lastPosition = currentPosition;
+		},
 		setOne : function(key, value) {
 			fields[key] = value;
 		},
@@ -136,34 +150,97 @@ Worm = function (color) {
 	}
 }
 
-WormPosition = function () {
+
+var WormPosition = function (params) {
+
 	var fields = new Array();
+	function init(params) {
+		initialize();
+		setAllParams(params);
+	}
+
+	function initialize(){
+		fields = {
+			"movementId" 		: 0,		// Movement Identification (PK)
+			"wormColor"			: "no color",		// The Worm Color (A letter maybe)
+			"isHole"			: false,	// Boolean Determines if have to print
+			"x"					: 0,		// The Horizontal Position of the pixel
+			"y"					: 0,		// The Vertical Position of the pixel
+			"matchId"			: 0,		// Identifies the Unique Game identifier
+			"roundNumber"		: 0,		// The number of the rounds in the game
+			"movementNumber"	: 0			// The number of movement in the round
+		};
+	}
+
+	function setAllParams(params){
+		if( typeof(params) == "undefined" ) {
+			return;
+		}
+		
+		$.each(params, function(key, value) {
+			fields[key] = value;
+		});
+	}
+
+	init(params);
 
 	return {
-		initialize : function() {
-			fields = {	"movementId" 		: 0,		// Movement Identification (PK)
-						"wormColor"			: "",		// The Worm Color (A letter maybe)
-						"isHole"			: false,	// Boolean Determines if have to print
-						"x"					: 0,		// The Horizontal Position of the pixel
-						"y"					: 0,		// The Vertical Position of the pixel
-						"matchId"			: 0,		// Identifies the Unique Game identifier
-						"roundNumber"		: 0,		// The number of the rounds in the game
-						"movementNumber"	: 0			// The number of movement in the round
-			};
+		getOneParam : function(key) {
+			return fields[key];
 		},
-		setOne : function(key, value) {
+		getAllParams : function() {
+			return fields;
+		},
+		setOneParam : function(key, value) {
 			fields[key] = value;
+		},
+		setAllParams : function(params) {
+			setAllParams(params);
+		}
+	}
+}
+
+
+NextWormPosition = function(worm) {
+	var fields = new Array();
+	return {
+		initialize : function () {
+			fields = {
+				"x" 			: 100,
+				"y"				: 200,
+				"movementNumber": -1,
+				"movementId"	: -1,
+				"isHole"		: false,
+				"roundNumber"	: 10,
+				"wormColor"		: -1,
+				"matchId"		: -1
+			}
+		},
+		getX : function() {
+			return fields["x"]+1;
+		},
+		getY : function() {
+			return fields["y"]+1;
+		},
+		getMovementId : function() {
+			return fields["movementId"]+1;
+		},
+		getRoundNumber : function() {
+			return fields["roundNumber"];
+		},
+		getIsHole : function() {
+			var isHole = false;
+			var module = worm.getOne("length")%(holeSize+spaceBetweenHoles);
+			if(module <= holeSize)
+				isHole = true;
+			return isHole;
 		},
 		getOne : function(key) {
 			return fields[key];
 		},
 		getAll : function() {
 			return fields;
-		},
-		add : function(params) {
-			$.each(params, function(key, value) {
-				fields[key] = value;
-			});
 		}
+
 	}
 }
