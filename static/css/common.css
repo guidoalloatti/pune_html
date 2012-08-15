@@ -4,10 +4,25 @@ table.colorone {
     border-collapse: collapse;
 }
 
+table.centered {
+	cellspacing: 0;
+	cellpadding: 5px;
+	width: 400px;
+	border: 0;
+	align: "center";
+}
+
 p {
 	display: block;
 	-webkit-margin-before: 0em;
 	-webkit-margin-after: 0em;
 	-webkit-margin-start: 0px;
 	-webkit-margin-end: 0px;
+}
+
+p.subtitle {
+	font-family: "Arial, Helvetica, sans-serif";
+	font-size: 16px;
+	font-weight: bold;
+	color: #FFCFCE;
 }
