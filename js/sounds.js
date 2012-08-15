@@ -15,12 +15,15 @@ function soundSwitcher()
 
 }
 
-function playSound(action) 
+function playSound(audio) 
 {
 	if(soundOn)
-		document.getElementById(action).innerHTML = '<object data="sounds/'+action+'.mp3" type="audio/mpeg" width="30" height="4" style="color: '+action+';"></object>';
+	{
+		var audio = new Audio("sounds/" + audio + ".mp3");
+		audio.play();
 		
-		//alert(action);
+		//document.getElementById(action).innerHTML = '<object data="sounds/'+action+'.mp3" type="audio/mpeg" width="30" height="4" style="color:'+action+';"></object>';
+	}	
 }
 
 

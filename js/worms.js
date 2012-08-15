@@ -181,7 +181,16 @@ function doSpeeding()
 	playSound("speeding");
 	speed += speedingIncrementSpeed;
 	changeInterval(speed);
-	addMessage("Current Speed: "+(speed), "speed");
+	addMessage("Current Speed: "+speed, "speed");
+}
+
+// This function do the real speeding reduce
+function reduceSpeeding()
+{
+	playSound("ohh");
+	speed -= speedingIncrementSpeed;
+	changeInterval(speed);
+	addMessage("Current Speed: "+speed, "speed");
 }
 
 // This function evaluates and if random numbers matchs speeds
@@ -289,7 +298,9 @@ function isWormHit(currentWorm)
 function setRound()
 {
 	currentRound++;
+	speed = 10;
 	addMessage("Current Round: "+currentRound, "rounds");
+	addMessage("Current Speed: "+speed, "speed");
 }
 
 // Huge function, move a worm, evaluate if the worm has crushed 

@@ -22,7 +22,7 @@ var speedingChance = 500;
 var startingSpeed = 15;		/* How fast will worms start moving */
 var speedingIncrementSpeed = 5;
 var intervalMiliSeconds = 1000;
-var speed = 0;
+var speed = 10;
 var basicFPSValue = 20;
 var fps; 					/* Is defined by speed+basicFPSValue */
 var wormSize = 4; 			/* The size of the circle */

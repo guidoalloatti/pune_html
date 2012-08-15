@@ -24,6 +24,10 @@ document.onkeydown = function(event)
 	/* Set and unset pause */
 	if(keyCode == 32)
 		pause();
+	else if(keyCode == 34)
+		doSpeeding();
+	else if(keyCode == 33)
+		reduceSpeeding();
 		
 	keysBeenPressed[keyCode] = true;
 }
