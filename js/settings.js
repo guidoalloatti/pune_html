@@ -1,50 +1,12 @@
 
-//var keys = new array(6);
-
-
+// Method Called when the Label is clicked
 function labelClicked(color, caller)
 {
-	switch(color)
-	{
-		case 'red': 
-			var play = $("#red_play");
-			var label = $("#red_label");
-			var left = $("#red_left");
-			var right = $("#red_right");
-			break;
-		case 'blue': 
-			var play = $("#blue_play");
-			var label = $("#blue_label");
-			var left = $("#blue_left");
-			var right = $("#blue_right");
-			break;
-		case 'green': 
-			var play = $("#green_play");
-			var label = $("#green_label");
-			var left = $("#green_left");
-			var right = $("#green_right");
-			break;
-		case 'purple': 
-			var play = $("#purple_play");
-			var label = $("#purple_label");
-			var left = $("#purple_left");
-			var right = $("#purple_right");
-			break;
-		case 'cyan': 
-			var play = $("#cyan_play");
-			var label = $("#cyan_label");
-			var left = $("#cyan_left");
-			var right = $("#cyan_right");
-			break;
-		case 'yellow': 
-			var play = $("#yellow_play");
-			var label = $("#yellow_label");
-			var left = $("#yellow_left");
-			var right = $("#yellow_right");
-			break;
-		default: 
-			break;
-	}
+	var play  = $("#"+color+"_play");
+	var label = $("#"+color+"_label");
+	var left  = $("#"+color+"_left");
+	var right = $("#"+color+"_right");
+	
 	if(caller == 'check')
 	{
 		if(play.is(':checked') == true)
@@ -122,31 +84,16 @@ $(document).ready(function()
 	$("#cyan_right").keypress(function(e)	{	setMoveKey("cyan", "right", event.keyCode, event.charCode); 	});
 	$("#yellow_left").keypress(function(e)	{	setMoveKey("yellow", "left", event.keyCode, event.charCode); 	});
 	$("#yellow_right").keypress(function(e)	{	setMoveKey("yellow", "right", event.keyCode, event.charCode); 	});
-	
-	/*
-	$("input:hidden").each(function(i) {
-		this.id = this.id + "_" + i;
-		alert(this.id);
-    });
-	*/
-	
+		
 });
 
 function setMoveKey(color, direction, keyCode, charCode)
 {
-	/*
-	$("input:hidden").each(function(i) {
-		this.id = this.id + "_" + i;
-		alert(this.id+"\n"+this.val()+"\n"+this.text());
-    });
-	*/
-	
 	if(keyCode != 9)
 	{
 		$("#"+color+"_"+direction).val("");
 		$("#"+color+"_"+direction+"_value").val(keyCode);
 	}
-	//alert("Character: "+$("#"+color+"_"+direction).val()+"\nNumber: "+$("#"+color+"_"+direction+"_value").val());
 }
 
 function disableKeys()
@@ -186,10 +133,10 @@ function settings()
 function save()
 {
 	/**
-	* Save the options to the XML File
+	* Save the options
 	*/
-	pindonga = "poasadasdsad";
-	alert(pindonga);
+	var message = "Method to store configuration is not yet implemented, ooops!";
+	alert(message);
 	window.close();
 }
 

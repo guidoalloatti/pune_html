@@ -13,8 +13,9 @@ var wormHasCrush = false;
 var imageArray;
 var soundOn = true;
 var winningWorm;
-var longestWormSize;
+var longestWormSize = 0;
 var longestWorm;
+var longestWormColor;
 var wormIsInHole = false;
 
 /* How Will Worm Move */

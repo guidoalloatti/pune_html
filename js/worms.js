@@ -66,10 +66,10 @@ function setArrays()
 	// Who is playing
 	players[0] = true;
 	players[1] = true;
-	players[2] = false; //true;
-	players[3] = false; //true;
-	players[4] = false;	//true;
-	players[5] = false; //true;
+	players[2] = true; //true;
+	players[3] = true; //true;
+	players[4] = true;	//true;
+	players[5] = true; //true;
 	
 	// Which are they colors
 	colors[0] = "red"; 
@@ -149,22 +149,27 @@ function startWorm(color)
 // This function gets the worm who is winning with it size
 function getLongestWorm()
 {
-	longestWormSize = 0;
-	longestWorm = "";
-	
 	for(var i = 0; i < worms.length; i++)
 	{
-		if(players[i])
+		if(players[i]) 
 		{
-			//alert(i+" "+worms[i].length+" "+longestWormSize);
-			if(worms[i].length >= longestWormSize)
+			
+			if(worms[i].alive && worms[i].length > longestWormSize)
 			{
-				longestWorm = worms[i];
-				longestWormSize = worms[i].length;
-				//alert(worms[i].length);
+				console.log(longestWormColor, longestWormSize);
+				
+				longestWorm       = worms[i];
+				longestWormSize   = worms[i].length;
+				longestWormColor  = worms[i].color;
+				
+				message = "Longest Worm: "+ longestWormColor;
+				addMessage(message, "longest");
+				message = "Size: "+ longestWormSize;  
+				addMessage(message, "longest_size");
 			}
 		}
 	}
+
 }
 
 // Set Time interval (must not exists any more when render will be implemented)
@@ -298,7 +303,8 @@ function isWormHit(currentWorm)
 function setRound()
 {
 	currentRound++;
-	speed = 10;
+	speed = startingSpeed;
+	changeInterval(speed);
 	addMessage("Current Round: "+currentRound, "rounds");
 	addMessage("Current Speed: "+speed, "speed");
 }
@@ -334,11 +340,8 @@ function wormIsAlive(currentWorm)
 function wormCrushes(currentWorm)
 {
 	playSound("die");
-	
-	//speed = startingSpeed;
-	//changeInterval(speed);
-	
 	currentWorm.alive = false;
+	getLongestWorm();
 	addScore();
 	getWormsAlive();	
 	
@@ -349,9 +352,9 @@ function wormCrushes(currentWorm)
 	drawScore();
 	
 	getLongestWorm();
-	message = "Longest Worm: "+longestWorm.color;
+	message = "Longest Worm: "+ longestWormColor;
 	addMessage(message, "longest");
-	message = "Size: "+longestWormSize;  
+	message = "Size: "+ longestWormSize;  
 	addMessage(message, "longest_size");
 	
 }
@@ -453,29 +456,16 @@ function getWormIndexByColor(color)
 // This function adds a message to different textareas
 function addMessage(message, id)
 {
-	switch (id)
-	{
-		case "howto":
-			$("#howto").text(message);
-			break;
-		case "speed":
-			$("#speed").val(message);
-			break;
-		case "rounds":
-			$("#rounds").val(message);	
-			break;
-		case "longest":
-			$("#longest").val(message);
-			break;
-		case "longest_size":
-			$("#longest_size").val(message);
-			break;
-	}
+	if(id == "howto")
+		$("#"+id).text(message);
+	else
+		$("#"+id).val(message);
 }
 
 // This function shows the current worm info
 function showWormInfo(currentWorm)
 {
+	pause();
 	alert(	"color: "+currentWorm.color+
 			"\nx: "+currentWorm.x+
 			"\ny: "+currentWorm.y+
@@ -507,10 +497,7 @@ function renderScreen()
 	for(var i = 0; i < worms.length; i++)
 	{
 		if(players[i] && worms[i].score > maxScore)
-		{
 			renderWorm(worms[i]);
-			//maxScore = worms[i].score;
-		}
 	}
 }
 
@@ -518,41 +505,16 @@ function renderScreen()
 function renderWorm(currentWorm)
 {
 	context.fillStyle = currentWorm.color;
-	
 	for(var i = 0; i < currentWorm.lenght; i++)
 	{
 		if(currentWorm.previousHole[i])
-		{
-			//setColor...
 			context.fillStyle = "rgb(2, 2, 2)";
-		}
 		
 		context.beginPath();
 		context.arc(currentWorm.previousX[i], currentWorm.previousY[i], wormSize, 0, Math.PI*2, true);
-		//context.stroke();
 		context.fill();
 		context.closePath();
-		
-		/*
-			context.beginPath();
-			context.fillStyle = "rgb(0, 0, 0)";
-			context.arc(currentWorm.previousX[8], currentWorm.previousY[8], wormSize+1, 0, Math.PI*2, true);
-			context.fill();
-			context.closePath();
-		
-			context.beginPath();
-			//context.fillStyle = "rgb(220, 80, 100)";
-			context.fillStyle = "rgb(2, 2, 2)";
-			context.arc(currentWorm.previousX[11], currentWorm.previousY[11], 2, 0, Math.PI*2, true);
-			context.fill();
-			context.closePath();
-		}
-		*/
 	}
-	
-	//currentWorm.length++;
-	
-	
 }
 
 //Pause Function 
