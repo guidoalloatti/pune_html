@@ -23,7 +23,7 @@ document.onkeydown = function(event)
 	
 	/* Set and unset pause */
 	if(keyCode == 32)
-		pause();
+        pauseSwitcher();
 	else if(keyCode == 34)
 		doSpeeding();
 	else if(keyCode == 33)

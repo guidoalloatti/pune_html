@@ -54,6 +54,8 @@ var y;
 /* Information Vars */
 var message = '';
 var actionCounter = 0;
+var soundOn = true;
+var pauseOn = false;
 
 /* Marker Vars */
 var xMarker = 0; //xMax+5;

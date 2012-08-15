@@ -522,15 +522,4 @@ function pause()
 {
 	onPause = !onPause;
 	playSound("pause");
-	
-	if(!onPause)
-	{
-		$("#pauseButton").val("Pause Off");
-		$("#log").text($("#log").text()+"\nPause Removed");
-	}
-	else
-	{
-		$("#pauseButton").val("Pause On");
-		$("#log").text($("#log").text()+"\nGame Paused");
-	}
 }
