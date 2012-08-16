@@ -42,9 +42,7 @@ function playSound(audio)
 	{
 		var audio = new Audio("sounds/" + audio + ".mp3");
 		audio.play();
-		
-		//document.getElementById(action).innerHTML = '<object data="sounds/'+action+'.mp3" type="audio/mpeg" width="30" height="4" style="color:'+action+';"></object>';
-	}	
+	}
 }
 
 

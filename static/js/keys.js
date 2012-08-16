@@ -1,8 +1,7 @@
 function clearKeys()
 {
 	keysBeenPressed = new Array(512);
-}	
-
+}
 
 document.onkeyup = function(event)
 {
@@ -20,8 +19,8 @@ document.onkeydown = function(event)
 		keyCode = window.event.keyCode; 
 	else 
 		keyCode = event.keyCode; 
-	
-	/* Set and unset pause */
+
+	/* Set and unset pause and speeding */
 	if(keyCode == 32)
         pauseSwitcher();
 	else if(keyCode == 34)
