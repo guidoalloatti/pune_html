@@ -1,41 +1,32 @@
 
 // Method Called when the Label is clicked
-function labelClicked(color, caller)
-{
+function labelClicked(color, caller) {
 	var play  = $("#"+color+"_play");
 	var label = $("#"+color+"_label");
 	var left  = $("#"+color+"_left");
 	var right = $("#"+color+"_right");
 	
-	if(caller == 'check')
-	{
-		if(play.is(':checked') == true)
-		{
+	if(caller == 'check') {
+		if(play.is(':checked') == true) {
 			label.css('color', color);
 			label.css('background', 'white');
 			left.show("fade");
 			right.show("fade");
-		}
-		else
-		{
+		} else {
 			label.css('color', 'white');
 			label.css('background', 'lightgray');
 			left.hide("fade");
 			right.hide("fade");
 		}
 	}
-	else if(caller == 'label')
-	{
-		if(play.is(':checked') == true)
-		{
+	else if(caller == 'label') {
+		if(play.is(':checked') == true) {
 			label.css('color', 'white');
 			label.css('background', 'lightgray');
 			play.attr('checked', false);
 			left.hide("fade");
 			right.hide("fade");
-		}
-		else
-		{
+		} else {
 			label.css('color', 'white');
 			label.css('background', color);
 			play.attr('checked', true);
@@ -45,10 +36,8 @@ function labelClicked(color, caller)
 	}
 } 
 
-$(document).ready(function()
-{
+$(document).ready(function() {
 	disableKeys();
-	
    /**
 	* Clicking on Input Functionality
 	*/
@@ -87,17 +76,14 @@ $(document).ready(function()
 		
 });
 
-function setMoveKey(color, direction, keyCode, charCode)
-{
-	if(keyCode != 9)
-	{
+function setMoveKey(color, direction, keyCode, charCode) {
+	if(keyCode != 9) {
 		$("#"+color+"_"+direction).val("");
 		$("#"+color+"_"+direction+"_value").val(keyCode);
 	}
 }
 
-function disableKeys()
-{
+function disableKeys() {
 	$("#red_left").hide();
 	$("#red_right").hide();
 	$("#blue_left").hide();
@@ -112,8 +98,7 @@ function disableKeys()
 	$("#yellow_right").hide();
 }
 
-function settings()
-{
+function settings() {
 	if(!onPause)
 		pause();
 	
@@ -130,8 +115,7 @@ function settings()
 	window.open("settings.php", "Settings Window", options);
 }
 
-function save()
-{
+function save() {
 	/**
 	* Save the options
 	*/
@@ -139,4 +123,3 @@ function save()
 	alert(message);
 	window.close();
 }
-

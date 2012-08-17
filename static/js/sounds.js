@@ -1,11 +1,9 @@
 /*
-* Sound Functions
+* Sound Functionality
+* Pause Functionality
 */
 
-
-
-function soundSwitcher()
-{
+function soundSwitcher() {
 	soundOn = !soundOn;
 	
 	if(!soundOn) {
@@ -19,8 +17,14 @@ function soundSwitcher()
 	}
 }
 
-function pauseSwitcher()
-{
+function playSound(audio) {
+	if(soundOn) {
+		var audio = new Audio("sounds/" + audio + ".mp3");
+		audio.play();
+	}
+}
+
+function pauseSwitcher() {
 	pauseOn = !pauseOn;
 	if(!pauseOn) {
 		$("#pauseImage").html('<a  onclick="pauseSwitcher();"><img src="images/check.png" alt="Pause is OFF" width="32" height="32" border="0" /></a>');
@@ -35,13 +39,8 @@ function pauseSwitcher()
 	}
 }
 
-function playSound(audio) 
-{
-	if(soundOn)
-	{
-		var audio = new Audio("sounds/" + audio + ".mp3");
-		audio.play();
-	}
+//Pause Function
+function pause() {
+	onPause = !onPause;
+	playSound("pause");
 }
-
-
