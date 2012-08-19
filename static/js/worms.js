@@ -58,7 +58,7 @@ function setArrays() {
 	players[2] = true; //true;
 	players[3] = true; //true;
 	players[4] = true;	//true;
-	players[5] = true; //true;
+	players[5] = false; //true;
 	
 	// Which are they colors
 	colors[0] = "red"; 
@@ -78,11 +78,14 @@ function worm() {
 	this.previousY 		= new Array(histotyDotsSaved);
 	this.previousHole 	= new Array(histotyDotsSaved);
 	this.angle;
-	this.alive = true;
-	this.playing = false;
-	this.score = 0;
-	this.length = 0;
+	this.alive 		= false	;
+	this.playing 	= false;
+	this.score 		= 0;
+	this.length 	= 0;
 	this.lastHoleStarted = 0;	
+	this.leftKey;
+	this.rightKey;
+	this.defaultKeys = true;
 }
 
 // Starting the contexts, set speeding and start Worms
@@ -108,21 +111,26 @@ function startWorms() {
 // Start a worm each round
 function startWorm(color) {
 	// Getting Random Postitions and Angle
-	x = Math.floor(Math.random()*xMax);
-	y = Math.floor(Math.random()*yMax);
-	angle = Math.floor(Math.random()*angleMax);
-	i = getWormIndexByColor(color);
+	x 		= Math.floor(Math.random()*xMax);
+	y 		= Math.floor(Math.random()*yMax);
+	angle 	= Math.floor(Math.random()*angleMax);
+	i 		= getWormIndexByColor(color);
+	
 	if(!isNewRound) {
-		worms[i] = new worm;
-		worms[i].score = 0;
+		worms[i] 		= new worm;
+		worms[i].score 	= 0;
 	}
-	worms[i].x = x;
-	worms[i].y = y;
-	worms[i].angle = angle;
-	worms[i].color = color;
-	worms[i].alive = true;
-	worms[i].playing = true;
-	worms[i].length = 0; //31;
+	
+	worms[i].x 			= x;
+	worms[i].y 			= y;
+	worms[i].angle 		= angle;
+	worms[i].color 		= color;
+	worms[i].alive 		= true;
+	worms[i].playing 	= true;
+	worms[i].length 	= 0; //31;
+	worms[i].leftKey 	= getKey(i, "left");
+	worms[i].rightKey 	= getKey(i, "right");
+	
 	drawWorm(worms[i]);
 }
 

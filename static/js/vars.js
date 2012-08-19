@@ -75,4 +75,20 @@ var xmlFileDir = "/xml";
 var xmlFileName = "xml_jquery.xml"
 //var xmlFileName = "config.xml"
 
+/* Default Keys */
+var defaultKeys = {
+    0 		: { left: 192, right: 49 },
+	1 		: { left: 90, right: 88 },
+	2 		: { left: 66, right: 86 },
+	3 		: { left: 55, right: 54 },
+	4 		: { left: 187, right: 222 },
+	5 		: { left: 40, right: 39},
+	red 	: { left: 192, right: 49 },
+	blue 	: { left: 90, right: 88 },
+	green 	: { left: 66, right: 86 },
+	purple 	: { left: 55, right: 54 },
+	cyan 	: { left: 187, right: 222},
+	yellow 	: { left: 40, right: 39}
+};
+
 /* Variables Declarations Finished */

@@ -9,8 +9,8 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
         <meta content="javascript, game, games, jquery, gamequery, game engine, framework, development" name="keywords"> 
         <link rel="icon" href="/favicon.gif" type="image/gif"> 
         <script src="static/js/jquery-1.4.2.js" type="text/javascript"></script>
-		<script src="static/js/font.js" type="text/javascript"></script>
-		<script src="static/js/include.js" type="text/javascript"></script>
+		<!-- <script src="static/js/font.js" type="text/javascript"></script> -->
+		<!-- <script src="static/js/include.js" type="text/javascript"></script> -->
 		<!-- <script src="js/game.js" type="text/javascript"></script> -->
 		<script src="static/js/settings.js" type="text/javascript"></script>
 	</head>

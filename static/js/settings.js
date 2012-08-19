@@ -1,4 +1,9 @@
 
+function loadInitialValues() {
+	if(worms[0].playing)
+		labelClicked("red", "label");
+}
+
 // Method Called when the Label is clicked
 function labelClicked(color, caller) {
 	var play  = $("#"+color+"_play");
@@ -38,6 +43,7 @@ function labelClicked(color, caller) {
 
 $(document).ready(function() {
 	disableKeys();
+	loadInitialValues();
    /**
 	* Clicking on Input Functionality
 	*/
