@@ -11,7 +11,7 @@ function soundSwitcher() {
 		$("#soundStatus").html("Sound is OFF");
 		$("#log").text($("#log").text()+"\nSound is OFF");
 	} else {
-		 $("#soundImage").html('<a onclick="soundSwitcher();"><img src="images/uncheck.png" alt="Sound is ON" width="32" height="32" border="0" /></a>');
+		$("#soundImage").html('<a onclick="soundSwitcher();"><img src="images/uncheck.png" alt="Sound is ON" width="32" height="32" border="0" /></a>');
 		$("#soundStatus").html("Sound is ON");
 		$("#log").text($("#log").text()+"\nSound is ON");
 	}
