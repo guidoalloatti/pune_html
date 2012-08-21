@@ -29,14 +29,9 @@ document.onkeydown = function(event) {
 }
 
 function getKey(index, direction) {
+	//console.log(index, direction, defaultKeys, defaultKeys[index][direction]);
 	if(worms[index].defaultKeys) 
 		return defaultKeys[index][direction];
-	else
-		return getCustomKey(index, direction);
-}
-
-function getCustomKey(index, direction) {
-	return true;
 }
 
 function evalKeyPress(i, direction) {
@@ -53,4 +48,21 @@ function modifyWormsAngle() {
 			}
 		}
 	}
+}
+
+function testKeysPage() {
+	if(!onPause)
+		pause();
+
+	var options = "status=0, ";
+	options += "toolbar=0, ";
+	options += "location=0, ";
+	options += "menubar=0, ";
+	options += "directories=0, ";
+	options += "resizable=0, ";
+	options += "scrollbars=0, ";
+	options += "height=600, ";
+	options += "width=400";
+
+	window.open("model/keys.php", "Keys Window", options);
 }
