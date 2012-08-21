@@ -29,9 +29,14 @@ document.onkeydown = function(event) {
 }
 
 function getKey(index, direction) {
-	//console.log(index, direction, defaultKeys, defaultKeys[index][direction]);
 	if(worms[index].defaultKeys) 
 		return defaultKeys[index][direction];
+	else
+		return getCustomKey(index, direction);
+}
+
+function getCustomKey(index, direction) {
+	return true;
 }
 
 function evalKeyPress(i, direction) {
