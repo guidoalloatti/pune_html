@@ -57,6 +57,19 @@ function testKeysPage() {
 }
 
 function showAjaxData(data){
-	alert(data);
+	getKeysArray(data);
+	console.log(currentKeys);
+}
 
+function getKeysArray(keys) {
+	currentKeys = keys;
+	//var keysArray = new Array();
+	//$.each(keys, function() {
+	//	currentKeys.push(this);
+		//$.each(this, function(i, val) {
+		//currentKeys.push({})
+		//keysArray.push({ i : val });
+		//})
+	//})
+	//return keysArray;
 }

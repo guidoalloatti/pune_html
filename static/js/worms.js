@@ -1,6 +1,7 @@
 // Starting the Game when page is Ready
 $(document).ready(function() {
 	startGame();
+	pause();
 });
 
 // The Function that starts the game including canvas and game
@@ -55,14 +56,14 @@ function setArrays() {
 	// Who is playing
 	players[0] = true;
 	players[1] = true;
-	players[2] = true; //true;
-	players[3] = true; //true;
-	players[4] = true;	//true;
+	players[2] = false; //true;
+	players[3] = false; //true;
+	players[4] = false;	//true;
 	players[5] = false; //true;
 	
 	// Which are they colors
 	colors[0] = "red"; 
-	colors[1] = "blue"; 
+	colors[1] = "blue";
 	colors[2] = "green";
 	colors[3] = "purple";
 	colors[4] = "cyan";

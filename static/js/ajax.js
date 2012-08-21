@@ -1,5 +1,4 @@
 function getDbKeys() {
-	var keys;
 	$.ajax({ 
 		data: "", 
 		type: "GET", 
@@ -15,5 +14,4 @@ function getDbKeys() {
 			console.log(data);
 		}
 	});
-	return keys;	
 }

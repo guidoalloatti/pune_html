@@ -14,7 +14,8 @@ class Keys
 	public function __construct(){
 		$this->host 		= "localhost";
 		$this->user 		= "root";
-		$this->pass 		= "";  //root
+		//$this->pass 		= "";
+		$this->pass 		= "root";
 		$this->db 			= "pune";
 		$this->table 		= "keys";
 		$this->descQuery 	= "DESC `$this->table`;";
@@ -56,7 +57,6 @@ class Keys
 		}
 		/* DB Connection Close */
 		$this->mySqlClose();
-
 		return $content;
 	}
 

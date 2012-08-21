@@ -91,7 +91,11 @@ var defaultKeys = {
 	yellow 	: { left: 40, right: 39}
 };
 
+/* currentKeys */
+var currentKeys = new Array();
+
 /* AJAX Calls Vars */
-var rootDir = "/pune_html";
+//var rootDir = "/pune_html";
+var rootDir = "";
 
 /* Variables Declarations Finished */
