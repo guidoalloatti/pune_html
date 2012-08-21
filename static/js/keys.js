@@ -53,16 +53,10 @@ function modifyWormsAngle() {
 function testKeysPage() {
 	if(!onPause)
 		pause();
+	getDbKeys();
+}
 
-	var options = "status=0, ";
-	options += "toolbar=0, ";
-	options += "location=0, ";
-	options += "menubar=0, ";
-	options += "directories=0, ";
-	options += "resizable=0, ";
-	options += "scrollbars=0, ";
-	options += "height=600, ";
-	options += "width=400";
+function showAjaxData(data){
+	alert(data);
 
-	window.open("model/keys.php", "Keys Window", options);
 }

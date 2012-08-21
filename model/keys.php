@@ -2,7 +2,6 @@
 
 class Keys
 {
-
 	public $host; 		//		= "localhost";
 	public $user; 		//		= "root";
 	public $pass; 		//		= "root";
@@ -15,7 +14,7 @@ class Keys
 	public function __construct(){
 		$this->host 		= "localhost";
 		$this->user 		= "root";
-		$this->pass 		= "root";
+		$this->pass 		= "";  //root
 		$this->db 			= "pune";
 		$this->table 		= "keys";
 		$this->descQuery 	= "DESC `$this->table`;";
@@ -77,10 +76,13 @@ class Keys
 
 $keys = new Keys();
 $content = $keys->getContent();
+echo json_encode($content);
 
-echo "<pre>";
-var_dump($content);
-echo "</pre>";
+//echo "<pre>";
+//var_dump($content);
+//echo "</pre>";
+
+
 
 
 ?>
