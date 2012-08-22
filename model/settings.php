@@ -2,16 +2,17 @@
 
 require_once("base.php");
 
-class Keys
+class Settings
 {
 	public $table;
 	public function __construct(){
-		$this->table 		= "keys";
+		$this->table 		= "match";
 	}
 }
 
-$keys = new Keys();
-$base = new Base($keys->table);
+$settings = new Settings();
+$base = new Base($settings->table);
 $content = $base->getContent();
 echo json_encode($content);
+
 ?>

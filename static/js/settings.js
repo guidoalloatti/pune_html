@@ -1,15 +1,24 @@
 
 function loadInitialValues() {
-	if(worms[0].playing)
-		labelClicked("red", "label");
+	$.each(players, function(index, setting) {
+		$.each(setting, function(key, value) {
+			if(key == "player_1" && value == 1) { labelClicked("red", "label"); }
+			if(key == "player_2" && value == 1) { labelClicked("blue", "label"); }
+			if(key == "player_3" && value == 1) { labelClicked("green", "label"); }
+			if(key == "player_4" && value == 1) { labelClicked("purple", "label"); }
+			if(key == "player_5" && value == 1) { labelClicked("cyan", "label"); }
+			if(key == "player_6" && value == 1) { labelClicked("yellow", "label"); }
+		})
+	})
+	testKeysPage("settings");
 }
 
 // Method Called when the Label is clicked
 function labelClicked(color, caller) {
 	var play  = $("#"+color+"_play");
 	var label = $("#"+color+"_label");
-	var left  = $("#"+color+"_left");
-	var right = $("#"+color+"_right");
+	var left  = $("#"+color+"LeftInput");
+	var right = $("#"+color+"RightInput");
 	
 	if(caller == 'check') {
 		if(play.is(':checked') == true) {
@@ -23,8 +32,7 @@ function labelClicked(color, caller) {
 			left.hide("fade");
 			right.hide("fade");
 		}
-	}
-	else if(caller == 'label') {
+	} else if(caller == 'label') {
 		if(play.is(':checked') == true) {
 			label.css('color', 'white');
 			label.css('background', 'lightgray');
@@ -39,69 +47,34 @@ function labelClicked(color, caller) {
 			right.show("fade");
 		}
 	}
-} 
+}
 
 $(document).ready(function() {
-	disableKeys();
-	loadInitialValues();
    /**
-	* Clicking on Input Functionality
+	* Adding Checkbox click event &&
+    * Adding Label Click event &&
+    * Hiding Original Inputs &&
+    * Adding KeyPress Event to Inputs
 	*/
-	$("#red_label").click(function()	{	labelClicked("red", "label");	});	
-	$("#blue_label").click(function()	{	labelClicked("blue", "label");	});
-	$("#green_label").click(function()	{	labelClicked("green", "label");	});
-	$("#purple_label").click(function()	{	labelClicked("purple", "label");});
-	$("#cyan_label").click(function()	{	labelClicked("cyan", "label");	});	
-	$("#yellow_label").click(function()	{	labelClicked("yellow", "label");});
-	
-   /**
-	* Clicking on Checkbox Functionality
-	*/
-	$("#red_play").click(function() 	{	labelClicked("red", "check");	});	
-	$("#blue_play").click(function() 	{	labelClicked("blue", "check");	});
-	$("#green_play").click(function() 	{	labelClicked("green", "check");	});
-	$("#purple_play").click(function() 	{	labelClicked("purple", "check");});
-	$("#cyan_play").click(function() 	{	labelClicked("cyan", "check");	});
-	$("#yellow_play").click(function() 	{	labelClicked("yellow", "check");});	
-	
-	/** 
-	* The Keys Can Be Only One Char
-	*/
-	$("#red_left").keypress(function(e)		{	setMoveKey("red", "left", event.keyCode, event.charCode); 		});
-	$("#red_right").keypress(function(e)	{	setMoveKey("red", "right", event.keyCode, event.charCode); 		});
-	$("#blue_left").keypress(function(e)	{	setMoveKey("blue", "left", event.keyCode, event.charCode); 		});
-	$("#blue_right").keypress(function(e)	{	setMoveKey("blue", "right", event.keyCode, event.charCode); 	});
-	$("#green_left").keypress(function(e)	{	setMoveKey("green", "left", event.keyCode, event.charCode); 	});
-	$("#green_right").keypress(function(e)	{	setMoveKey("green", "right", event.keyCode, event.charCode); 	});
-	$("#purple_left").keypress(function(e)	{	setMoveKey("purple", "left", event.keyCode, event.charCode); 	});
-	$("#purple_right").keypress(function(e)	{	setMoveKey("purple", "right", event.keyCode, event.charCode); 	});
-	$("#cyan_left").keypress(function(e)	{	setMoveKey("cyan", "left", event.keyCode, event.charCode); 		});
-	$("#cyan_right").keypress(function(e)	{	setMoveKey("cyan", "right", event.keyCode, event.charCode); 	});
-	$("#yellow_left").keypress(function(e)	{	setMoveKey("yellow", "left", event.keyCode, event.charCode); 	});
-	$("#yellow_right").keypress(function(e)	{	setMoveKey("yellow", "right", event.keyCode, event.charCode); 	});
-		
+   $.each(colors, function(){
+	   var color = this;
+		$("#"+color+"_play").click(function()    { labelClicked(color, "check"); });
+		$("#"+color+"_label").click(function()	{ labelClicked(color, "label"); });
+		$.each(["Right", "Left"], function(){
+			var direction = this;
+			$("#"+color+direction+"Input").keypress(function(e) {
+				setMoveKey(color, direction.toLowerCase(), event.keyCode, event.charCode);
+			});
+			$("#"+color+direction+"Input").hide();
+		})
+   })
+	testSettingsPage()
 });
 
 function setMoveKey(color, direction, keyCode, charCode) {
 	if(keyCode != 9) {
-		$("#"+color+"_"+direction).val("");
-		$("#"+color+"_"+direction+"_value").val(keyCode);
+		$("#"+color+capitalize(direction)+"Input").val("");
 	}
-}
-
-function disableKeys() {
-	$("#red_left").hide();
-	$("#red_right").hide();
-	$("#blue_left").hide();
-	$("#blue_right").hide();
-	$("#green_left").hide();
-	$("#green_right").hide();
-	$("#purple_left").hide();
-	$("#purple_right").hide();
-	$("#cyan_left").hide();
-	$("#cyan_right").hide();
-	$("#yellow_left").hide();
-	$("#yellow_right").hide();
 }
 
 function settings() {
@@ -128,4 +101,19 @@ function save() {
 	var message = "Method to store configuration is not yet implemented, ooops!";
 	alert(message);
 	window.close();
+}
+
+function testSettingsPage() {
+	getDbSettings();
+}
+
+function showSettingsData(settings) {
+	console.log(settings);
+	players = settings;
+	loadInitialValues();
+}
+
+function capitalize(toCapitalize) {
+	var str = toCapitalize;
+	return str.substr(0,1).toUpperCase() + str.substr(1);
 }

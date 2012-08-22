@@ -1,3 +1,24 @@
+/* Match Vars */
+	// Who is playing
+	var players = new Array();
+	/*
+	players[0] = true;
+	players[1] = true;
+	players[2] = false; //true;
+	players[3] = false; //true;
+	players[4] = false;	//true;
+	players[5] = false; //true;
+	*/
+
+	// Which are they colors
+	var colors = new Array();
+	colors[0] = "red";
+	colors[1] = "blue";
+	colors[2] = "green";
+	colors[3] = "purple";
+	colors[4] = "cyan";
+	colors[5] = "yellow";
+
 
 /* Game Vars */
 var showMessages = false;
@@ -66,8 +87,6 @@ var hMarker = yMax/6;
 /* Arrays Declarations */
 var keysBeenPressed = new Array(512);
 var worms = new Array(6);
-var players = new Array(6);
-var colors = new Array(6); 
 var rgbColors = new Array(6);
 
 /* XML Settings */
@@ -77,22 +96,24 @@ var xmlFileName = "xml_jquery.xml"
 
 /* Default Keys */
 var defaultKeys = {
-    0 		: { left: 192, right: 49 },
-	1 		: { left: 90, right: 88 },
-	2 		: { left: 66, right: 86 },
-	3 		: { left: 55, right: 54 },
-	4 		: { left: 187, right: 222 },
-	5 		: { left: 40, right: 39},
-	red 	: { left: 192, right: 49 },
-	blue 	: { left: 90, right: 88 },
-	green 	: { left: 66, right: 86 },
-	purple 	: { left: 55, right: 54 },
-	cyan 	: { left: 187, right: 222},
-	yellow 	: { left: 40, right: 39}
+    0 	: { color : "red", left: 192, right: 49 },
+	1 	: { color : "blue", left: 90, right: 88 },
+	2 	: { color : "green", left: 66, right: 86 },
+	3 	: { color : "purple", left: 55, right: 54 },
+	4 	: { color : "cyan", left: 187, right: 222 },
+	5 	: { color : "yellow", left: 40, right: 39},
 };
+var usingDefaultKeys = false;
 
 /* currentKeys */
-var currentKeys = new Array();
+var currentKeys  = {
+    0 	: { color : "red", left: -1, right: -1 },
+	1 	: { color : "blue", left: -1, right: -1 },
+	2 	: { color : "green", left: -1, right: -1 },
+	3 	: { color : "purple", left: -1, right: -1 },
+	4 	: { color : "cyan", left: -1, right: -1 },
+	5 	: { color : "yellow", left: -1, right: -1}
+};
 
 /* AJAX Calls Vars */
 //var rootDir = "/pune_html";

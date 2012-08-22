@@ -24,14 +24,20 @@ document.onkeydown = function(event) {
 		doSpeeding();
 	else if(keyCode == 33)
 		reduceSpeeding();
-		
 	keysBeenPressed[keyCode] = true;
 }
 
 function getKey(index, direction) {
-	//console.log(index, direction, defaultKeys, defaultKeys[index][direction]);
-	if(worms[index].defaultKeys) 
-		return defaultKeys[index][direction];
+	/* TODO: We have 3 set of keys:
+	 *    1. DefaultKeys -> Predefined and used when a game starts
+	 *    2. CustomKeys  -> Keys defined by the user
+	 *    3. CurrentKeys -> Keys that are in use for the game
+	 */
+	var keys = defaultKeys;
+	if(!usingDefaultKeys) {
+		keys = currentKeys;
+	}
+	return keys[index][direction];
 }
 
 function evalKeyPress(i, direction) {
@@ -41,35 +47,73 @@ function evalKeyPress(i, direction) {
 
 function modifyWormsAngle() {
 	for(var i = 0; i < 5; i++) {
-		if(worms[i].playing) {
-			if(worms[i].defaultKeys) {
-				evalKeyPress(i, "right");
-				evalKeyPress(i, "left");
-			}
+		if(worms[i].playing && worms[i].defaultKeys) {
+			evalKeyPress(i, "right");
+			evalKeyPress(i, "left");
 		}
 	}
 }
 
-function testKeysPage() {
-	if(!onPause)
-		pause();
-	getDbKeys();
+function testKeysPage(source) {
+	getDbKeys(source);
 }
 
-function showAjaxData(data){
-	getKeysArray(data);
-	console.log(currentKeys);
+function showAjaxData(data, source){
+	getKeysArray(data, source);
 }
 
-function getKeysArray(keys) {
-	currentKeys = keys;
-	//var keysArray = new Array();
-	//$.each(keys, function() {
-	//	currentKeys.push(this);
-		//$.each(this, function(i, val) {
-		//currentKeys.push({})
-		//keysArray.push({ i : val });
-		//})
-	//})
-	//return keysArray;
+function getKeysArray(keys, source) {
+	if(source == "main") {
+		usingDefaultKeys = false;
+		$.each(keys, function() {
+			$.each(this, function(key, value) {
+				var i = 0;
+				$.each(colors, function(){
+					if(key == this+"_r") currentKeys[i]["right"] = value;
+					if(key == this+"_l") currentKeys[i]["left"] = value;
+					i++;
+				})
+			})
+		})
+		$("#log").text($("#log").text()+"\nNow using custom Keys!");
+
+		var keys = defaultKeys;
+		if(!usingDefaultKeys) keys = currentKeys;
+
+		$.each(keys, function(index, key) {
+			$("#"+key["color"]+"RightButton").val(getCharFromKeyCode(key["right"]));
+			$("#"+key["color"]+"LeftButton").val(getCharFromKeyCode(key["left"]));
+		})
+	} else if(source == "settings") {
+
+		//console.log(keys);
+		//console.log(colors);
+
+		usingDefaultKeys = false;
+		$.each(keys, function() {
+			$.each(this, function(key, value) {
+				var i = 0;
+				$.each(colors, function(){
+					if(key == this+"_r") currentKeys[i]["right"] = value;
+					if(key == this+"_l") currentKeys[i]["left"] = value;
+					i++;
+				})
+			})
+		})
+		$("#log").text($("#log").text()+"\nNow using custom Keys!");
+
+		var keys = defaultKeys;
+		if(!usingDefaultKeys) keys = currentKeys;
+
+		$.each(keys, function(index, key) {
+			$("#"+key["color"]+"RightInput").val(getCharFromKeyCode(key["right"]));
+			$("#"+key["color"]+"LeftInput").val(getCharFromKeyCode(key["left"]));
+		})
+	}
 }
+
+function getCharFromKeyCode(keyCode) {
+	return String.fromCharCode(keyCode);
+}
+
+
