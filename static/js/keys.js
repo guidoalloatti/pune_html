@@ -85,10 +85,6 @@ function getKeysArray(keys, source) {
 			$("#"+key["color"]+"LeftButton").val(getCharFromKeyCode(key["left"]));
 		})
 	} else if(source == "settings") {
-
-		//console.log(keys);
-		//console.log(colors);
-
 		usingDefaultKeys = false;
 		$.each(keys, function() {
 			$.each(this, function(key, value) {
@@ -107,7 +103,10 @@ function getKeysArray(keys, source) {
 
 		$.each(keys, function(index, key) {
 			$("#"+key["color"]+"RightInput").val(getCharFromKeyCode(key["right"]));
+			$("#"+key["color"]+"RightInput").attr("name", key["right"]);
+
 			$("#"+key["color"]+"LeftInput").val(getCharFromKeyCode(key["left"]));
+			$("#"+key["color"]+"LeftInput").attr("name", key["left"]);
 		})
 	}
 }
@@ -115,5 +114,9 @@ function getKeysArray(keys, source) {
 function getCharFromKeyCode(keyCode) {
 	return String.fromCharCode(keyCode);
 }
+
+//function getKeyCodeFromChar(char) {
+//	return String.toKeyCode(char);
+//}
 
 

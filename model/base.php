@@ -78,6 +78,38 @@ class Base
 			array_push($this->fields, $row["Field"]);
 		}
 	}
+
+	function mySqlUpdate($sql) {
+		$this->mySqlConnect();
+		$this->mySqlDBSelect();
+		if (!mysql_query($sql, $this->link)) {
+			$message = "Error trying to execute: " . $sql . " Mysql Error is: " . mysql_error();
+			return $message;
+		}
+		$this->mySqlClose();
+		return "Success: 1 row updated. Executed query: '".$sql."'";
+	}
+
+	public function insert($values) {
+
+	}
+
+	public function update($id, $settings) {
+		$values = "";
+		$i = 0;
+		foreach($settings as $key=>$value) {
+			if($value == "true") 		$value = 1;
+			else if ($value == "false")	$value = 0;
+			$values .= $key." = '".$value."'";
+			$i++;
+			if($i < count($settings))
+				$values .= ", ";
+		}
+		$sql = "UPDATE `$this->table` SET $values WHERE id = $id;";
+		$message = $this->mySqlUpdate($sql);
+		return $message;
+	}
+
 }
 
 ?>

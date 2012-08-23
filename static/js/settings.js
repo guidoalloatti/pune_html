@@ -8,6 +8,10 @@ function loadInitialValues() {
 			if(key == "player_4" && value == 1) { labelClicked("purple", "label"); }
 			if(key == "player_5" && value == 1) { labelClicked("cyan", "label"); }
 			if(key == "player_6" && value == 1) { labelClicked("yellow", "label"); }
+			if(key == "hole_points")  $("#hole_points").val(value);
+			if(key == "start_speed")  $("#speed").val(value);
+			if(key == "gap_space" )   $("#gap_spacing").val(value);
+			if(key == "gap_size" )    $("#gap_sizing").val(value);
 		})
 	})
 	testKeysPage("settings");
@@ -59,11 +63,11 @@ $(document).ready(function() {
    $.each(colors, function(){
 	   var color = this;
 		$("#"+color+"_play").click(function()    { labelClicked(color, "check"); });
-		$("#"+color+"_label").click(function()	{ labelClicked(color, "label"); });
+		$("#"+color+"_label").click(function()	 { labelClicked(color, "label"); });
 		$.each(["Right", "Left"], function(){
 			var direction = this;
 			$("#"+color+direction+"Input").keypress(function(e) {
-				setMoveKey(color, direction.toLowerCase(), event.keyCode, event.charCode);
+				setMoveKey(color, direction.toLowerCase(), e.keyCode, getCharFromKeyCode(e.keyCode));
 			});
 			$("#"+color+direction+"Input").hide();
 		})
@@ -72,8 +76,20 @@ $(document).ready(function() {
 });
 
 function setMoveKey(color, direction, keyCode, charCode) {
+
+	/*
+	console.log(color);
+	console.log(direction);
+	console.log(keyCode);
+	console.log(charCode);
+	console.log("#"+color+capitalize(direction)+"Input");
+	console.log($("#"+color+capitalize(direction)+"Input"));
+	*/
+
 	if(keyCode != 9) {
-		$("#"+color+capitalize(direction)+"Input").val("");
+		$("#"+color+capitalize(direction)+"Input").attr("value", "");
+		//$("#"+color+capitalize(direction)+"Input").attr("value", charCode);
+		$("#"+color+capitalize(direction)+"Input").attr("name", keyCode);
 	}
 }
 
@@ -98,17 +114,46 @@ function save() {
 	/**
 	* Save the options
 	*/
-	var message = "Method to store configuration is not yet implemented, ooops!";
-	alert(message);
+	var settings = { hole_points : $("#hole_points").val(),
+ 					 start_speed : $("#speed").val(),
+					 gap_space   : $("#gap_spacing").val(),
+					 gap_size    : $("#gap_sizing").val(),
+					 player_1    : $("#red_play").is(":checked"),
+					 player_2    : $("#blue_play").is(":checked"),
+					 player_3    : $("#green_play").is(":checked"),
+					 player_4    : $("#purple_play").is(":checked"),
+					 player_5    : $("#cyan_play").is(":checked"),
+					 player_6    : $("#yellow_play").is(":checked")
+	}
+
+	var keys = { red_r      : $("#redRightInput").attr("name"), //val(),
+				 red_l      : $("#redLeftInput").attr("name"), //val(),
+				 blue_r     : $("#blueRightInput").attr("name"), //val(),
+				 blue_l     : $("#blueLeftInput").attr("name"), //val(),
+				 green_r    : $("#greenRightInput").attr("name"), //val(),
+				 green_l    : $("#greenLeftInput").attr("name"), //val(),
+				 purple_r   : $("#purpleRightInput").attr("name"), //val(),
+				 purple_l   : $("#purpleLeftInput").attr("name"), //val(),
+				 cyan_r     : $("#cyanRightInput").attr("name"), //val(),
+				 cyan_l     : $("#cyanLeftInput").attr("name"), //val(),
+				 yellow_r   : $("#yellowRightInput").attr("name"), //val(),
+				 yellow_l   : $("#yellowLeftInput").attr("name") //val()
+	}
+
+	console.log(keys);
+
+	saveSettings(1, settings);
+	saveKeys(1, keys);
+	alert("Settings Properly Saved!");
 	window.close();
 }
 
 function testSettingsPage() {
-	getDbSettings();
+	getDbSettings("id");
 }
 
 function showSettingsData(settings) {
-	console.log(settings);
+	//console.log(settings);
 	players = settings;
 	loadInitialValues();
 }
