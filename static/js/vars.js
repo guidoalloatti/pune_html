@@ -1,14 +1,12 @@
 /* Match Vars */
 	// Who is playing
 	var players = new Array();
-	/*
-	players[0] = true;
-	players[1] = true;
+	players[0] = false;
+	players[1] = false;
 	players[2] = false; //true;
 	players[3] = false; //true;
 	players[4] = false;	//true;
 	players[5] = false; //true;
-	*/
 
 	// Which are they colors
 	var colors = new Array();
@@ -51,7 +49,7 @@ var wormSize = 4; 			/* The size of the circle */
 var angleStepSize = 1; 		/* How much will it turn */
 var sizeMultiplier = 2;		/* How much will the worm move every interval */
 var currentRound = 0;		/* Set initial value for round, previous start */
-var histotyDotsSaved = 10000;
+var historyDotsSaved = 10000;
 
 /* Canvas and Js Vars */
 var xMax = 640; //800;
@@ -87,6 +85,7 @@ var hMarker = yMax/6;
 /* Arrays Declarations */
 var keysBeenPressed = new Array(512);
 var worms = new Array(6);
+
 var rgbColors = new Array(6);
 
 /* XML Settings */
@@ -118,5 +117,8 @@ var currentKeys  = {
 /* AJAX Calls Vars */
 //var rootDir = "/pune_html";
 var rootDir = "";
-
+var settings = { id:"", player1:"", player2:"", player3:"", player4:"", player5:"", player6:"", hole_points:"none" };
+var appStatus = "started";
+// Other Status
+	//
 /* Variables Declarations Finished */

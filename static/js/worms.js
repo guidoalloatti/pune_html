@@ -2,22 +2,27 @@
 $(document).ready(function() {
 	startGame();
 	pause();
+	$("#canvas_div").hide();
 });
+
+function createWorms() {
+	for(var i = 0; i < colors.length; i++) {
+		startWorm(colors[i]);
+	}
+	drawScore();
+}
 
 // The Function that starts the game including canvas and game
 function startGame() {
 	context = loadCanvasContext();
-	marker = loadMarkerCanvas();
-	
-	if(context && marker)
-	{
-		setArrays();
+	marker  = loadMarkerCanvas();
+
+	if(context && marker) {
 		isNewRound = false;
 		start();
 		setRound();
 		doSpeeding();
 		isNewRound = true;
-		explainHowToMove();
 		speed = startingSpeed;
 		$("#rounds").text("1");
 		changeInterval(speed);
@@ -51,28 +56,23 @@ function changeAngle(direction, currentWorm) {
 	return currentWorm;
 }
 
-// Setting Worms Arrays (should be from XML)
-function setArrays() {
-
-}
-
 // Worm Object Definition
 function worm() {
 	this.color;
 	this.x;
     this.y;
-	this.previousX 		= new Array(histotyDotsSaved);
-	this.previousY 		= new Array(histotyDotsSaved);
-	this.previousHole 	= new Array(histotyDotsSaved);
-	this.angle;
-	this.alive 		= false	;
-	this.playing 	= false;
-	this.score 		= 0;
-	this.length 	= 0;
-	this.lastHoleStarted = 0;	
+	this.previousX 		= new Array(historyDotsSaved);
+	this.previousY 		= new Array(historyDotsSaved);
+	this.previousHole 	= new Array(historyDotsSaved);
+	this.alive 			= false;
+	this.playing 		= false;
+	this.score 			= 0;
+	this.length 		= 0;
+	this.defaultKeys 	= true;
+	this.lastHoleStarted = 0;
 	this.leftKey;
 	this.rightKey;
-	this.defaultKeys = true;
+	this.angle;
 }
 
 // Starting the contexts, set speeding and start Worms
@@ -89,9 +89,10 @@ function start() {
 // Start each individual Worm
 function startWorms() {
 	for(var i = 0; i < colors.length; i++) {
-		if(players[i])
+		//if(worms[i].playing) {
 			startWorm(colors[i]);
-	}	
+		//}
+	}
 	drawScore();
 }
 
@@ -107,7 +108,7 @@ function startWorm(color) {
 		worms[i] 		= new worm;
 		worms[i].score 	= 0;
 	}
-	
+
 	worms[i].x 			= x;
 	worms[i].y 			= y;
 	worms[i].angle 		= angle;
@@ -342,7 +343,7 @@ function roundOver(currentWorm) {
 
 // This function stores the previuos coordinates of ther worms
 function storePreviuosCoordinates(currentWorm) {
-	for(var i = histotyDotsSaved; i > 0; i--) {
+	for(var i = historyDotsSaved; i > 0; i--) {
 		currentWorm.previousX[i] = currentWorm.previousX[i-1];
 		currentWorm.previousY[i] = currentWorm.previousY[i-1];
 	}

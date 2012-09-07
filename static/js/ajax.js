@@ -23,6 +23,21 @@ function getDbSettings(id) {
 		url: "/model/settings.php",
 		async: true,
 		success: function(data){
+
+
+			$.each(data, function() {
+				$.each(this, function(key, val) {
+					if(		key == "player_1" && val == 1) { players[0] = true; worms[0].playing = true; }
+					else if(key == "player_2" && val == 1) { players[1] = true; worms[1].playing = true; }
+					else if(key == "player_3" && val == 1) { players[2] = true; worms[2].playing = true; }
+					else if(key == "player_4" && val == 1) { players[3] = true; worms[3].playing = true; }
+					else if(key == "player_5" && val == 1) { players[4] = true; worms[4].playing = true; }
+					else if(key == "player_6" && val == 1) { players[5] = true; worms[5].playing = true; }
+				});
+			});
+
+			settings['id'] = data['id'];
+
 			console.log("Ajax Success!");
 			showSettingsData(data);
 		},

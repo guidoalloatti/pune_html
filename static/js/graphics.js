@@ -1,8 +1,7 @@
 
 function drawMarkers() {
 	yMarker = 0;
-	for(var i = 0; i < colors.length; i++)
-	{
+	for(var i = 0; i < colors.length; i++) {
 		drawMarker(colors[i], xMarker, yMarker, wMarker, hMarker);
 		yMarker += yMax/6;
 	}	
@@ -16,8 +15,7 @@ function drawMarker(color, x, y, w, h) {
 }
 
 function drawScore() {
-	for(var i = 0; i < worms.length; i++)
-	{
+	for(var i = 0; i < worms.length; i++) {
 		var score = "00";
 		if(players[i]) {
 			if(worms[i].score < 10)
@@ -30,7 +28,7 @@ function drawScore() {
 		marker.fillStyle = "black";
 		marker.fillText(score, score_x, (score_y+(i*(yMax/6))));
 		marker.fillStyle = "white";
-		marker.fillText(score, score_x-2, (score_y-2+(i*(yMax/6))));	
+		marker.fillText(score, score_x-2, (score_y-2+(i*(yMax/6))));
 		marker.closePath();
 	}
 }
@@ -57,8 +55,6 @@ function drawWorm(currentWorm) {
 		currentWorm.previousHole[currentWorm.length] = false;
 	}
 	currentWorm.length++;
-	
-
 }
 
 function getPixelColor(x, y, w, h) {
@@ -81,17 +77,24 @@ function setMarkerProperties() {
 }
 
 function loadCanvasContext() {
-	context = $("#screen")[0].getContext('2d');
-	if(context)
-		return context;
-	return false;
+	//if( typeof($("#screen")[0]) != "undefined") {
+
+		context = $("#screen")[0].getContext('2d');
+		if(context)
+			return context;
+		return false;
+	//}
+	//return "undef";
 }
 
 function loadMarkerCanvas() {
-	marker = $("#marker")[0].getContext('2d');
-	if(marker)
-		return marker;
-	return false;
+	//if( typeof($("#marker")[0]) != "undefined") {
+		marker = $("#marker")[0].getContext('2d');
+		if(marker)
+			return marker;
+		return false;
+	//}
+	//return "undef";
 }
 
 // Render Worm: This function render one specific worm

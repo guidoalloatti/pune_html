@@ -76,19 +76,8 @@ $(document).ready(function() {
 });
 
 function setMoveKey(color, direction, keyCode, charCode) {
-
-	/*
-	console.log(color);
-	console.log(direction);
-	console.log(keyCode);
-	console.log(charCode);
-	console.log("#"+color+capitalize(direction)+"Input");
-	console.log($("#"+color+capitalize(direction)+"Input"));
-	*/
-
 	if(keyCode != 9) {
 		$("#"+color+capitalize(direction)+"Input").attr("value", "");
-		//$("#"+color+capitalize(direction)+"Input").attr("value", charCode);
 		$("#"+color+capitalize(direction)+"Input").attr("name", keyCode);
 	}
 }
@@ -106,7 +95,7 @@ function settings() {
 	options += "scrollbars=0, ";
 	options += "height=600, ";
 	options += "width=400";
-	
+
 	window.open("settings.php", "Settings Window", options);
 }
 
@@ -140,11 +129,9 @@ function save() {
 				 yellow_l   : $("#yellowLeftInput").attr("name") //val()
 	}
 
-	console.log(keys);
-
+	//console.log(keys);
 	saveSettings(1, settings);
 	saveKeys(1, keys);
-	alert("Settings Properly Saved!");
 	window.close();
 }
 

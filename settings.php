@@ -33,7 +33,8 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www
 				<th>Right</th>
 			</tr>
 			<tr>
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Red Worm" readonly="true" id="red_label"/></td>
+				<!-- <td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Red Worm" readonly="true" id="red_label"/></td> -->
+				<td ><input type="text" value="Red Worm" readonly="true" id="red_label"/></td>
 				<td align="center"><input type="checkbox" id="red_play" /></td>
 				<td align="center"><input type="text" id="redLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="redRightInput" size="1"/></td>
