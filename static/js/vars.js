@@ -36,6 +36,7 @@ var longestWormSize = 0;
 var longestWorm;
 var longestWormColor;
 var wormIsInHole = false;
+var gameId = 1;
 
 /* How Will Worm Move */
 var speedingChance = 500;

@@ -47,7 +47,7 @@ function evalKeyPress(i, direction) {
 
 function modifyWormsAngle() {
 	for(var i = 0; i < 5; i++) {
-		console.log(worms[i]);
+		//console.log(worms[i]);
 		if(worms[i].playing && worms[i].defaultKeys) {
 			evalKeyPress(i, "right");
 			evalKeyPress(i, "left");

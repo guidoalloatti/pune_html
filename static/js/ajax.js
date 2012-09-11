@@ -23,22 +23,24 @@ function getDbSettings(id) {
 		url: "/model/settings.php",
 		async: true,
 		success: function(data){
-
-
 			$.each(data, function() {
 				$.each(this, function(key, val) {
-					if(		key == "player_1" && val == 1) { players[0] = true; worms[0].playing = true; }
-					else if(key == "player_2" && val == 1) { players[1] = true; worms[1].playing = true; }
-					else if(key == "player_3" && val == 1) { players[2] = true; worms[2].playing = true; }
-					else if(key == "player_4" && val == 1) { players[3] = true; worms[3].playing = true; }
-					else if(key == "player_5" && val == 1) { players[4] = true; worms[4].playing = true; }
-					else if(key == "player_6" && val == 1) { players[5] = true; worms[5].playing = true; }
+					for( var i = 0; i < 6; i++ ) {
+						if(key == "player_"+(i+1)) {
+							if(typeof(worms[i]) != undefined) {
+								startWorm(getWormColorByIndex(i));
+								//worms[i] = new worm;
+							}
+							if(val == 1) {
+								players[i] = true;
+								worms[i].playing = true;
+							}
+						}
+					}
 				});
 			});
-
 			settings['id'] = data['id'];
-
-			console.log("Ajax Success!");
+			//console.log("Ajax Success!");
 			showSettingsData(data);
 		},
 		error: function(data){

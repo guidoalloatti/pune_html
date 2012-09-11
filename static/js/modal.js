@@ -32,21 +32,19 @@ $(function() {
 				}
 			}
 
-			function newGame() {
-				$(".demo").hide();
-				$("#canvas_div").show();
-				startGame();
-			}
-
-			$( "#dialog-form" ).dialog({
+			$("#dialog-form").dialog({
 				autoOpen: false,
-				height: 520,
+				height: 530,
 				width: 420,
 				modal: true,
 				buttons: {
 					"Create a game": function() {
-						$(this).dialog( "close" );
-						newGame();
+						if(validateNewGame()) {
+							$(this).dialog( "close" );
+							$(".demo").hide();
+							$("#canvas_div").show();
+							startGame();
+						}
 					},
 					"Save Settings": function() {
 						save();
@@ -65,4 +63,75 @@ $(function() {
 			$( "#create-game" ).click(function() { $( "#dialog-form" ).dialog( "open" ); });
 			$( "#set-game" ).click(function() { $( "#dialog-form" ).dialog( "open" ); });
 
-		});
+		function validateNewGame() {
+			/*
+			 * TODO: Validations
+			 *       Validate 2 worms minimun
+			 *       Validate worms have both keys
+			 *       Validate worms don't repeat keys
+			 */
+
+			var checked = 0;
+			var isValid = true;
+			var playing = new Array();
+			var message = "The game cannot be started! Why?";
+			var keys = new Array();
+
+			$('input[type=checkbox]').each(function(){
+				if(this.checked) {
+					//console.log($(this))
+					playing.push(this);
+					checked++;
+				}
+			});
+
+			if(checked < 2) {
+				message += "\n * You need at least 2 worms to play!";
+				isValid = false;
+			}
+
+			if(isValid) {
+				$.each(playing, function(){
+					var color = $(this).attr("name");
+					if($("#"+color+"LeftInput").val() == "") {
+						message += "\n * The left key for the "+color+" worm is not defined!";
+						isValid = false;
+					} else {
+						keys.push($("#"+color+"LeftInput").val());
+					}
+
+					if($("#"+color+"RightInput").val() == "") {
+						message += "\n * The right key for the "+color+" worm is not defined!";
+						isValid = false;
+					} else {
+						keys.push($("#"+color+"RightInput").val());
+					}
+				});
+			}
+
+			if(isValid) {
+				var duplicates = find_duplicates(keys);
+				$.each(duplicates, function(){
+					message += "\n * The key "+ this + " is duplicated!";
+					isValid = false;
+				});
+			}
+
+			if(!isValid) alert(message);
+			return isValid;
+		}
+
+		function find_duplicates(arr) {
+			var len = arr.length, out=[], counts={};
+			for (var i=0;i<len;i++) {
+				var item = arr[i];
+				var count = counts[item];
+				counts[item] = counts[item] >= 1 ? counts[item] + 1 : 1;
+			}
+			for (var item in counts) {
+			if(counts[item] > 1)
+				out.push(item);
+			}
+			return out;
+		}
+});

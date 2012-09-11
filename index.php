@@ -28,49 +28,46 @@ $header = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http:
 	</head>
 	<body>';
 
-
-
-$startContent = '
-<div class="demo">
+$startContent = '<div class="demo">
 		<div class="ui-widget" id="dialog-form" title="Create a new game: Configure Keys and Settings!">
+		<p style="font-size: 10px"> Click over the input or in the checkbox to add color! </p>
 		<table class="ui-widget ui-widget-content">
 			<tr class="ui-widget-header">
 				<th>Worm</th><th>Play</th><th>Left</th><th>Right</th>
 			</tr>
 			<tr class="ui-widget-content">
-				<!-- <td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Red Worm" readonly="true" id="red_label"/></td> -->
 				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Red Worm" readonly="true" id="red_label"/></td>
-				<td align="center"><input type="checkbox" id="red_play" /></td>
+				<td align="center"><input type="checkbox" id="red_play" name="red"/></td>
 				<td align="center"><input type="text" id="redLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="redRightInput" size="1"/></td>
 			</tr>
-			<tr>
+			<tr class="ui-widget-content">
 				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Blue Worm" readonly="true" id="blue_label"/></td>
-				<td align="center"><input type="checkbox" id="blue_play" /></td>
+				<td align="center"><input type="checkbox" id="blue_play" name="blue"/></td>
 				<td align="center"><input type="text" id="blueLeftInput" size="1" /></td>
 				<td align="center"><input type="text" id="blueRightInput" size="1" /></td>
 			</tr>
-			<tr>
+			<tr class="ui-widget-content">
 				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Green Worm" readonly="true" id="green_label"/></td>
-				<td align="center"><input type="checkbox" id="green_play" /></td>
+				<td align="center"><input type="checkbox" id="green_play" name="green"/></td>
 				<td align="center"><input type="text" id="greenLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="greenRightInput" size="1"/></td>
 			</tr>
-			<tr>
+			<tr class="ui-widget-content">
 				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Purple Worm" readonly="true" id="purple_label"/></td>
-				<td align="center"><input type="checkbox" id="purple_play" /></td>
+				<td align="center"><input type="checkbox" id="purple_play" name="purple"/></td>
 				<td align="center"><input type="text" id="purpleLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="purpleRightInput" size="1"/></td>
 			</tr>
-			<tr>
+			<tr class="ui-widget-content">
 				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Cyan Worm" readonly="true" id="cyan_label"/></td>
-				<td align="center"><input type="checkbox" id="cyan_play" /></td>
+				<td align="center"><input type="checkbox" id="cyan_play" name="cyan"/></td>
 				<td align="center"><input type="text" id="cyanLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="cyanRightInput" size="1"/></td>
 			</tr>
-			<tr>
+			<tr class="ui-widget-content">
 				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Yellow Worm" readonly="true" id="yellow_label"/></td>
-				<td align="center"><input type="checkbox" id="yellow_play" /></td>
+				<td align="center"><input type="checkbox" id="yellow_play" name="yellow"/></td>
 				<td align="center"><input type="text" id="yellowLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="yellowRightInput" size="1"/></td>
 			</tr>
@@ -85,7 +82,6 @@ $startContent = '
 						<option>One</option>
 					</select>
 				</td>
-
 			</tr>
 			<tr>
 				<td>Speed</td>
@@ -119,17 +115,15 @@ $startContent = '
 	<!-- Modal Content -->
 	<div id="users-contain" class="ui-widget">
 		<h1>Welcome to Pune HTML!</h1>
-	<hr/>
-		<img src="images/wormclean.jpg">
+	<!-- <hr/>
+		<img src="images/wormclean.jpg"> -->
 	</div>
 	<hr/>
 	<button id="create-game">Create new game</button>
 	<button id="read-about">Read About</button>
 	</div>
 	<div class="demo-description">
-	</div>
-	';
-
+	</div>';
 
 $gameContent = '<div id="canvas_div">
 		<table>

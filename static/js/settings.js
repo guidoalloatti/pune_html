@@ -72,7 +72,6 @@ $(document).ready(function() {
 			$("#"+color+direction+"Input").hide();
 		})
    })
-	testSettingsPage()
 });
 
 function setMoveKey(color, direction, keyCode, charCode) {
@@ -132,11 +131,11 @@ function save() {
 	//console.log(keys);
 	saveSettings(1, settings);
 	saveKeys(1, keys);
-	window.close();
+	//window.close();
 }
 
 function testSettingsPage() {
-	getDbSettings("id");
+	getDbSettings(gameId);
 }
 
 function showSettingsData(settings) {

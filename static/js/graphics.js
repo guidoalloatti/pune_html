@@ -17,8 +17,8 @@ function drawMarker(color, x, y, w, h) {
 function drawScore() {
 	for(var i = 0; i < worms.length; i++) {
 		var score = "00";
-		if(players[i]) {
-			if(worms[i].score < 10)
+		if( worms[i].playing &&
+			worms[i].score < 10)
 				score = "0"+worms[i].score;
 			else
 				score = worms[i].score;
@@ -30,7 +30,6 @@ function drawScore() {
 		marker.fillStyle = "white";
 		marker.fillText(score, score_x-2, (score_y-2+(i*(yMax/6))));
 		marker.closePath();
-	}
 }
 
 function drawWorm(currentWorm) {
@@ -115,7 +114,8 @@ function renderWorm(currentWorm) {
 function renderScreen() {
 	// draw canvas
 	for(var i = 0; i < worms.length; i++) {
-		if(players[i] && worms[i].score > maxScore)
+		if(worms[i].playing &&
+			worms[i].score > maxScore)
 			renderWorm(worms[i]);
 	}
 }
