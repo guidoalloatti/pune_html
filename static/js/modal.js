@@ -43,6 +43,7 @@ $(function() {
 							$(this).dialog( "close" );
 							$(".demo").hide();
 							$("#canvas_div").show();
+							gameHasStarted = true;
 							startGame();
 						}
 					},
@@ -91,13 +92,20 @@ $(function() {
 			}
 
 			if(isValid) {
+				var playingColors = new Array();
 				$.each(playing, function(){
+					
 					var color = $(this).attr("name");
+					playingColors.push(color);
+										
 					if($("#"+color+"LeftInput").val() == "") {
 						message += "\n * The left key for the "+color+" worm is not defined!";
 						isValid = false;
 					} else {
 						keys.push($("#"+color+"LeftInput").val());
+						$.each(currentKeys, function(index, object) {	
+							if(object.color == color) object.left = $("#"+color+"LeftInput").attr("name")
+						});
 					}
 
 					if($("#"+color+"RightInput").val() == "") {
@@ -105,9 +113,14 @@ $(function() {
 						isValid = false;
 					} else {
 						keys.push($("#"+color+"RightInput").val());
+						$.each(currentKeys, function(index, object) {	
+							if(object.color == color) object.right = $("#"+color+"RightInput").attr("name")						
+						});
 					}
 				});
 			}
+			
+			startGame(playingColors);
 
 			if(isValid) {
 				var duplicates = find_duplicates(keys);
@@ -133,5 +146,10 @@ $(function() {
 				out.push(item);
 			}
 			return out;
+		}
+		
+		function setPlayingWorms(){
+		
+			console.log("Play");
 		}
 });

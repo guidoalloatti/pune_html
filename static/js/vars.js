@@ -1,24 +1,38 @@
 /* Match Vars */
-	// Who is playing
-	var players = new Array();
-	players[0] = false;
-	players[1] = false;
-	players[2] = false; //true;
-	players[3] = false; //true;
-	players[4] = false;	//true;
-	players[5] = false; //true;
+// Who is playing
+/*
+var worms = new Array();
+worms[0] = true;
+worms[1] = true;
+worms[2] = false; //true;
+worms[3] = false; //true;
+worms[4] = false; //true;
+worms[5] = false; //true;
+*/
 
-	// Which are they colors
-	var colors = new Array();
-	colors[0] = "red";
-	colors[1] = "blue";
-	colors[2] = "green";
-	colors[3] = "purple";
-	colors[4] = "cyan";
-	colors[5] = "yellow";
+// Who is playing
+var players = new Array();
+/*
+players[0] = false;
+players[1] = false;
+players[2] = false; //true;
+players[3] = false; //true;
+players[4] = false;	//true;
+players[5] = false; //true;
+*/
+
+// Which are they colors
+var colors = new Array();
+colors[0] = "red";
+colors[1] = "blue";
+colors[2] = "green";
+colors[3] = "purple";
+colors[4] = "cyan";
+colors[5] = "yellow";
 
 
 /* Game Vars */
+var gameHasStarted = false;
 var showMessages = false;
 var holeSize = 30;
 var spaceBetweenHoles = 100;

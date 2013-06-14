@@ -1,7 +1,6 @@
 <?php
 
-class Base
-{
+class Base {
 	public $host; 		//		= "localhost";
 	public $user; 		//		= "root";
 	public $pass; 		//		= "root";

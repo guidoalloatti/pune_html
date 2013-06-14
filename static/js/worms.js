@@ -1,30 +1,24 @@
 // Starting the Game when page is Ready
 $(document).ready(function() {
-	$("#canvas_div").hide();
+	//$("#canvas_div").hide();
+	
+	// Setting dev instance with no settings in the beginning
+	$(this).dialog( "close" );
+	$(".demo").hide();
+	//$("#canvas_div").show();
+	//startGame();
 });
 
-//function createWorms() {
-	//for(var i = 0; i < colors.length; i++) {
-	//$.each(worms, function(){
-	//	console.log(this);
-	//});
-	//	startWorm(colors[i]);
-	//}
-	//drawScore();
-//}
-
 // The Function that starts the game including canvas and game
-function startGame() {
-
-	console.log("Starting Game");
-
+function startGame(colors) {
+	//console.log("function startGame/top");
+	//console.log("colors: " + colors);
 	context = loadCanvasContext();
 	marker  = loadMarkerCanvas();
 
 	if(context && marker) {
-		//console.log("context and marker ok");
 		isNewRound = false;
-		start();
+		start(colors);
 		setRound();
 		doSpeeding();
 		isNewRound = true;
@@ -78,6 +72,7 @@ function worm() {
 	this.leftKey;
 	this.rightKey;
 	this.angle;
+	this.index			= 0;
 }
 
 //function startGame(){
@@ -87,32 +82,37 @@ function worm() {
 //}
 
 // Starting the contexts, set speeding and start Worms
-function start() {
+function start(colors) {
 	setContextProperties();
 	setMarkerProperties();	
 	context.fillRect(0, 0, xMax, yMax);
 	marker.fillRect(xMax, 0, xMax+100, yMax);
 	drawMarkers();
 	$("#speed").text("Current Speed: "+speed);
-	startWorms();
+	startWorms(colors);
 }
 
 // Start each individual Worm
-function startWorms() {
-	//$.each(worms, function(){
-	//	console.log(this);
-	//});
-	for(var i = 0; i < colors.length; i++) {
-		if(worms[i].playing) {
-			startWorm(colors[i]);
-		}
+function startWorms(colors) {
+	// First Time Game Starts
+	if(!gameHasStarted && typeof(colors) !== 'undefined') {
+		$.each(colors, function() {
+			startWorm(this);
+		});
 	}
+	
+	$.each(players, function() {
+		if(this.playing) {
+			startWorm(this.color);
+		}
+	});
 	drawScore();
 }
 
 // Start a worm each round
 function startWorm(color) {
-
+	color = color.toString();
+	//console.log("function startWorm/top color: " + color);	
 
 	// Getting Random Postitions and Angle
 	x 		= Math.floor(Math.random()*xMax);
@@ -120,42 +120,46 @@ function startWorm(color) {
 	angle 	= Math.floor(Math.random()*angleMax);
 	i 		= getWormIndexByColor(color);
 	
-	if(!isNewRound) {
-		worms[i] 		= new worm;
-		worms[i].score 	= 0;
+	//console.log("index: " + i);
+	
+	if(!isNewRound || !gameHasStarted) {
+		//console.log("Create New Worm");
+		players[i] 			= new worm;
+		players[i].score 	= 0;
 	}
 
-	worms[i].x 			= x;
-	worms[i].y 			= y;
-	worms[i].angle 		= angle;
-	worms[i].color 		= color;
-	worms[i].alive 		= false;
-	worms[i].playing 	= false;
-	worms[i].length 	= 0; //31;
-	worms[i].leftKey 	= getKey(i, "left");
-	worms[i].rightKey 	= getKey(i, "right");
+	players[i].x 			= x;
+	players[i].y 			= y;
+	players[i].angle 		= angle;
+	players[i].color 		= color;
+	players[i].alive 		= true;
+	players[i].playing 		= true;
+	players[i].length 		= 0;
+	players[i].leftKey      = currentKeys[i].left;   //getKey(i, "left");
+	players[i].rightKey		= currentKeys[i].right;  //getKey(i, "right");
+	players[i].index 		= i;
 
-	console.log(worms[i]);
-
-	//drawWorm(worms[i]);
+	
+	console.log("Keys: ");
+	console.log("left: ", currentKeys[i].left, getCharFromKeyCode(currentKeys[i].left));
 }
 
 // This function gets the worm who is winning with it size
 function getLongestWorm() {
-	for(var i = 0; i < worms.length; i++) {
-		if( worms[i].playing &&
-			worms[i].alive &&
-			worms[i].length > longestWormSize) {
+	$.each(players, function() {
+		if( this.playing &&
+			this.alive &&
+			this > longestWormSize) {
 				//console.log(longestWormColor, longestWormSize);
-				longestWorm       = worms[i];
-				longestWormSize   = worms[i].length;
-				longestWormColor  = worms[i].color;
+				longestWorm       = this;
+				longestWormSize   = this.length;
+				longestWormColor  = this.color;
 				message = "Longest Worm: "+ longestWormColor;
 				addMessage(message, "longest");
 				message = "Size: "+ longestWormSize;  
 				addMessage(message, "longest_size");
 		}
-	}
+	});
 }
 
 // Set Time interval (must not exists any more when render will be implemented)
@@ -195,50 +199,48 @@ function moveWorms() {
 		return;
 	speeding();
 	modifyWormsAngle();
-	for(var i = 0; i < colors.length; i++) {
-		if( worms[i].playing &&
-			worms[i].alive)
-			moveWorm(worms[i]);
-	}
+	
+	$.each(players, function() {	
+		if(gameHasStarted && this.playing && this.alive) 
+			//console.log("Move worm!");
+			moveWorm(this);
+	});
 } 
 
 // Add the score to all non dead worms
 function addScore() {
-	for(var i = 0; i < worms.length; i++) {
-		if( worms[i].playing &&
-			worms[i].alive)
-			worms[i].score++;
-	}
+	$.each(players, function() {
+		if(this.playing && this.alive) this.score++;
+	});
 }
 
 // Determines wich worms are alive
 function getWormsAlive() {
 	wormsAlive = 0;
-	for(var i = 0; i < worms.length; i++) {
-		if(worms[i].playing && worms[i].alive)
+	$.each(players, function() {
+		if(this.playing && this.alive)
 			wormsAlive++;
-	}
+	});
 }
 
 // Get the highest Score and the Winning Worm
 function getMaxScore() {
 	maxScore = 0;
-	for(var i = 0; i < worms.length; i++) {
-		if(	worms[i].playing &&
-			worms[i].score > maxScore) {
-			maxScore = worms[i].score;
-			winningWorm = i;
+	$.each(players, function() {
+		if(	this.playing && this.score > maxScore) {
+			maxScore = this.score;
+			winningWorm = this.color;
 		}
-	}
+	});
 }
 
 // Get the score needed to win the match
 function getScoreToWin() {
 	scoreToWin = -10;
-	for(var i = 0; i < worms.length; i++) {
-		if(worms[i].playing)
+	$.each(players, function() {
+		if(this.playing)
 			scoreToWin+=10;
-	}
+	});
 }
 
 // Calculates if the worm crush with other worm, also play yabass if passed through a hole
@@ -268,6 +270,10 @@ function isWormHit(currentWorm) {
 
 // Stablish the current round
 function setRound() {
+	//$.each(players, function() {
+	//	this.alive = true;
+	//});
+	
 	currentRound++;
 	speed = startingSpeed;
 	changeInterval(speed);
@@ -298,11 +304,9 @@ function wormIsAlive(currentWorm) {
 	currentWorm.y += sin;
 	currentWorm.x += cos;
 
-	console.log("====== currentWorm.color " + currentWorm.color + " =======");
-
-	//if(currentWorm.alive && currentWorm.platying) {
+	if(currentWorm.alive && currentWorm.playing) {
 		drawWorm(currentWorm);
-	//}
+	}
 }
 	
 // The worm is dead, so we need to kill her	
@@ -412,6 +416,7 @@ function getWormColorByIndex(index) {
 
 // Gets the worm index by the color
 function getWormIndexByColor(color) {
+	color = color.toString();
 	switch(color) {
 		case "red":
 			return 0;

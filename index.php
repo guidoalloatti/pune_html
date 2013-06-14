@@ -30,7 +30,7 @@ $header = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http:
 
 $startContent = '<div class="demo">
 		<div class="ui-widget" id="dialog-form" title="Create a new game: Configure Keys and Settings!">
-		<p style="font-size: 10px"> Click over the input or in the checkbox to add color! </p>
+		<p style="font-size: 10px"> Click over the input or in the checkbox to add the worm of the color yo choose! </p>
 		<table class="ui-widget ui-widget-content">
 			<tr class="ui-widget-header">
 				<th>Worm</th><th>Play</th><th>Left</th><th>Right</th>
@@ -120,6 +120,7 @@ $startContent = '<div class="demo">
 	</div>
 	<hr/>
 	<button id="create-game">Create new game</button>
+	<button id="post-it">Share!</button>
 	<button id="read-about">Read About</button>
 	</div>
 	<div class="demo-description">
@@ -157,7 +158,7 @@ $gameContent = '<div id="canvas_div">
 									<td id="soundImage"><a onclick="soundSwitcher();"><img src="images/uncheck.png" alt="Sound is ON" width="32" height="32" border="0" /></a></td></tr>
 								<tr><td><p id="pauseStatus" class="submenu">Pause is OFF </p></td>
 									<td id="pauseImage"><a onclick="pauseSwitcher();"><img src="images/check.png" alt="Sound is ON" width="32" height="32" border="0" /></a></td></tr>
-								<tr><td><input id="configButton" type="button" value="Settings" onclick="settings();" /></td></tr>
+								<!-- <tr><td><input id="configButton" type="button" value="Settings" onclick="settings();" /></td></tr> -->
 								<tr><td><input id="testKeys" type="button" value="Load Custom Key!" onclick="testKeysPage(\'main\');" /></td></tr>
 								<tr><td><input id="button" type="button" value="Sound Test [Nasty!]" onclick="playSound(\'burp\');"></td></tr>
 								<tr><td><button id="set-game">Settings</button></td></tr>
@@ -265,11 +266,16 @@ $gameContent = '<div id="canvas_div">
 	</body>
 </html>';
 
-$gameId = $_GET['gameId'];
-$gameIdInput = '<input type="hidden" id="gameId" value="'.$gameId.'" />';
+if(isset($_GET['gameId'])) {
+	$gameId = $_GET['gameId'];
+	$gameIdInput = '<input type="hidden" id="gameId" value="'.$gameId.'" />';
+}
+
 echo $header;
 echo $gameContent;
-echo $gameIdInput;
+if(isset($_GET['gameId'])) {
+	echo $gameIdInput;
+}
 echo $startContent;
 
 ?>

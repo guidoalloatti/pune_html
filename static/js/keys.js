@@ -3,27 +3,19 @@ function clearKeys() {
 }
 
 document.onkeyup = function(event) {
-	if(event == null)
-		keyCode = window.event.keyCode; 
-	else 
-		keyCode = event.keyCode; 
-	
+	if(event == null) keyCode = window.event.keyCode; 
+	else KeyCode = event.keyCode; 
 	keysBeenPressed[keyCode] = false;
 }
 
 document.onkeydown = function(event) {
-	if(event == null)
-		keyCode = window.event.keyCode; 
-	else 
-		keyCode = event.keyCode; 
-
+	if(event == null) keyCode = window.event.keyCode; 
+	else keyCode = event.keyCode; 
+	
 	/* Set and unset pause and speeding */
-	if(keyCode == 32)
-        pauseSwitcher();
-	else if(keyCode == 34)
-		doSpeeding();
-	else if(keyCode == 33)
-		reduceSpeeding();
+	if(keyCode == 32) pauseSwitcher();
+	else if(keyCode == 34) doSpeeding();
+	else if(keyCode == 33) reduceSpeeding();
 	keysBeenPressed[keyCode] = true;
 }
 
@@ -33,25 +25,28 @@ function getKey(index, direction) {
 	 *    2. CustomKeys  -> Keys defined by the user
 	 *    3. CurrentKeys -> Keys that are in use for the game
 	 */
-	var keys = defaultKeys;
-	if(!usingDefaultKeys) {
-		keys = currentKeys;
-	}
-	return keys[index][direction];
+	//var keys = defaultKeys;
+	//if(!usingDefaultKeys) {
+	//	keys = currentKeys;
+	//}
+	//console.log("getKey");
+	return currentKeys[index][direction];
 }
 
 function evalKeyPress(i, direction) {
+	console.log("asads");
 	if(keysBeenPressed[getKey(i, direction)])
-		worms[i] = changeAngle(direction, worms[i]);
+		players[i] = changeAngle(direction, players[i]);
 }
 
 function modifyWormsAngle() {
-	for(var i = 0; i < 5; i++) {
-		//console.log(worms[i]);
-		if(worms[i].playing && worms[i].defaultKeys) {
-			evalKeyPress(i, "right");
-			evalKeyPress(i, "left");
-		}
+	if(gameHasStarted) {
+		$.each(players, function() {
+			if(this.playing && this.alive) {   // && this.defaultKeys) {
+				evalKeyPress(i, "right");
+				evalKeyPress(i, "left");
+			}
+		});
 	}
 }
 
@@ -64,6 +59,9 @@ function showAjaxData(data, source){
 }
 
 function getKeysArray(keys, source) {
+	console.log(keys);
+	console.log(source);
+
 	if(source == "main") {
 		usingDefaultKeys = false;
 		$.each(keys, function() {
@@ -115,9 +113,5 @@ function getKeysArray(keys, source) {
 function getCharFromKeyCode(keyCode) {
 	return String.fromCharCode(keyCode);
 }
-
-//function getKeyCodeFromChar(char) {
-//	return String.toKeyCode(char);
-//}
 
 
