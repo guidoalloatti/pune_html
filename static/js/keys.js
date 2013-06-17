@@ -1,50 +1,66 @@
+document.onkeydown = onEventDown;
+document.onkeypress = onEventPress; 
+document.onkeyup = onEventUp;
+
 function clearKeys() {
-	keysBeenPressed = new Array(512);
+	$.each(players, function(){
+		if(typeof(this.leftKey) !== 'undefined' && typeof(this.rightKey) !== 'undefined' ) {
+			keysBeenPressed[this.leftKey] = false;
+			keysBeenPressed[this.rightKey] = false;
+		}
+	});
 }
 
-document.onkeyup = function(event) {
-	if(event == null) keyCode = window.event.keyCode; 
-	else KeyCode = event.keyCode; 
-	keysBeenPressed[keyCode] = false;
-}
-
-document.onkeydown = function(event) {
+function onEventPress(event) {
 	if(event == null) keyCode = window.event.keyCode; 
 	else keyCode = event.keyCode; 
-	
 	/* Set and unset pause and speeding */
 	if(keyCode == 32) pauseSwitcher();
 	else if(keyCode == 34) doSpeeding();
 	else if(keyCode == 33) reduceSpeeding();
-	keysBeenPressed[keyCode] = true;
+	if(!onPause && gameHasStarted && keyIsDefined(keyCode)) {
+		keysBeenPressed[keyCode] = true;
+	}
 }
 
+
+
+function onEventDown(event) {
+	if(event == null) keyCode = window.event.keyCode; 
+	else keyCode = event.keyCode; 
+	if(!onPause && gameHasStarted && keyIsDefined(keyCode)) {
+		keysBeenPressed[keyCode] = true;
+	}
+}
+
+function onEventUp(event) {
+	if(event == null) keyCode = window.event.keyCode; 
+	else KeyCode = event.keyCode; 
+	
+	clearKeys();
+	keysBeenPressed[keyCode] = false;
+	}
+
+
 function getKey(index, direction) {
-	/* TODO: We have 3 set of keys:
-	 *    1. DefaultKeys -> Predefined and used when a game starts
-	 *    2. CustomKeys  -> Keys defined by the user
-	 *    3. CurrentKeys -> Keys that are in use for the game
-	 */
-	//var keys = defaultKeys;
-	//if(!usingDefaultKeys) {
-	//	keys = currentKeys;
-	//}
-	//console.log("getKey");
-	return currentKeys[index][direction];
+	if(currentKeys[index][direction] != '' && typeof(currentKeys[index][direction]) !== 'undefined') {
+		return currentKeys[index][direction];
+	} else {
+		return defaultKeys[index][direction];
+	}
 }
 
 function evalKeyPress(i, direction) {
-	console.log("asads");
-	if(keysBeenPressed[getKey(i, direction)])
-		players[i] = changeAngle(direction, players[i]);
+	currentWorm = players[i];
+	if(keysBeenPressed[getKey(i, direction)]) changeAngle(direction, currentWorm);
 }
 
 function modifyWormsAngle() {
 	if(gameHasStarted) {
 		$.each(players, function() {
-			if(this.playing && this.alive) {   // && this.defaultKeys) {
-				evalKeyPress(i, "right");
-				evalKeyPress(i, "left");
+			if(this.playing && this.alive) { 
+				evalKeyPress(this.index, "right");
+				evalKeyPress(this.index, "left");
 			}
 		});
 	}
@@ -114,4 +130,15 @@ function getCharFromKeyCode(keyCode) {
 	return String.fromCharCode(keyCode);
 }
 
+function keyIsDefined(keyCode) {
+	//console.log(players);
+	var keyFound = false;
+	$.each(players, function(){
+		if((typeof(this.leftKey) !== 'undefined' && typeof(this.rightKey) !== 'undefined' ) &&
+		  (this.leftKey == keyCode || this.rightKey == keyCode)) {
+			keyFound = true;
+		}
+	});
+	return keyFound;
+}
 

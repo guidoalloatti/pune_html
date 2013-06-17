@@ -98,7 +98,7 @@ var wMarker = yMax/6;
 var hMarker = yMax/6;
 
 /* Arrays Declarations */
-var keysBeenPressed = new Array(512);
+var keysBeenPressed = new Array();
 var worms = new Array(6);
 
 var rgbColors = new Array(6);

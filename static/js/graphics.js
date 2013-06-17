@@ -115,6 +115,6 @@ function renderScreen() {
 	// draw canvas
 	$.each(players, function() {
 		if(this.playing && this.score > maxScore)
-			renderWorm(players[i]);
+			renderWorm(this);
 	});
 }

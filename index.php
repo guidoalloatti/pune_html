@@ -21,7 +21,6 @@ $header = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http:
 		<script src="static/js/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
 		<script src="static/js/modal.js" type="text/javascript"></script>
 
-
 		<!-- Adding the Styling Sources -->
 		<link href="static/js/jquery-ui-1.8.23.custom.css" rel="stylesheet" type="text/css">
 		<link href="static/css/common.css" rel="stylesheet" type="text/css">

@@ -18,6 +18,14 @@ function startGame(colors) {
 
 	if(context && marker) {
 		isNewRound = false;
+		
+	
+		//Set the keysBeenPressed
+		$.each(players, function(){
+			if(typeof(this.leftKey) !== 'undefined') keysBeenPressed[this.leftKey] = false;
+			if(typeof(this.rightKey) !== 'undefined' ) keysBeenPressed[this.rightKey] = false;
+		});
+		
 		start(colors);
 		setRound();
 		doSpeeding();
@@ -111,8 +119,9 @@ function startWorms(colors) {
 
 // Start a worm each round
 function startWorm(color) {
+	console.log("function startWorm/top color: " + color);	
+	
 	color = color.toString();
-	//console.log("function startWorm/top color: " + color);	
 
 	// Getting Random Postitions and Angle
 	x 		= Math.floor(Math.random()*xMax);
@@ -139,9 +148,6 @@ function startWorm(color) {
 	players[i].rightKey		= currentKeys[i].right;  //getKey(i, "right");
 	players[i].index 		= i;
 
-	
-	console.log("Keys: ");
-	console.log("left: ", currentKeys[i].left, getCharFromKeyCode(currentKeys[i].left));
 }
 
 // This function gets the worm who is winning with it size
@@ -166,7 +172,7 @@ function getLongestWorm() {
 function changeInterval(speed) {
 	fps = speed+basicFPSValue;
 	clearInterval(interval);
-	interval = setInterval(moveWorms, intervalMiliSeconds/fps);
+	if(!onPause) interval = setInterval(moveWorms, intervalMiliSeconds/fps);
 }
 
 // This function do the real speeding
