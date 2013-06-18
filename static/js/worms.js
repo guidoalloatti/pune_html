@@ -142,6 +142,11 @@ function startWorm(color) {
 	angle 	= Math.floor(Math.random()*angleMax);
 	i 		= getWormIndexByColor(color);
 	
+	if(x < borderSeparation) x+=borderSeparation;
+	if(x > (xMax-borderSeparation)) x-=borderSeparation;
+	if(y < borderSeparation) y+=borderSeparation;
+	if(y > (yMax-borderSeparation)) y-=borderSeparation;
+	
 	if(!isNewRound || !gameHasStarted) {
 		players[i] 			= new worm;
 		players[i].score 	= 0;

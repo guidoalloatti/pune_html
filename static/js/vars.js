@@ -39,6 +39,7 @@ var modalSpeed;
 var gapSizing;
 				
 // In Game Vars
+var borderSeparation = 100;
 var gameHasStarted = false;
 var showMessages = false;
 var holeSize = 30;
@@ -71,7 +72,7 @@ var wormSize = 4; 			/* The size of the circle */
 var angleStepSize = 1; 		/* How much will it turn */
 var sizeMultiplier = 2;		/* How much will the worm move every interval */
 var currentRound = 0;		/* Set initial value for round, previous start */
-var historyDotsSaved = 10000;
+var historyDotsSaved = 1000;
 
 /* Canvas and Js Vars */
 var xMax = 640; //800;
