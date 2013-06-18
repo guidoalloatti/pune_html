@@ -4,17 +4,26 @@ document.onkeyup = onEventUp;
 
 function clearKeys() {
 	$.each(players, function(){
-		if(typeof(this.leftKey) !== 'undefined' && typeof(this.rightKey) !== 'undefined' ) {
-			keysBeenPressed[this.leftKey] = false;
-			keysBeenPressed[this.rightKey] = false;
+		player = this;
+		if(typeof(player.leftKey) !== 'undefined' && typeof(player.rightKey) !== 'undefined' ) {
+			keysBeenPressed[player.leftKey] = false;
+			keysBeenPressed[player.rightKey] = false;
 		}
 	});
+}
+
+function clearWormKeys(currentWorm) {
+	if(typeof(currentWorm.leftKey) !== 'undefined' && typeof(currentWorm.rightKey) !== 'undefined' ) {
+		keysBeenPressed[currentWorm.leftKey] = false;
+		keysBeenPressed[currentWorm.rightKey] = false;
+	}
 }
 
 function onEventPress(event) {
 	if(event == null) keyCode = window.event.keyCode; 
 	else keyCode = event.keyCode; 
-	/* Set and unset pause and speeding */
+	
+	// Set and unset pause and speeding
 	if(keyCode == 32) pauseSwitcher();
 	else if(keyCode == 34) doSpeeding();
 	else if(keyCode == 33) reduceSpeeding();
@@ -23,44 +32,31 @@ function onEventPress(event) {
 	}
 }
 
-
-
 function onEventDown(event) {
-	if(event == null) keyCode = window.event.keyCode; 
-	else keyCode = event.keyCode; 
-	if(!onPause && gameHasStarted && keyIsDefined(keyCode)) {
-		keysBeenPressed[keyCode] = true;
-	}
 }
 
 function onEventUp(event) {
 	if(event == null) keyCode = window.event.keyCode; 
-	else KeyCode = event.keyCode; 
-	
-	clearKeys();
+	else keyCode = event.keyCode; 
 	keysBeenPressed[keyCode] = false;
-	}
-
-
-function getKey(index, direction) {
-	if(currentKeys[index][direction] != '' && typeof(currentKeys[index][direction]) !== 'undefined') {
-		return currentKeys[index][direction];
-	} else {
-		return defaultKeys[index][direction];
-	}
 }
 
-function evalKeyPress(i, direction) {
-	currentWorm = players[i];
-	if(keysBeenPressed[getKey(i, direction)]) changeAngle(direction, currentWorm);
+function getKey(currentWorm, direction) {
+	if(direction == "right") return currentWorm.rightKey;
+	else if (direction == "left") return currentWorm.leftKey;
+}
+
+function evalKeyPress(currentWorm, direction) {
+	if(keysBeenPressed[getKey(currentWorm, direction)]) 
+		changeAngle(direction, currentWorm);
 }
 
 function modifyWormsAngle() {
 	if(gameHasStarted) {
 		$.each(players, function() {
 			if(this.playing && this.alive) { 
-				evalKeyPress(this.index, "right");
-				evalKeyPress(this.index, "left");
+				evalKeyPress(this, "right");
+				evalKeyPress(this, "left");
 			}
 		});
 	}

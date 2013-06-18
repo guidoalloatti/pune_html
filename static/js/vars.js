@@ -32,6 +32,13 @@ colors[5] = "yellow";
 
 
 /* Game Vars */
+// Setup Vars
+var holePoints;
+var gapSpacing;
+var modalSpeed;
+var gapSizing;
+				
+// In Game Vars
 var gameHasStarted = false;
 var showMessages = false;
 var holeSize = 30;

@@ -85,7 +85,7 @@ $startContent = '<div class="demo">
 			<tr>
 				<td>Speed</td>
 				<td>
-					<select id="speed">
+					<select id="modal_speed">
 						<option>Slow</option>
 						<option>Normal</option>
 						<option>Frantic</option>
@@ -174,30 +174,35 @@ $gameContent = '<div id="canvas_div">
 							<font face="Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">
 						Worm . . . L . . . R
 							<table>
-								<tr>
+								<tr id="redKeyHelpRow" style="display:none;">
 									<td class="cool">Red</td>
-									<td><input type="button" id="redRightButton" value="a"></td>
-									<td><input type="button" id="redLeftButton" value="b"></td>
-								</tr><tr>
+									<td><input type="button" id="redLeftButton" value=""></td>
+									<td><input type="button" id="redRightButton" value=""></td>
+								</tr>
+								<tr id="blueKeyHelpRow" style="display:none;">
 									<td class="cool">Blue</td>
-									<td><input type="button" id="blueRightButton" value="a"></td>
-									<td><input type="button" id="blueLeftButton" value="b"></td>
-								</tr><tr>
+									<td><input type="button" id="blueLeftButton" value=""></td>
+									<td><input type="button" id="blueRightButton" value=""></td>
+								</tr>
+								<tr id="greenKeyHelpRow" style="display:none;">
 									<td class="cool">Green</td>
-									<td><input type="button" id="greenRightButton" value="a"></td>
-									<td><input type="button" id="greenLeftButton" value="b"></td>
-								</tr><tr>
+									<td><input type="button" id="greenLeftButton" value=""></td>
+									<td><input type="button" id="greenRightButton" value=""></td>
+								</tr>
+								<tr id="purpleKeyHelpRow" style="display:none;">
 									<td class="cool">Purple</td>
-									<td><input type="button" id="purpleRightButton" value="a"></td>
-									<td><input type="button" id="purpleLeftButton" value="b"></td>
-								</tr><tr>
+									<td><input type="button" id="purpleLeftButton" value=""></td>
+									<td><input type="button" id="purpleRightButton" value=""></td>
+								</tr>
+								<tr id="cyanKeyHelpRow" style="display:none;">
 									<td class="cool">Cyan</td>
-									<td><input type="button" id="cyanRightButton" value="a"></td>
-									<td><input type="button" id="cyanLeftButton" value="b"></td>
-								</tr><tr>
+									<td><input type="button" id="cyanLeftButton" value=""></td>
+									<td><input type="button" id="cyanRightButton" value=""></td>
+								</tr>
+								<tr id="yellowKeyHelpRow" style="display:none;">
 									<td class="cool">Yellow</td>
-									<td><input type="button" id="yellowRightButton" value="a"></td>
-									<td><input type="button" id="yellowLeftButton" value="b"></td>
+									<td><input type="button" id="yellowLeftButton" value=""></td>
+									<td><input type="button" id="yellowRightButton" value=""></td>
 								</tr>
 							</table>
 						  </font></p>
@@ -240,7 +245,7 @@ $gameContent = '<div id="canvas_div">
 						<p>&nbsp;</p>
 					  </td>
 					  <td width="10" bgcolor=#BDD3EF></td>
-					  <td colspan=3 bgcolor="purple" rowspan=3><font face="Arial, Helvetica, sans-serif" size="2" color="#BDD3EF"><b>Speed,Round & Longest Worm </b> </font><font face="Arial, Helvetica, sans-serif" size="2"><br>
+					  <td colspan=3 bgcolor="purple" rowspan=3><font face="Arial, Helvetica, sans-serif" size="2" color="#BDD3EF"><b>Game Info SR&LW </b> </font><font face="Arial, Helvetica, sans-serif" size="2"><br>
 						<font color="#FFFFFF">
 						<input type="label" id="speed" readonly/>
 						<hr/>

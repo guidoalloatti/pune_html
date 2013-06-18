@@ -34,7 +34,7 @@ $(function() {
 
 			$("#dialog-form").dialog({
 				autoOpen: false,
-				height: 530,
+				height: 600,
 				width: 420,
 				modal: true,
 				buttons: {
@@ -47,11 +47,13 @@ $(function() {
 							startGame();
 						}
 					},
+					/*
 					"Save Settings": function() {
 						save();
 						alert("Settings saved!");
 						$(this).dialog( "save" );
 					},
+					*/
 					"Cancel": function() {
 						$(this).dialog( "close" );
 					}
@@ -83,6 +85,13 @@ $(function() {
 					//console.log($(this))
 					playing.push(this);
 					checked++;
+					
+					holePoints = $("#hole_points").val();
+					modalSpeed = $("#modal_speed").val();
+					gapSpacing = $("#gap_spacing").val();
+					gapSizing = $("#gap_sizing").val();
+					
+					
 				}
 			});
 
@@ -120,6 +129,7 @@ $(function() {
 				});
 			}
 			
+			
 			startGame(playingColors);
 
 			if(isValid) {
@@ -149,7 +159,6 @@ $(function() {
 		}
 		
 		function setPlayingWorms(){
-		
 			console.log("Play");
 		}
 });
