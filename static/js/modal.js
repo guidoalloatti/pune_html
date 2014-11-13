@@ -57,9 +57,33 @@ $(function() {
 			}
 		},
 		close: function() {
-
-		}
-	});
+			$("#dialog-form").dialog({
+				autoOpen: false,
+				height: 600,
+				width: 420,
+				modal: true,
+				buttons: {
+					"Create a game": function() {
+						if(validateNewGame()) {
+							$(this).dialog( "close" );
+							$(".demo").hide();
+							$("#canvas_div").show();
+							gameHasStarted = true;
+							startGame();
+						}
+					},
+					/*
+					"Save Settings": function() {
+						save();
+						alert("Settings saved!");
+						$(this).dialog( "save" );
+					},
+					*/
+					"Cancel": function() {
+						$(this).dialog( "close" );
+					}
+				},
+				close: function() {
 
 	$( "#create-game" ).click(function() { $( "#dialog-form" ).dialog( "open" ); });
 	$( "#set-game" ).click(function() { $( "#dialog-form" ).dialog( "open" ); });
@@ -85,10 +109,20 @@ function validateNewGame() {
 		}
 	});
 
-	if(checked < 2) {
-		message += "\n * You need at least 2 worms to play!";
-		isValid = false;
-	}
+	$('input[type=checkbox]').each(function(){
+		if(this.checked) {
+			//console.log($(this))
+			playing.push(this);
+			checked++;
+			
+			holePoints = $("#hole_points").val();
+			modalSpeed = $("#modal_speed").val();
+			gapSpacing = $("#gap_spacing").val();
+			gapSizing = $("#gap_sizing").val();
+			
+			
+		}
+	});
 
 	if(isValid) {
 		$.each(playing, function() {
@@ -99,14 +133,38 @@ function validateNewGame() {
 			} else {
 				keys.push($("#"+color+"LeftInput").val());
 			}
-			if($("#"+color+"RightInput").val() == "") {
-				message += "\n * The right key for the "+color+" worm is not defined!";
-				isValid = false;
-			} else {
-				keys.push($("#"+color+"RightInput").val());
+
+			if(isValid) {
+				var playingColors = new Array();
+				$.each(playing, function(){
+					
+					var color = $(this).attr("name");
+					playingColors.push(color);
+										
+					if($("#"+color+"LeftInput").val() == "") {
+						message += "\n * The left key for the "+color+" worm is not defined!";
+						isValid = false;
+					} else {
+						keys.push($("#"+color+"LeftInput").val());
+						$.each(currentKeys, function(index, object) {	
+							if(object.color == color) object.left = $("#"+color+"LeftInput").attr("name")
+						});
+					}
+
+					if($("#"+color+"RightInput").val() == "") {
+						message += "\n * The right key for the "+color+" worm is not defined!";
+						isValid = false;
+					} else {
+						keys.push($("#"+color+"RightInput").val());
+						$.each(currentKeys, function(index, object) {	
+							if(object.color == color) object.right = $("#"+color+"RightInput").attr("name")						
+						});
+					}
+				});
 			}
-		});
-	}
+			
+			
+			startGame(playingColors);
 
 	if(isValid) {
 		var duplicates = find_duplicates(keys);
@@ -120,17 +178,21 @@ function validateNewGame() {
 	return isValid;
 }
 
-function find_duplicates(arr) {
-	var len = arr.length, out=[], counts={};
-	for (var i=0;i<len;i++) {
-		var item = arr[i];
-		var count = counts[item];
-		counts[item] = counts[item] >= 1 ? counts[item] + 1 : 1;
-	}
-	for (var item in counts) {
-	if(counts[item] > 1)
-		out.push(item);
-	}
-	return out;
-}
+		function find_duplicates(arr) {
+			var len = arr.length, out=[], counts={};
+			for (var i=0;i<len;i++) {
+				var item = arr[i];
+				var count = counts[item];
+				counts[item] = counts[item] >= 1 ? counts[item] + 1 : 1;
+			}
+			for (var item in counts) {
+			if(counts[item] > 1)
+				out.push(item);
+			}
+			return out;
+		}
+		
+		function setPlayingWorms(){
+			console.log("Play");
+		}
 });

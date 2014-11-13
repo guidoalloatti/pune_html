@@ -21,7 +21,6 @@ $header = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http:
 		<script src="static/js/jquery-ui-1.8.23.custom.min.js" type="text/javascript"></script>
 		<script src="static/js/modal.js" type="text/javascript"></script>
 
-
 		<!-- Adding the Styling Sources -->
 		<link href="static/js/jquery-ui-1.8.23.custom.css" rel="stylesheet" type="text/css">
 		<link href="static/css/common.css" rel="stylesheet" type="text/css">
@@ -30,7 +29,7 @@ $header = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http:
 
 $startContent = '<div class="demo">
 		<div class="ui-widget" id="dialog-form" title="Create a new game: Configure Keys and Settings!">
-		<p style="font-size: 10px"> Click over the input or in the checkbox to add color! </p>
+		<p style="font-size: 10px"> Click over the input or in the checkbox to add the worm of the color yo choose! </p>
 		<table class="ui-widget ui-widget-content">
 			<tr class="ui-widget-header">
 				<th>Worm</th><th>Play</th><th>Left</th><th>Right</th>
@@ -86,7 +85,7 @@ $startContent = '<div class="demo">
 			<tr>
 				<td>Speed</td>
 				<td>
-					<select id="speed">
+					<select id="modal_speed">
 						<option>Slow</option>
 						<option>Normal</option>
 						<option>Frantic</option>
@@ -120,6 +119,7 @@ $startContent = '<div class="demo">
 	</div>
 	<hr/>
 	<button id="create-game">Create new game</button>
+	<button id="post-it">Share!</button>
 	<button id="read-about">Read About</button>
 	</div>
 	<div class="demo-description">
@@ -157,7 +157,7 @@ $gameContent = '<div id="canvas_div">
 									<td id="soundImage"><a onclick="soundSwitcher();"><img src="images/uncheck.png" alt="Sound is ON" width="32" height="32" border="0" /></a></td></tr>
 								<tr><td><p id="pauseStatus" class="submenu">Pause is OFF </p></td>
 									<td id="pauseImage"><a onclick="pauseSwitcher();"><img src="images/check.png" alt="Sound is ON" width="32" height="32" border="0" /></a></td></tr>
-								<tr><td><input id="configButton" type="button" value="Settings" onclick="settings();" /></td></tr>
+								<!-- <tr><td><input id="configButton" type="button" value="Settings" onclick="settings();" /></td></tr> -->
 								<tr><td><input id="testKeys" type="button" value="Load Custom Key!" onclick="testKeysPage(\'main\');" /></td></tr>
 								<tr><td><input id="button" type="button" value="Sound Test [Nasty!]" onclick="playSound(\'burp\');"></td></tr>
 								<tr><td><button id="set-game">Settings</button></td></tr>
@@ -174,6 +174,7 @@ $gameContent = '<div id="canvas_div">
 							<font face="Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">
 						Worm . . . L . . . R
 							<table>
+<<<<<<< HEAD
 								<tr id="redControls" style="display:none;">
 									<td class="cool">Red</td>
 									<td><input type="button" id="redRightButton" value="a"></td>
@@ -200,9 +201,37 @@ $gameContent = '<div id="canvas_div">
 									<td><input type="button" id="cyanLeftButton" value="b"></td>
 								</tr>
 								<tr id="yellowControls" style="display:none;">
+=======
+								<tr id="redKeyHelpRow" style="display:none;">
+									<td class="cool">Red</td>
+									<td><input type="button" id="redLeftButton" value=""></td>
+									<td><input type="button" id="redRightButton" value=""></td>
+								</tr>
+								<tr id="blueKeyHelpRow" style="display:none;">
+									<td class="cool">Blue</td>
+									<td><input type="button" id="blueLeftButton" value=""></td>
+									<td><input type="button" id="blueRightButton" value=""></td>
+								</tr>
+								<tr id="greenKeyHelpRow" style="display:none;">
+									<td class="cool">Green</td>
+									<td><input type="button" id="greenLeftButton" value=""></td>
+									<td><input type="button" id="greenRightButton" value=""></td>
+								</tr>
+								<tr id="purpleKeyHelpRow" style="display:none;">
+									<td class="cool">Purple</td>
+									<td><input type="button" id="purpleLeftButton" value=""></td>
+									<td><input type="button" id="purpleRightButton" value=""></td>
+								</tr>
+								<tr id="cyanKeyHelpRow" style="display:none;">
+									<td class="cool">Cyan</td>
+									<td><input type="button" id="cyanLeftButton" value=""></td>
+									<td><input type="button" id="cyanRightButton" value=""></td>
+								</tr>
+								<tr id="yellowKeyHelpRow" style="display:none;">
+>>>>>>> 9a5eaea50ceb68b5aa0fc896832ceb4c3a85101c
 									<td class="cool">Yellow</td>
-									<td><input type="button" id="yellowRightButton" value="a"></td>
-									<td><input type="button" id="yellowLeftButton" value="b"></td>
+									<td><input type="button" id="yellowLeftButton" value=""></td>
+									<td><input type="button" id="yellowRightButton" value=""></td>
 								</tr>
 							</table>
 						  </font></p>
@@ -252,7 +281,7 @@ $gameContent = '<div id="canvas_div">
 						<p>&nbsp;</p>
 					  </td>
 					  <td width="10" bgcolor=#BDD3EF></td>
-					  <td colspan=3 bgcolor="purple" rowspan=3><font face="Arial, Helvetica, sans-serif" size="2" color="#BDD3EF"><b>Speed,Round & Longest Worm </b> </font><font face="Arial, Helvetica, sans-serif" size="2"><br>
+					  <td colspan=3 bgcolor="purple" rowspan=3><font face="Arial, Helvetica, sans-serif" size="2" color="#BDD3EF"><b>Game Info SR&LW </b> </font><font face="Arial, Helvetica, sans-serif" size="2"><br>
 						<font color="#FFFFFF">
 						<input type="label" id="speed" readonly/>
 						<hr/>
@@ -277,11 +306,16 @@ $gameContent = '<div id="canvas_div">
 	</body>
 </html>';
 
-$gameId = $_GET['gameId'];
-$gameIdInput = '<input type="hidden" id="gameId" value="'.$gameId.'" />';
+if(isset($_GET['gameId'])) {
+	$gameId = $_GET['gameId'];
+	$gameIdInput = '<input type="hidden" id="gameId" value="'.$gameId.'" />';
+}
+
 echo $header;
 echo $gameContent;
-echo $gameIdInput;
+if(isset($_GET['gameId'])) {
+	echo $gameIdInput;
+}
 echo $startContent;
 
 ?>

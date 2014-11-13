@@ -15,22 +15,21 @@ function drawMarker(color, x, y, w, h) {
 }
 
 function drawScore() {
-	console.log("Draw Score");
-	for(var i = 0; i < worms.length; i++) {
-		var score = "00";
-		if( worms[i].playing && worms[i].score < 10) { score = "0"+worms[i].score; }
-		else { score = worms[i].score; }
-	}
-
-	console.log("Score: " + score);
-
-	marker.beginPath();
-	marker.font = "40pt serif";
-	marker.fillStyle = "black";
-	marker.fillText(score, score_x, (score_y+(i*(yMax/6))));
-	marker.fillStyle = "white";
-	marker.fillText(score, score_x-2, (score_y-2+(i*(yMax/6))));
-	marker.closePath();
+	var score = "00";
+	$.each(players, function () { 	
+		if(this.playing && this.score < 10) score = "0"+this.score;
+		else score = this.score;
+		
+		var i = this.index;
+		
+		marker.beginPath();
+		marker.font = "40pt serif";
+		marker.fillStyle = "black";
+		marker.fillText(score, score_x, (score_y+(i*(yMax/6))));
+		marker.fillStyle = "white";
+		marker.fillText(score, score_x-2, (score_y-2+(i*(yMax/6))));
+		marker.closePath();
+	});
 }
 
 function drawWorm(currentWorm) {
@@ -107,9 +106,8 @@ function renderWorm(currentWorm) {
 // Render Screen: This function draws all
 function renderScreen() {
 	// draw canvas
-	for(var i = 0; i < worms.length; i++) {
-		if(worms[i].playing &&
-			worms[i].score > maxScore)
-			renderWorm(worms[i]);
-	}
+	$.each(players, function() {
+		if(this.playing && this.score > maxScore)
+			renderWorm(this);
+	});
 }

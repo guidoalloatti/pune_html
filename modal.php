@@ -89,7 +89,7 @@
 			<tr>
 				<td>Speed</td>
 				<td>
-					<select id="speed">
+					<select id="modal_speed">
 						<option>Slow</option>
 						<option>Normal</option>
 						<option>Frantic</option>
@@ -121,6 +121,7 @@
 		<table>
 			<tr>
 				<td><input id="saveButton" type="button" value="Save" onclick="save();" /></td>
+				<td><input id="testSettings" type="button" value="Test Settings!" onclick="testSettingsPage();" /></td>
 				<td><input id="testSettings" type="button" value="Test Settings!" onclick="testSettingsPage();" /></td>
 				<td><input id="testKeys" type="button" value="Test Keys!" onclick="testKeysPage(\'settings\');" /></td>
 			</tr>
