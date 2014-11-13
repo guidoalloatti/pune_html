@@ -27,21 +27,24 @@ function getDbSettings(id) {
 				$.each(this, function(key, val) {
 					for( var i = 0; i < 6; i++ ) {
 						if(key == "player_"+(i+1)) {
-							if(typeof(worms[i]) != undefined) {
+							if( typeof(worms[i]) == undefined || typeof(worms[i] == "undefined") ) {
 								startWorm(getWormColorByIndex(i));
-								//worms[i] = new worm;
 							}
 							if(val == 1) {
+
 								players[i] = true;
 								worms[i].playing = true;
+								worms[i].alive = true;
+								$("#"+worms[i].color+"Controls").show();
 							}
 						}
 					}
 				});
 			});
-			settings['id'] = data['id'];
-			//console.log("Ajax Success!");
-			showSettingsData(data);
+
+			startWorms();
+			startRound();
+
 		},
 		error: function(data){
 			console.log("The Ajax Call was has a error, the error text is: ");

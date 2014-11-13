@@ -62,8 +62,9 @@ $(document).ready(function() {
 	*/
    $.each(colors, function(){
 	   var color = this;
-		$("#"+color+"_play").click(function()    { labelClicked(color, "check"); });
-		$("#"+color+"_label").click(function()	 { labelClicked(color, "label"); });
+		$("#"+color+"_play").click(function()	{ labelClicked(color, "check"); });
+		$("#"+color+"_label").click(function()	{ labelClicked(color, "label"); });
+		$("#"+color+"Status").click(function()	{ showWormInfo(worms[getWormIndexByColor(color)]); console.log(worms[getWormIndexByColor(color)]); });
 		$.each(["Right", "Left"], function(){
 			var direction = this;
 			$("#"+color+direction+"Input").keypress(function(e) {

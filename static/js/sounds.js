@@ -43,8 +43,4 @@ function pauseSwitcher() {
 function pause() {
 	onPause = !onPause;
 	playSound("pause");
-	// TODO: check configs and update
-	//getDbSettings(gameId);
-	//getDbKeys('main', 1);
-
 }

@@ -3,24 +3,17 @@ $(document).ready(function() {
 	$("#canvas_div").hide();
 });
 
-//function createWorms() {
-	//for(var i = 0; i < colors.length; i++) {
-	//$.each(worms, function(){
-	//	console.log(this);
-	//});
-	//	startWorm(colors[i]);
-	//}
-	//drawScore();
-//}
-
 // The Function that starts the game including canvas and game
 function startGame() {
-
 	console.log("Starting Game");
-
+	getDbKeys(source, gameId);
+	getDbSettings(gameId);
 	context = loadCanvasContext();
 	marker  = loadMarkerCanvas();
+}
 
+function startRound() {
+	console.log("Start Round");
 	if(context && marker) {
 		//console.log("context and marker ok");
 		isNewRound = false;
@@ -28,9 +21,8 @@ function startGame() {
 		setRound();
 		doSpeeding();
 		isNewRound = true;
-		speed = startingSpeed;
+
 		$("#rounds").text("1");
-		changeInterval(speed);
 	} else {
 		alert("Cannot Load Canvas");
 	}
@@ -80,39 +72,36 @@ function worm() {
 	this.angle;
 }
 
-//function startGame(){
-//}
-
-//function startRound(){
-//}
-
 // Starting the contexts, set speeding and start Worms
 function start() {
+	console.log("Start");
 	setContextProperties();
-	setMarkerProperties();	
+	setMarkerProperties();
+
 	context.fillRect(0, 0, xMax, yMax);
 	marker.fillRect(xMax, 0, xMax+100, yMax);
 	drawMarkers();
+	//drawScores();
+
 	$("#speed").text("Current Speed: "+speed);
-	startWorms();
+	//startWorms();
 }
 
 // Start each individual Worm
 function startWorms() {
-	//$.each(worms, function(){
-	//	console.log(this);
-	//});
-	for(var i = 0; i < colors.length; i++) {
+	console.log("Start Worms");
+	/*
+	for(var i = 0; i < 6; i++) {
 		if(worms[i].playing) {
-			startWorm(colors[i]);
+			startWorm(worms[i].color);
 		}
-	}
+	}*/
 	drawScore();
 }
 
 // Start a worm each round
 function startWorm(color) {
-
+	console.log("Start Worm: " + color);
 
 	// Getting Random Postitions and Angle
 	x 		= Math.floor(Math.random()*xMax);
@@ -121,8 +110,9 @@ function startWorm(color) {
 	i 		= getWormIndexByColor(color);
 	
 	if(!isNewRound) {
+		console.log("New Worm Created");
 		worms[i] 		= new worm;
-		worms[i].score 	= 0;
+		worms[i].score 		= 0;
 	}
 
 	worms[i].x 			= x;
@@ -134,10 +124,6 @@ function startWorm(color) {
 	worms[i].length 	= 0; //31;
 	worms[i].leftKey 	= getKey(i, "left");
 	worms[i].rightKey 	= getKey(i, "right");
-
-	console.log(worms[i]);
-
-	//drawWorm(worms[i]);
 }
 
 // This function gets the worm who is winning with it size
@@ -205,9 +191,10 @@ function moveWorms() {
 // Add the score to all non dead worms
 function addScore() {
 	for(var i = 0; i < worms.length; i++) {
-		if( worms[i].playing &&
-			worms[i].alive)
+		if( worms[i].playing && worms[i].alive) {
+			console.log("==== Increase worm score: " + worms[i].color + " ====");
 			worms[i].score++;
+		}
 	}
 }
 
@@ -271,6 +258,7 @@ function setRound() {
 	currentRound++;
 	speed = startingSpeed;
 	changeInterval(speed);
+
 	addMessage("Current Round: "+currentRound, "rounds");
 	addMessage("Current Speed: "+speed, "speed");
 }
@@ -297,17 +285,17 @@ function wormIsAlive(currentWorm) {
 	storePreviuosCoordinates(currentWorm);
 	currentWorm.y += sin;
 	currentWorm.x += cos;
-
-	console.log("====== currentWorm.color " + currentWorm.color + " =======");
-
-	//if(currentWorm.alive && currentWorm.platying) {
-		drawWorm(currentWorm);
-	//}
+	drawWorm(currentWorm);
 }
 	
 // The worm is dead, so we need to kill her	
 function wormCrushes(currentWorm) {
-	playSound("die");
+
+	// TODO: uncommnet!
+	// playSound("die");
+
+
+
 	currentWorm.alive = false;
 	getLongestWorm();
 	addScore();
@@ -351,19 +339,14 @@ function matchOver(currentWorm) {
 // This function is called when the round is over
 function roundOver(currentWorm) {
 	yMarker = 0;
-	if(winningWorm == 0) 
-		playSound("red");
-	else if(winningWorm == 1) 
-		playSound("blue");
-	else if(winningWorm == 2) 
-		playSound("green");
-	else if(winningWorm == 3) 
-		playSound("purple");
-	else if(winningWorm == 4) 
-		playSound("cyan");
-	else if(winningWorm == 5) 
-		playSound("yellow");
-	start();
+	if(winningWorm == 0) { playSound("red"); }
+	else if(winningWorm == 1) { playSound("blue"); }
+	else if(winningWorm == 2) { playSound("green"); }
+	else if(winningWorm == 3) {	playSound("purple"); }
+	else if(winningWorm == 4) { playSound("cyan"); }
+	else if(winningWorm == 5) { playSound("yellow"); }
+
+	startRound();
 }
 
 // This function stores the previuos coordinates of ther worms
@@ -386,55 +369,24 @@ function isHole(currentWorm) {
 
 function getWormColorByIndex(index) {
 	switch(index) {
-			case 0:
-				return "red";
-				break;
-			case 1:
-				return "blue";
-				break;
-			case 2:
-				return "green";
-				break;
-			case 3:
-				return "purple";
-				break;
-			case 4:
-				return "cyan";
-				break;
-			case 5:
-				return "yellow";
-				break;
-			default:
-				return 100;
-				break;
-		}
+		case 0: return "red"; break;
+		case 1: return "blue"; break;
+		case 2: return "green"; break;
+		case 3: return "purple"; break;
+		case 4: return "cyan"; break;
+		case 5: return "yellow"; break;
+		default: return 10; break;
+	}
 }
 
 // Gets the worm index by the color
 function getWormIndexByColor(color) {
-	switch(color) {
-		case "red":
-			return 0;
-			break;
-		case "blue":
-			return 1;
-			break;
-		case "green":
-			return 2;
-			break;
-		case "purple":
-			return 3;
-			break;
-		case "cyan":
-			return 4;
-			break;
-		case "yellow":
-			return 5;
-			break;
-		default:
-			return 100;
-			break;
-	}
+	if(color == "red") { return 0;}
+	else if (color == "blue")	{ return 1;}
+	else if (color == "green")	{ return 2;}
+	else if (color == "purple")	{ return 3;}
+	else if (color == "cyan")	{ return 4;}
+	else if (color == "yellow")	{ return 5;}
 }
 
 // This function adds a message to different textareas
@@ -447,15 +399,15 @@ function addMessage(message, id) {
 
 // This function shows the current worm info
 function showWormInfo(currentWorm) {
-	pause();
-	console.log(	"color: "+currentWorm.color+
+	//pause();
+	alert(	"color: "+currentWorm.color+
 			"\nx: "+currentWorm.x+
 			"\ny: "+currentWorm.y+
 			"\nangle: "+currentWorm.angle+
 			"\nalive: "+currentWorm.alive+
 			"\nplaying: "+currentWorm.playing+
 			"\nscore: "+currentWorm.score+
-			"\nlength: "+currentWorm.length);		
+			"\nlength: "+currentWorm.length);
 }  
 
 // This function shows the information related with the selected picture

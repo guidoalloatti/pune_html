@@ -1,8 +1,8 @@
 
 function drawMarkers() {
 	yMarker = 0;
-	for(var i = 0; i < colors.length; i++) {
-		drawMarker(colors[i], xMarker, yMarker, wMarker, hMarker);
+	for(var i = 0; i < worms.length; i++) {
+		drawMarker(worms[i].color, xMarker, yMarker, wMarker, hMarker);
 		yMarker += yMax/6;
 	}	
 }
@@ -15,21 +15,22 @@ function drawMarker(color, x, y, w, h) {
 }
 
 function drawScore() {
+	console.log("Draw Score");
 	for(var i = 0; i < worms.length; i++) {
 		var score = "00";
-		if( worms[i].playing &&
-			worms[i].score < 10)
-				score = "0"+worms[i].score;
-			else
-				score = worms[i].score;
-		}
-		marker.beginPath();
-		marker.font = "40pt serif";
-		marker.fillStyle = "black";
-		marker.fillText(score, score_x, (score_y+(i*(yMax/6))));
-		marker.fillStyle = "white";
-		marker.fillText(score, score_x-2, (score_y-2+(i*(yMax/6))));
-		marker.closePath();
+		if( worms[i].playing && worms[i].score < 10) { score = "0"+worms[i].score; }
+		else { score = worms[i].score; }
+	}
+
+	console.log("Score: " + score);
+
+	marker.beginPath();
+	marker.font = "40pt serif";
+	marker.fillStyle = "black";
+	marker.fillText(score, score_x, (score_y+(i*(yMax/6))));
+	marker.fillStyle = "white";
+	marker.fillText(score, score_x-2, (score_y-2+(i*(yMax/6))));
+	marker.closePath();
 }
 
 function drawWorm(currentWorm) {
@@ -76,24 +77,17 @@ function setMarkerProperties() {
 }
 
 function loadCanvasContext() {
-	//if( typeof($("#screen")[0]) != "undefined") {
-
-		context = $("#screen")[0].getContext('2d');
-		if(context)
-			return context;
-		return false;
-	//}
-	//return "undef";
+	context = $("#screen")[0].getContext('2d');
+	if(context)
+		return context;
+	return false;
 }
 
 function loadMarkerCanvas() {
-	//if( typeof($("#marker")[0]) != "undefined") {
-		marker = $("#marker")[0].getContext('2d');
-		if(marker)
-			return marker;
-		return false;
-	//}
-	//return "undef";
+	marker = $("#marker")[0].getContext('2d');
+	if(marker)
+		return marker;
+	return false;
 }
 
 // Render Worm: This function render one specific worm

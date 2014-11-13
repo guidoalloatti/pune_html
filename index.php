@@ -36,37 +36,37 @@ $startContent = '<div class="demo">
 				<th>Worm</th><th>Play</th><th>Left</th><th>Right</th>
 			</tr>
 			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Red Worm" readonly="true" id="red_label"/></td>
+				<td><input type="label" style="color: white; background: lightgray" value="Red Worm" readonly="true" id="red_label"/></td>
 				<td align="center"><input type="checkbox" id="red_play" name="red"/></td>
 				<td align="center"><input type="text" id="redLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="redRightInput" size="1"/></td>
 			</tr>
 			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Blue Worm" readonly="true" id="blue_label"/></td>
+				<td><input type="label" style="color: white; background: lightgray;;" value="Blue Worm" readonly="true" id="blue_label"/></td>
 				<td align="center"><input type="checkbox" id="blue_play" name="blue"/></td>
 				<td align="center"><input type="text" id="blueLeftInput" size="1" /></td>
 				<td align="center"><input type="text" id="blueRightInput" size="1" /></td>
 			</tr>
 			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Green Worm" readonly="true" id="green_label"/></td>
+				<td><input type="label" style="color: white; background: lightgray;" value="Green Worm" readonly="true" id="green_label"/></td>
 				<td align="center"><input type="checkbox" id="green_play" name="green"/></td>
 				<td align="center"><input type="text" id="greenLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="greenRightInput" size="1"/></td>
 			</tr>
 			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Purple Worm" readonly="true" id="purple_label"/></td>
+				<td><input type="label" style="color: white; background: lightgray;" value="Purple Worm" readonly="true" id="purple_label"/></td>
 				<td align="center"><input type="checkbox" id="purple_play" name="purple"/></td>
 				<td align="center"><input type="text" id="purpleLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="purpleRightInput" size="1"/></td>
 			</tr>
 			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Cyan Worm" readonly="true" id="cyan_label"/></td>
+				<td><input type="label" style="color: white; background: lightgray;" value="Cyan Worm" readonly="true" id="cyan_label"/></td>
 				<td align="center"><input type="checkbox" id="cyan_play" name="cyan"/></td>
 				<td align="center"><input type="text" id="cyanLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="cyanRightInput" size="1"/></td>
 			</tr>
 			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Yellow Worm" readonly="true" id="yellow_label"/></td>
+				<td><input type="label" style="color: white; background: lightgray;" value="Yellow Worm" readonly="true" id="yellow_label"/></td>
 				<td align="center"><input type="checkbox" id="yellow_play" name="yellow"/></td>
 				<td align="center"><input type="text" id="yellowLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="yellowRightInput" size="1"/></td>
@@ -174,27 +174,32 @@ $gameContent = '<div id="canvas_div">
 							<font face="Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">
 						Worm . . . L . . . R
 							<table>
-								<tr>
+								<tr id="redControls" style="display:none;">
 									<td class="cool">Red</td>
 									<td><input type="button" id="redRightButton" value="a"></td>
 									<td><input type="button" id="redLeftButton" value="b"></td>
-								</tr><tr>
+								</tr>
+								<tr id="blueControls" style="display:none;">
 									<td class="cool">Blue</td>
 									<td><input type="button" id="blueRightButton" value="a"></td>
 									<td><input type="button" id="blueLeftButton" value="b"></td>
-								</tr><tr>
+								</tr>
+								<tr id="greenControls" style="display:none;">
 									<td class="cool">Green</td>
 									<td><input type="button" id="greenRightButton" value="a"></td>
 									<td><input type="button" id="greenLeftButton" value="b"></td>
-								</tr><tr>
+								</tr>
+								<tr id="purpleControls" style="display:none;">
 									<td class="cool">Purple</td>
 									<td><input type="button" id="purpleRightButton" value="a"></td>
 									<td><input type="button" id="purpleLeftButton" value="b"></td>
-								</tr><tr>
+								</tr>
+								<tr id="cyanControls" style="display:none;">
 									<td class="cool">Cyan</td>
 									<td><input type="button" id="cyanRightButton" value="a"></td>
 									<td><input type="button" id="cyanLeftButton" value="b"></td>
-								</tr><tr>
+								</tr>
+								<tr id="yellowControls" style="display:none;">
 									<td class="cool">Yellow</td>
 									<td><input type="button" id="yellowRightButton" value="a"></td>
 									<td><input type="button" id="yellowLeftButton" value="b"></td>
@@ -215,7 +220,14 @@ $gameContent = '<div id="canvas_div">
 						<table>
 							<tr> <td>Die</td> <td>Win</td> <td>Speed</td> <td>Yabass</td> <td>Pause</td> <td>Burp</td> </tr>
 							<tr> <td id="die"></td> <td id="win"></td> <td id="speeding"></td> <td id="yabass"></td> <td id="pause"></td> <td id="burp"></td> </tr>
-							<tr> <td bgcolor="red">Red</td> <td bgcolor="blue">Blue</td> <td bgcolor="green">Green</td> <td bgcolor="purple">Purple</td> <td bgcolor="cyan">Cyan</td> <td bgcolor="yellow">Yellow</td> </tr>
+							<tr>
+								<td bgcolor="red" 	 id="redStatus">	Red</td>
+								<td bgcolor="blue" 	 id="blueStatus">	Blue</td>
+								<td bgcolor="green"  id="greenStatus">	Green</td>
+								<td bgcolor="purple" id="purpleStatus">	Purple</td>
+								<td bgcolor="cyan" 	 id="cyanStatus">	Cyan</td>
+								<td bgcolor="yellow" id="yellowStatus">	Yellow</td>
+							</tr>
 							<tr> <td id="red"></td> <td id="blue"></td> <td id="green"></td> <td id="purple"></td> <td id="cyan"></td> <td id="yellow"></td></tr>
 						</table>
 					  </td>
