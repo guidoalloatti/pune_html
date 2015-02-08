@@ -1,21 +1,21 @@
 /* Match Vars */
-	// Who is playing
-	var players = new Array();
-	players[0] = false;
-	players[1] = false;
-	players[2] = false; //true;
-	players[3] = false; //true;
-	players[4] = false;	//true;
-	players[5] = false; //true;
+// Who is playing
+var players = new Array();
+players[0] = false;
+players[1] = false;
+players[2] = false; //true;
+players[3] = false; //true;
+players[4] = false;	//true;
+players[5] = false; //true;
 
-	// Which are they colors
-	var colors = new Array();
-	colors[0] = "red";
-	colors[1] = "blue";
-	colors[2] = "green";
-	colors[3] = "purple";
-	colors[4] = "cyan";
-	colors[5] = "yellow";
+// Which are they colors
+var colors = new Array();
+colors[0] = "red";
+colors[1] = "blue";
+colors[2] = "green";
+colors[3] = "purple";
+colors[4] = "cyan";
+colors[5] = "yellow";
 
 
 /* Game Vars */
@@ -36,7 +36,8 @@ var longestWormSize = 0;
 var longestWorm;
 var longestWormColor;
 var wormIsInHole = false;
-var gameId = 1;
+var gameId = '';
+var keyId = '';
 var source = "main";
 
 /* How Will Worm Move */

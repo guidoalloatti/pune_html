@@ -34,8 +34,8 @@ $(function() {
 
 	$("#dialog-form").dialog({
 		autoOpen: false,
-		//height: 450,
-		//width: 300,
+		//height: 440,
+		//width: 380,
 		modal: true,
 		buttons: {
 			"Create a game": function() {
@@ -47,12 +47,14 @@ $(function() {
 					startGame();
 				}
 			},
-			"Save Settings": function() {
-				save();
-				alert("Settings saved!");
-				$(this).dialog( "save" );
-			},
-			"Cancel": function() {
+			// "Save Settings": function() {
+			// 	if(validateNewGame()) {
+			// 		save();
+			// 		alert("Settings saved!");
+			// 		$(this).dialog( "save" );
+			// 	}
+			// },
+			"Close": function() {
 				$(this).dialog( "close" );
 			}
 		},
