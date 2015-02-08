@@ -55,7 +55,7 @@ function getDbSettings(id) {
 
 function saveSettings(id, settings) {
 	$.ajax({
-		data: { id : id, settings : settings, action : "save" },
+		data: { id: id, settings: settings, action: "save" },
 		type: "GET",
 		dataType: "json",
 		url: "/model/settings.php",
@@ -63,19 +63,21 @@ function saveSettings(id, settings) {
 		success: function(data){
 			//console.log("Ajax Success: saveSettings!");
 			console.log("============= saveSettings: AJAX SUCCESS ==========");
-			console.log(data);
+			console.log("Id: " + data.id);
+			console.log("Sql: " + data.sqlResult);
+			gameId = data.id;
 		},
 		error: function(data){
 			//console.log("The Ajax Call was has a error, the error text is: ");
 			console.log("============= saveSettings: AJAX ERROR ==========");
-			console.log(data);
+			console.log(data.responseText);
 		}
 	})
 }
 
 function saveKeys(id, keys) {
 	$.ajax({
-		data: { id : id, settings : keys, action : "save" },
+		data: { id: id, settings: keys, action: "save" },
 		type: "GET",
 		dataType: "json",
 		url: "/model/keys.php",
@@ -83,12 +85,14 @@ function saveKeys(id, keys) {
 		success: function(data){
 			//console.log("Ajax Success: saveSettings!");
 			console.log("============= saveKeys: AJAX SUCCESS ==========");
-			console.log(data);
+			console.log("Id: " + data.id);
+			console.log("Sql: " + data.sqlResult);
+			keyId = data.id;
 		},
 		error: function(data){
 			//console.log("The Ajax Call was has a error, the error text is: ");
 			console.log("============= saveKeys: AJAX ERROR ==========");
-			console.log(data);
+			console.log(data.responseText);
 		}
 	})
 }

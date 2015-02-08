@@ -103,36 +103,36 @@ function save() {
 	/**
 	* Save the options
 	*/
-	var settings = { hole_points : $("#hole_points").val(),
- 					 start_speed : $("#speed").val(),
-					 gap_space   : $("#gap_spacing").val(),
-					 gap_size    : $("#gap_sizing").val(),
-					 player_1    : $("#red_play").is(":checked"),
-					 player_2    : $("#blue_play").is(":checked"),
-					 player_3    : $("#green_play").is(":checked"),
-					 player_4    : $("#purple_play").is(":checked"),
-					 player_5    : $("#cyan_play").is(":checked"),
-					 player_6    : $("#yellow_play").is(":checked")
+	var settings = { 
+				hole_points : $("#hole_points").val(), 
+				start_speed : $("#speed").val(),
+				gap_space   : $("#gap_spacing").val(),
+				gap_size    : $("#gap_sizing").val(),
+				player_1    : $("#red_play").is(":checked"),
+				player_2    : $("#blue_play").is(":checked"),
+				player_3    : $("#green_play").is(":checked"),
+				player_4    : $("#purple_play").is(":checked"),
+				player_5    : $("#cyan_play").is(":checked"),
+				player_6    : $("#yellow_play").is(":checked")
 	}
 
-	var keys = { red_r      : $("#redRightInput").attr("name"), //val(),
-				 red_l      : $("#redLeftInput").attr("name"), //val(),
-				 blue_r     : $("#blueRightInput").attr("name"), //val(),
-				 blue_l     : $("#blueLeftInput").attr("name"), //val(),
-				 green_r    : $("#greenRightInput").attr("name"), //val(),
-				 green_l    : $("#greenLeftInput").attr("name"), //val(),
-				 purple_r   : $("#purpleRightInput").attr("name"), //val(),
-				 purple_l   : $("#purpleLeftInput").attr("name"), //val(),
-				 cyan_r     : $("#cyanRightInput").attr("name"), //val(),
-				 cyan_l     : $("#cyanLeftInput").attr("name"), //val(),
-				 yellow_r   : $("#yellowRightInput").attr("name"), //val(),
-				 yellow_l   : $("#yellowLeftInput").attr("name") //val()
+	var keys = { 
+				red_r      : $("#redRightInput").attr("name"), //val(),
+				red_l      : $("#redLeftInput").attr("name"), //val(),
+				blue_r     : $("#blueRightInput").attr("name"), //val(),
+				blue_l     : $("#blueLeftInput").attr("name"), //val(),
+				green_r    : $("#greenRightInput").attr("name"), //val(),
+				green_l    : $("#greenLeftInput").attr("name"), //val(),
+				purple_r   : $("#purpleRightInput").attr("name"), //val(),
+				purple_l   : $("#purpleLeftInput").attr("name"), //val(),
+				cyan_r     : $("#cyanRightInput").attr("name"), //val(),
+				cyan_l     : $("#cyanLeftInput").attr("name"), //val(),
+				yellow_r   : $("#yellowRightInput").attr("name"), //val(),
+				yellow_l   : $("#yellowLeftInput").attr("name") //val()
 	}
 
-	//console.log(keys);
-	saveSettings(1, settings);
-	saveKeys(1, keys);
-	//window.close();
+	saveSettings(gameId, settings);
+	saveKeys(gameId, keys);
 }
 
 function testSettingsPage() {

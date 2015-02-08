@@ -58,7 +58,8 @@ var longestWormSize = 0;
 var longestWorm;
 var longestWormColor;
 var wormIsInHole = false;
-var gameId = 1;
+var gameId = '';
+var keyId = '';
 var source = "main";
 
 /* How Will Worm Move */

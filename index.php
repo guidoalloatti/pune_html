@@ -174,34 +174,6 @@ $gameContent = '<div id="canvas_div">
 							<font face="Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">
 						Worm . . . L . . . R
 							<table>
-<<<<<<< HEAD
-								<tr id="redControls" style="display:none;">
-									<td class="cool">Red</td>
-									<td><input type="button" id="redRightButton" value="a"></td>
-									<td><input type="button" id="redLeftButton" value="b"></td>
-								</tr>
-								<tr id="blueControls" style="display:none;">
-									<td class="cool">Blue</td>
-									<td><input type="button" id="blueRightButton" value="a"></td>
-									<td><input type="button" id="blueLeftButton" value="b"></td>
-								</tr>
-								<tr id="greenControls" style="display:none;">
-									<td class="cool">Green</td>
-									<td><input type="button" id="greenRightButton" value="a"></td>
-									<td><input type="button" id="greenLeftButton" value="b"></td>
-								</tr>
-								<tr id="purpleControls" style="display:none;">
-									<td class="cool">Purple</td>
-									<td><input type="button" id="purpleRightButton" value="a"></td>
-									<td><input type="button" id="purpleLeftButton" value="b"></td>
-								</tr>
-								<tr id="cyanControls" style="display:none;">
-									<td class="cool">Cyan</td>
-									<td><input type="button" id="cyanRightButton" value="a"></td>
-									<td><input type="button" id="cyanLeftButton" value="b"></td>
-								</tr>
-								<tr id="yellowControls" style="display:none;">
-=======
 								<tr id="redKeyHelpRow" style="display:none;">
 									<td class="cool">Red</td>
 									<td><input type="button" id="redLeftButton" value=""></td>
@@ -228,7 +200,6 @@ $gameContent = '<div id="canvas_div">
 									<td><input type="button" id="cyanRightButton" value=""></td>
 								</tr>
 								<tr id="yellowKeyHelpRow" style="display:none;">
->>>>>>> 9a5eaea50ceb68b5aa0fc896832ceb4c3a85101c
 									<td class="cool">Yellow</td>
 									<td><input type="button" id="yellowLeftButton" value=""></td>
 									<td><input type="button" id="yellowRightButton" value=""></td>

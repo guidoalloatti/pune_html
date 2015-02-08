@@ -21,7 +21,7 @@ class Base {
 		$this->host 		= "localhost";
 		$this->user 		= "root";
 		//$this->pass 		= "";
-		$this->pass 		= "root";
+		$this->pass 		= "root"; //root";
 		$this->db 			= "pune";
 		$this->table 		= $table;
 		$this->descQuery 	= "DESC `$this->table`;";
@@ -42,9 +42,11 @@ class Base {
 	}
 
 	public function getResults($query) {
+		$this->mySqlConnect();
+		$this->mySqlDBSelect();
 		$result = mysql_query($query);
 		if (!$result) {
-			die('Could not query:' . mysql_error());
+			die('Could not query: ' . mysql_error());
 		}
 		return $result;
 	}
@@ -54,7 +56,6 @@ class Base {
 		$this->mySqlConnect();
 		$this->mySqlDBSelect();
 		$this->getTableFields();
-
 
 		$this->sqlResult = $this->getResults($this->sqlQuery);
 		while($row = mysql_fetch_array($this->sqlResult)) {
@@ -78,19 +79,60 @@ class Base {
 		}
 	}
 
-	function mySqlUpdate($sql) {
+	public function get_last_id() {
+		$sql = "SELECT MAX(id) FROM `$this->table`";
+		$query_result = $this->getResults($sql);
+		$id = mysql_fetch_array($query_result)[0];
+		return $id;
+	}
+
+	function runQuery($sql, $type) {
 		$this->mySqlConnect();
 		$this->mySqlDBSelect();
-		if (!mysql_query($sql, $this->link)) {
+		if (!$query_result = mysql_query($sql, $this->link)) {
 			$message = "Error trying to execute: " . $sql . " Mysql Error is: " . mysql_error();
 			return $message;
 		}
 		$this->mySqlClose();
-		return "Success: 1 row updated. Executed query: '".$sql."'";
+
+		$message = "Success!";
+		if($type=="insert")
+			$message.=" 1 row inserted.";
+		else if($type == "update")
+			$message.=" 1 row updated.";
+		else if($type == "getById")
+			return mysql_fetch_array($query_result)[0];
+		else
+			$message = " Unknown operation.";
+
+		$message .= " Executed query: '".$sql."'";
+		$result = array("sqlResult" => $message, "id" => $this->get_last_id());
+		return $result;
+	}
+
+	public function get_by_id($id) {
+		$sql = "SELECT COUNT(*) FROM `$this->table` WHERE id = $id;";
+		return $this->runQuery($sql, "getById");
 	}
 
 	public function insert($values) {
+		$i = 0;
+		foreach($values as $key=>$value) {
+			$fields_key .= $key;
 
+			if($value == "false") $value = 0;
+			else if ($value == "true") $value = 1;
+
+			$fields_values .= "'".$value."'";
+			$i++;
+			if($i < count($values)) {
+				$fields_key .= ", ";
+				$fields_values .= ", ";
+			}
+		}
+		$sql = "INSERT INTO `$this->table` ($fields_key) VALUES ($fields_values);";
+		$message = $this->runQuery($sql, "insert");
+		return $message;
 	}
 
 	public function update($id, $settings) {
@@ -105,10 +147,11 @@ class Base {
 				$values .= ", ";
 		}
 		$sql = "UPDATE `$this->table` SET $values WHERE id = $id;";
-		$message = $this->mySqlUpdate($sql);
+		$message = $this->runQuery($sql, "update");
 		return $message;
 	}
-
 }
+
+
 
 ?>
