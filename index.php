@@ -137,11 +137,16 @@ $gameContent =
 		<div>
 			<a href="#" class="toggle-nav-bar" id="show-options">Toogle Options</a>
 		</div>
+		<div>
+			<a href="https://github.com/guidoalloatti/pune_html" TARGET="_blank" class="pune-nav-bar">Pune HTML5</a>
+		</div>
 	</div>
 
 	<div id="footer-bar">
 		<div>
-			<a href="#" class="footer-created-by">Created by: Guido Alloatti | 2015</a>
+			<a href="http://www.linkedin.com/profile/view?id=50407787" TARGET="_blank" class="footer-created-by">
+				Created by: Guido Alloatti
+			</a>
 		</div>
 	</div>
 	
