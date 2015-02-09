@@ -35,37 +35,37 @@ $startContent = '<div class="demo">
 				<th>Worm</th><th>Play</th><th>Left</th><th>Right</th>
 			</tr>
 			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Red Worm" readonly="true" id="red_label"/></td>
+				<td><input type="label" style="color: white; background: lightgray" value="Red Worm" readonly="true" id="red_label"/></td>
 				<td align="center"><input type="checkbox" id="red_play" name="red"/></td>
 				<td align="center"><input type="text" id="redLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="redRightInput" size="1"/></td>
 			</tr>
 			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Blue Worm" readonly="true" id="blue_label"/></td>
+				<td><input type="label" style="color: white; background: lightgray;;" value="Blue Worm" readonly="true" id="blue_label"/></td>
 				<td align="center"><input type="checkbox" id="blue_play" name="blue"/></td>
 				<td align="center"><input type="text" id="blueLeftInput" size="1" /></td>
 				<td align="center"><input type="text" id="blueRightInput" size="1" /></td>
 			</tr>
 			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Green Worm" readonly="true" id="green_label"/></td>
+				<td><input type="label" style="color: white; background: lightgray;" value="Green Worm" readonly="true" id="green_label"/></td>
 				<td align="center"><input type="checkbox" id="green_play" name="green"/></td>
 				<td align="center"><input type="text" id="greenLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="greenRightInput" size="1"/></td>
 			</tr>
 			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Purple Worm" readonly="true" id="purple_label"/></td>
+				<td><input type="label" style="color: white; background: lightgray;" value="Purple Worm" readonly="true" id="purple_label"/></td>
 				<td align="center"><input type="checkbox" id="purple_play" name="purple"/></td>
 				<td align="center"><input type="text" id="purpleLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="purpleRightInput" size="1"/></td>
 			</tr>
 			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Cyan Worm" readonly="true" id="cyan_label"/></td>
+				<td><input type="label" style="color: white; background: lightgray;" value="Cyan Worm" readonly="true" id="cyan_label"/></td>
 				<td align="center"><input type="checkbox" id="cyan_play" name="cyan"/></td>
 				<td align="center"><input type="text" id="cyanLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="cyanRightInput" size="1"/></td>
 			</tr>
 			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray; font-size: 12pt;" value="Yellow Worm" readonly="true" id="yellow_label"/></td>
+				<td><input type="label" style="color: white; background: lightgray;" value="Yellow Worm" readonly="true" id="yellow_label"/></td>
 				<td align="center"><input type="checkbox" id="yellow_play" name="yellow"/></td>
 				<td align="center"><input type="text" id="yellowLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="yellowRightInput" size="1"/></td>

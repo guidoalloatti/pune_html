@@ -10,6 +10,9 @@ $(document).ready(function() {
 
 // The Function that starts the game including canvas and game
 function startGame(colors) {
+	console.log("Starting Game");
+	getDbKeys(source, gameId);
+	getDbSettings(gameId);
 	context = loadCanvasContext();
 	marker  = loadMarkerCanvas();
 
@@ -80,12 +83,6 @@ function worm() {
 	this.index			= 0;
 	this.holeScore		= 0;
 }
-
-//function startGame(){
-//}
-
-//function startRound(){
-//}
 
 // Starting the contexts, set speeding and start Worms
 function start(colors) {
@@ -418,7 +415,6 @@ function getWormIndexByColor(color) {
 
 // This function adds a message to different textareas
 function addMessage(message, id) {
-	//console.log(message, id);
 	if(id == "howto") $("#"+id).text(message);
 	else $("#"+id).val(message);
 }
@@ -433,7 +429,7 @@ function showWormInfo(currentWorm) {
 			"\nalive: "+currentWorm.alive+
 			"\nplaying: "+currentWorm.playing+
 			"\nscore: "+currentWorm.score+
-			"\nlength: "+currentWorm.length);		
+			"\nlength: "+currentWorm.length);
 }  
 
 // This function shows the information related with the selected picture

@@ -1,3 +1,19 @@
+
+.div.ui-dialog-buttonpane{
+	font-size: 14px;
+}
+
+.ui-widget{
+	font-size: 14px;
+}
+
+.ui-widget-content{
+	font-size: 14px;
+}
+
+
+
+
 table.colorone {
     color: white;
     width: 100%;

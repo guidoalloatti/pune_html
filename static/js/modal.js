@@ -82,16 +82,12 @@ $(function() {
 
 			$('input[type=checkbox]').each(function(){
 				if(this.checked) {
-					//console.log($(this))
 					playing.push(this);
 					checked++;
-					
 					holePoints = $("#hole_points").val();
 					modalSpeed = $("#modal_speed").val();
 					gapSpacing = $("#gap_spacing").val();
 					gapSizing = $("#gap_sizing").val();
-					
-					
 				}
 			});
 
@@ -128,7 +124,6 @@ $(function() {
 					}
 				});
 			}
-			
 			
 			startGame(playingColors);
 
