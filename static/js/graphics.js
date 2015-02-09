@@ -16,7 +16,7 @@ function drawMarker(color, x, y, w, h) {
 
 function drawScore() {
 	var score = "00";
-	$.each(players, function () { 	
+	$.each(players, function () {
 		if(this.playing && this.score < 10) score = "0"+this.score;
 		else score = this.score;
 		

@@ -1,9 +1,9 @@
 // Starting the Game when page is Ready
 $(document).ready(function() {
-	//$("#canvas_div").hide();
+	$("#canvas_div").hide();
 	// Setting dev instance with no settings in the beginning
-	$(this).dialog( "close" );
-	$(".demo").hide();
+	//$(this).dialog( "close" );
+	//$(".demo").hide();
 	//$("#canvas_div").show();
 	//startGame();
 });
@@ -302,11 +302,12 @@ function isWormHit(currentWorm) {
 
 // Stablish the current round
 function setRound() {
-	currentRound++;
+	
 	speed = startingSpeed;
 	changeInterval(speed);
 	addMessage("Current Round: "+currentRound, "rounds");
 	addMessage("Current Speed: "+speed, "speed");
+	currentRound++;
 }
 
 // Huge function, move a worm, evaluate if the worm has crushed 

@@ -1,4 +1,9 @@
 $(function() {
+			$("#show-options").click(function(){
+				$("#options-td").toggle();
+				//$("#toggled-button").toggle("slow");
+			})
+
 			// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
 			$("#dialog:ui-dialog").dialog( "destroy" );
 
@@ -34,8 +39,8 @@ $(function() {
 
 			$("#dialog-form").dialog({
 				autoOpen: false,
-				height: 600,
-				width: 420,
+				height: 440,
+				width: 300,
 				modal: true,
 				buttons: {
 					"Create a game": function() {
@@ -43,6 +48,7 @@ $(function() {
 							$(this).dialog( "close" );
 							$(".demo").hide();
 							$("#canvas_div").show();
+							$("#background").show();
 							gameHasStarted = true;
 							startGame();
 						}
@@ -152,7 +158,7 @@ $(function() {
 			}
 			return out;
 		}
-		
+
 		function setPlayingWorms(){
 			console.log("Play");
 		}
