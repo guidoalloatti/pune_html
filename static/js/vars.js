@@ -120,7 +120,7 @@ var xmlFileName = "xml_jquery.xml"
 
 /* Default Keys */
 var defaultKeys = {
-    0 	: { color : "red", left: 192, right: 49 },
+  0 	: { color : "red", left: 192, right: 49 },
 	1 	: { color : "blue", left: 90, right: 88 },
 	2 	: { color : "green", left: 66, right: 86 },
 	3 	: { color : "purple", left: 55, right: 54 },
@@ -131,7 +131,7 @@ var usingDefaultKeys = false;
 
 /* currentKeys */
 var currentKeys  = {
-    0 	: { color : "red", left: -1, right: -1 },
+  0 	: { color : "red", left: -1, right: -1 },
 	1 	: { color : "blue", left: -1, right: -1 },
 	2 	: { color : "green", left: -1, right: -1 },
 	3 	: { color : "purple", left: -1, right: -1 },
@@ -144,6 +144,6 @@ var currentKeys  = {
 var rootDir = "";
 var settings = { id:"", player1:"", player2:"", player3:"", player4:"", player5:"", player6:"", hole_points:"none" };
 var appStatus = "started";
+
 // Other Status
-	//
 /* Variables Declarations Finished */

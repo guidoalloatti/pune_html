@@ -33,8 +33,8 @@ function getDbSettings(id) {
 							if(val == 1) {
 								players[i] = true;
 								worms[i].playing = true;
-								// worms[i].alive = true;
-								// $("#"+worms[i].color+"Controls").show();
+								worms[i].alive = true;	
+								$("#"+worms[i].color+"Controls").show();
 							}
 						}
 					}

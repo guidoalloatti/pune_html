@@ -1,11 +1,9 @@
 // Starting the Game when page is Ready
 $(document).ready(function() {
-	$("#canvas_div").hide();
-	// Setting dev instance with no settings in the beginning
-	//$(this).dialog( "close" );
-	//$(".demo").hide();
-	//$("#canvas_div").show();
-	//startGame();
+	/* The games is on */
+	// $("#background").show(); // This shows the complete game screen
+	$(".demo").hide();       // This hides the start menu screen
+	/* To start the game with custom settings just comment the 2 lines before */
 });
 
 // The Function that starts the game including canvas and game

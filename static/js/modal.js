@@ -44,15 +44,20 @@ $(function() {
 				buttons: {
 					"Create a game": function() {
 						if(validateNewGame()) {
+							pause()
+							gameHasStarted = false 
 							$(this).dialog( "close" );
-							$(".demo").hide();
-							$("#canvas_div").show();
-							$("#background").show();
-							$("#count_3").show();
-							setTimeout(function(){ $("#count_3").hide(); $("#count_2").show() }, 1000);
-							setTimeout(function(){ $("#count_2").hide(); $("#count_1").show() }, 2000);
-							setTimeout(function(){ $("#count_1").hide(); }, 3000);
-							setTimeout(function(){ gameHasStarted = true; startGame(); }, 3100);
+							$(".demo").hide()
+							$("#canvas_div").show()
+							$("#background").show()
+							$("#count_3").show()
+							setTimeout(function(){ $("#count_3").hide(); $("#count_2").show() }, 1000)
+							setTimeout(function(){ $("#count_2").hide(); $("#count_1").show() }, 2000)
+							setTimeout(function(){ $("#count_1").hide(); }, 3000)
+							pause()
+							setTimeout(function(){ 
+								gameHasStarted = true
+							}, 3100)
 						}
 					},
 					/*

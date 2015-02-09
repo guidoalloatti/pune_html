@@ -130,6 +130,21 @@ $startContent = '<div class="demo">
 
 $gameContent = 
 	'
+	<div id="nav-bar">
+		<div>
+			<a href="#" class="create-nav-bar" id="set-game">Create Game</a>
+		</div>
+		<div>
+			<a href="#" class="toggle-nav-bar" id="show-options">Toogle Options</a>
+		</div>
+	</div>
+
+	<div id="footer-bar">
+		<div>
+			<a href="#" class="footer-created-by">Created by: Guido Alloatti | 2015</a>
+		</div>
+	</div>
+	
 	<div id="background" style="display: none;">
 		<div id="canvas_div">
 			<table>
@@ -144,9 +159,6 @@ $gameContent =
 							This text is displayed if our browser does not support HTML5 Canvas.
 						</canvas>
 					</td>
-					<div id="toggled-button" bgcolor=#77aaaa width="54">
-						<button id="show-options">Toogle Options</button>
-					</div>
 					<td id="options-td">
 						<table class="centered" >
 						<tbody>
@@ -184,7 +196,7 @@ $gameContent =
 								<hr/>
 								<table>
 									<tr>
-										<td>Worm . . Left . . Right</td>
+										<td>Worm | Left | Right</td>
 									</tr>
 									<tr id="redKeyHelpRow" style="display:none;">
 										<td>Red</td>
