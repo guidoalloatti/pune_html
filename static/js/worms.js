@@ -10,9 +10,11 @@ $(document).ready(function() {
 
 // The Function that starts the game including canvas and game
 function startGame(colors) {
-	console.log("Starting Game");
+	console.log("Starting Game with id: " + gameId)
+	console.log("Getting Keys from source: " + source)
+
 	getDbKeys(source, gameId);
-	getDbSettings(gameId);
+	// getDbSettings(gameId);
 	context = loadCanvasContext();
 	marker  = loadMarkerCanvas();
 
@@ -238,12 +240,20 @@ function getWormsAlive() {
 // Get the highest Score and the Winning Worm
 function getMaxScore() {
 	maxScore = 0;
+	maxScorePlayers = 0;
 	$.each(players, function() {
 		if(	this.playing && this.score > maxScore) {
 			maxScore = this.score;
 			winningWorm = this.color;
 		}
 	});
+	$.each(players, function() {
+		if( this.playing && this.score == maxScore) {
+			maxScorePlayers++;
+		}
+	});
+	if(maxScorePlayers > 1)
+		winningWorm = "";
 }
 
 // Get the score needed to win the match

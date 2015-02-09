@@ -71,8 +71,8 @@ function showAjaxData(data, source){
 }
 
 function getKeysArray(keys, source) {
-	console.log(keys);
-	console.log(source);
+	// console.log(keys);
+	// console.log(source);
 
 	if(source == "main") {
 		usingDefaultKeys = false;

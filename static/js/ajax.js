@@ -41,8 +41,9 @@ function getDbSettings(id) {
 				});
 			});
 
-			startWorms();
-			startRound();
+			settings['id'] = data['id'];
+			//console.log("Ajax Success!");
+			showSettingsData(data);
 
 		},
 		error: function(data){
