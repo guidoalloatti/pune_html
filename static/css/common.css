@@ -1,8 +1,25 @@
+#count_1, #count_2, #count_3 {
+	display: none;
+	font-size: 320px;
+	font-weight: bold;
+	position: fixed;
+  top: 120px;
+  left: 250px;
+	width: 60px;
+	height: 30px;
+	color: white;
+}
+
 #background {
 	background: #88bbbb; 
 	width: 730px; 
 	height: 485px;
 	border: 10px solid #88bbbb;
+}
+
+#create-game {
+	background: lightgreen;
+	font-weight: bold;
 }
 
 #toggled-button {

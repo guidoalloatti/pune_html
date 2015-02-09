@@ -114,16 +114,19 @@ $startContent = '<div class="demo">
 	<!-- Modal Content -->
 	<div id="users-contain" class="ui-widget">
 		<h1>Welcome to Pune HTML!</h1>
-	<!-- <hr/>
-		<img src="images/wormclean.jpg"> -->
+		<hr/>
+		<img src="images/wormclean.jpg">
 	</div>
 	<hr/>
 	<button id="create-game">Create new game</button>
 	<button id="post-it">Share!</button>
-	<button id="read-about">Read About</button>
+	<button id="read-about">About</button>
 	</div>
-	<div class="demo-description">
-	</div>';
+	<div class="demo-description"></div>
+	<div id="count_1">1</div>
+	<div id="count_2">2</div>
+	<div id="count_3">3</div>
+	';
 
 $gameContent = 
 	'
@@ -181,37 +184,35 @@ $gameContent =
 								<hr/>
 								<table>
 									<tr>
-										<td class="cool">Worm</td>
-										<td>Left</td>
-										<td>Right</td>
+										<td>Worm . . Left . . Right</td>
 									</tr>
 									<tr id="redKeyHelpRow" style="display:none;">
-										<td class="cool">Red</td>
+										<td>Red</td>
 										<td><input type="button" id="redLeftButton" value=""></td>
 										<td><input type="button" id="redRightButton" value=""></td>
 									</tr>
 									<tr id="blueKeyHelpRow" style="display:none;">
-										<td class="cool">Blue</td>
+										<td>Blue</td>
 										<td><input type="button" id="blueLeftButton" value=""></td>
 										<td><input type="button" id="blueRightButton" value=""></td>
 									</tr>
 									<tr id="greenKeyHelpRow" style="display:none;">
-										<td class="cool">Green</td>
+										<td>Green</td>
 										<td><input type="button" id="greenLeftButton" value=""></td>
 										<td><input type="button" id="greenRightButton" value=""></td>
 									</tr>
 									<tr id="purpleKeyHelpRow" style="display:none;">
-										<td class="cool">Purple</td>
+										<td>Purple</td>
 										<td><input type="button" id="purpleLeftButton" value=""></td>
 										<td><input type="button" id="purpleRightButton" value=""></td>
 									</tr>
 									<tr id="cyanKeyHelpRow" style="display:none;">
-										<td class="cool">Cyan</td>
+										<td>Cyan</td>
 										<td><input type="button" id="cyanLeftButton" value=""></td>
 										<td><input type="button" id="cyanRightButton" value=""></td>
 									</tr>
 									<tr id="yellowKeyHelpRow" style="display:none;">
-										<td class="cool">Yellow</td>
+										<td>Yellow</td>
 										<td><input type="button" id="yellowLeftButton" value=""></td>
 										<td><input type="button" id="yellowRightButton" value=""></td>
 									</tr>

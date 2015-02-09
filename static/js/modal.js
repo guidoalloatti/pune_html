@@ -1,7 +1,6 @@
 $(function() {
 			$("#show-options").click(function(){
-				$("#options-td").toggle();
-				//$("#toggled-button").toggle("slow");
+				$("#options-td").toggle()
 			})
 
 			// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
@@ -49,8 +48,11 @@ $(function() {
 							$(".demo").hide();
 							$("#canvas_div").show();
 							$("#background").show();
-							gameHasStarted = true;
-							startGame();
+							$("#count_3").show();
+							setTimeout(function(){ $("#count_3").hide(); $("#count_2").show() }, 1000);
+							setTimeout(function(){ $("#count_2").hide(); $("#count_1").show() }, 2000);
+							setTimeout(function(){ $("#count_1").hide(); }, 3000);
+							setTimeout(function(){ gameHasStarted = true; startGame(); }, 3100);
 						}
 					},
 					/*
