@@ -3,6 +3,10 @@ $(function() {
 				$("#options-td").toggle()
 			})
 
+			$("#sounds-nav-bar").click(function(){
+				$("#sounds-menu").toggle();
+			})
+
 			// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
 			$("#dialog:ui-dialog").dialog( "destroy" );
 
@@ -45,6 +49,7 @@ $(function() {
 					"Create a game": function() {
 						if(validateNewGame()) {
 							pause()
+							$("#start-body").hide();
 							gameHasStarted = false 
 							$(this).dialog( "close" );
 							$(".demo").hide()
