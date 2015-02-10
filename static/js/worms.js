@@ -364,11 +364,10 @@ function lastWormCrushes(currentWorm) {
 
 // This function is called when the match is over
 function matchOver(currentWorm) {
-	playSound("win");
-	currentRound = 0;
-	isNewRound = false;
-	alert("Winner!\nThe champion worm with "+maxScore+" points is....\nThe glorious "+winningWorm+" worm!!");
-	startGame();
+	playSound("win")
+	currentRound = 0
+	isNewRound = false
+	alert("Winner!\nThe champion worm with "+maxScore+" points is....\nThe glorious "+winningWorm+" worm!!")
 }
 
 // This function is called when the round is over

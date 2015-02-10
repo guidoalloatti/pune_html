@@ -28,10 +28,101 @@ $header = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http:
 		<link href="static/css/nav-bar.css" rel="stylesheet" type="text/css">
 		<link href="static/css/footer-bar.css" rel="stylesheet" type="text/css">
 		<link href="static/css/pre-game.css" rel="stylesheet" type="text/css">
+		<link href="static/css/game-settings.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>';
 
-$startContent = '<div class="demo">
+/*
+/ This is the modal that appears when creating a game
+*/
+$startContent = '
+		<!-- Game settings start -->
+		<!--
+		<div id="game-settings-div" style="display:none">
+			<div id="settings-header-text">Create a new game: Configure Keys and Settings!</div>
+			<div id="settings-header-comments">Click over the input or in the checkbox to add the worm of the color yo choose!</div>
+			<hr/>
+			<div>
+				<table class="ui-widget ui-widget-content">
+			<tr class="ui-widget-header">
+				<th>Worm</th><th>Play</th><th>Left</th><th>Right</th>
+			</tr>
+			<tr class="ui-widget-content">
+				<td><input type="label" style="color: white; background: lightgray" value="Red Worm" readonly="true" id="red_label"/></td>
+				<td align="center"><input type="checkbox" id="red_play" name="red"/></td>
+				<td align="center"><input type="text" id="redLeftInput" size="1"/></td>
+				<td align="center"><input type="text" id="redRightInput" size="1"/></td>
+			</tr>
+			<tr class="ui-widget-content">
+				<td><input type="label" style="color: white; background: lightgray;;" value="Blue Worm" readonly="true" id="blue_label"/></td>
+				<td align="center"><input type="checkbox" id="blue_play" name="blue"/></td>
+				<td align="center"><input type="text" id="blueLeftInput" size="1" /></td>
+				<td align="center"><input type="text" id="blueRightInput" size="1" /></td>
+			</tr>
+			<tr class="ui-widget-content">
+				<td><input type="label" style="color: white; background: lightgray;" value="Green Worm" readonly="true" id="green_label"/></td>
+				<td align="center"><input type="checkbox" id="green_play" name="green"/></td>
+				<td align="center"><input type="text" id="greenLeftInput" size="1"/></td>
+				<td align="center"><input type="text" id="greenRightInput" size="1"/></td>
+			</tr>
+			<tr class="ui-widget-content">
+				<td><input type="label" style="color: white; background: lightgray;" value="Purple Worm" readonly="true" id="purple_label"/></td>
+				<td align="center"><input type="checkbox" id="purple_play" name="purple"/></td>
+				<td align="center"><input type="text" id="purpleLeftInput" size="1"/></td>
+				<td align="center"><input type="text" id="purpleRightInput" size="1"/></td>
+			</tr>
+			<tr class="ui-widget-content">
+				<td><input type="label" style="color: white; background: lightgray;" value="Cyan Worm" readonly="true" id="cyan_label"/></td>
+				<td align="center"><input type="checkbox" id="cyan_play" name="cyan"/></td>
+				<td align="center"><input type="text" id="cyanLeftInput" size="1"/></td>
+				<td align="center"><input type="text" id="cyanRightInput" size="1"/></td>
+			</tr>
+			<tr class="ui-widget-content">
+				<td><input type="label" style="color: white; background: lightgray;" value="Yellow Worm" readonly="true" id="yellow_label"/></td>
+				<td align="center"><input type="checkbox" id="yellow_play" name="yellow"/></td>
+				<td align="center"><input type="text" id="yellowLeftInput" size="1"/></td>
+				<td align="center"><input type="text" id="yellowRightInput" size="1"/></td>
+			</tr>
+		</table><hr/>
+
+		<table class="ui-widget ui-widget-content">
+			<tr><td>Hole Points</td>
+				<td><select id="hole_points">
+						<option>None</option>
+						<option>One</option>
+				</select></td></tr>
+			<tr><td>Speed</td>
+				<td><select id="modal_speed">
+						<option>Slow</option>
+						<option>Normal</option>
+						<option>Frantic</option>
+					</select></td></tr>
+			<tr><td>Gap Spacing</td>
+				<td><select id="gap_spacing">
+						<option>Close</option>
+						<option>Normal</option>
+						<option>Far Apart</option>
+					</select></td></tr>
+			<tr><td>Gap Size</td>
+				<td><select id="gap_sizing">
+						<option>Small</option>
+						<option>Normal</option>
+						<option>Large</option>
+					</select></td></tr>
+		</table>
+
+			</div>
+			<hr/>
+			<div>
+				<button id="create-game-from-settings">Create new game</button>
+				<button id="close-game-settings">Close</button>
+			</div>
+		</div>
+		-->
+
+
+		<!-- Demo start -->
+		<div class="demo">
 		<div class="ui-widget" id="dialog-form" title="Create a new game: Configure Keys and Settings!">
 		<p style="font-size: 10px"> Click over the input or in the checkbox to add the worm of the color yo choose! </p>
 		<table class="ui-widget ui-widget-content">
@@ -138,6 +229,7 @@ $gameContent =
 	<!-- ========================================================= -->
 	<div id="nav-bar">
 		<div>
+			<!-- <a href="#" class="create-new-game-nav-bar" id="open-new-game-settings">Create Game</a>-->
 			<a href="#" class="create-nav-bar" id="set-game">Create Game</a>
 		</div>
 		<div>
@@ -189,7 +281,8 @@ $gameContent =
 						<div id="cyan-text">Cyan</div>
 					</a>
 				</div>
-					<div>Game Funny Sounds</div>
+
+				<div>Game Funny Sounds</div>
 				<hr/>
 				<div id="die-shout">
 					<a href="#" id="die-shout">
@@ -298,9 +391,8 @@ $gameContent =
 						<tr valign=top>
 						  <td bgcolor=#99cccc width="6">&nbsp;</td>
 						  <td bgcolor=#006666 colspan=2 rowspan=2>
-							<p><font face="Arial, Helvetica, sans-serif" size="2" color="#8CBABD"><b>Move that Worm!<br></b></font></b>
-								<font face="Arial, Helvetica, sans-serif" size="2" color="#FFFFFF">
-								<hr/>
+							<p>
+								<font face="Arial, Helvetica, sans-serif" size="2" color="white">
 								<table>
 									<tr>
 										<td>Worm | Left | Right</td>

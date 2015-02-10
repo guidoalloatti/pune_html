@@ -12,6 +12,7 @@ worms[5] = false; //true;
 
 // Who is playing
 var players = new Array();
+var playingColors;
 /*
 players[0] = false;
 players[1] = false;
@@ -73,7 +74,7 @@ var fps; 					/* Is defined by speed+basicFPSValue */
 var wormSize = 4; 			/* The size of the circle */
 var angleStepSize = 1; 		/* How much will it turn */
 var sizeMultiplier = 2;		/* How much will the worm move every interval */
-var currentRound = 0;		/* Set initial value for round, previous start */
+var currentRound = 1;		/* Set initial value for round, previous start */
 var historyDotsSaved = 1000;
 
 /* Canvas and Js Vars */

@@ -1,6 +1,6 @@
 /* Nav-bar and Footer Elements */
 .create-nav-bar, .footer-created-by, .pune-nav-bar, 
-#show-options, #sounds-nav-bar, #sounds-menu {
+#show-options, #sounds-nav-bar, #sounds-menu, .create-new-game-nav-bar {
   color: #B5B5B5;
   text-decoration: none;
   font-family: sans-serif;
@@ -9,7 +9,7 @@
 }
 
 .create-nav-bar:hover, .footer-created-by:hover, .pune-nav-bar:hover,
-#show-options:hover, #sounds-nav-bar:hover {
+#show-options:hover, #sounds-nav-bar:hover, .create-new-game-nav-bar:hover {
   color: white;
 }
 
@@ -60,7 +60,7 @@
   height: 150px;
   background: #272727;
   border: 1px solid white;
-  border-radius: 0, 25px, 0, 25px;
+  border-radius: 10px;
   padding: 7px;
 }
 
@@ -93,7 +93,7 @@
   top: 3px;
 }
 
-.create-nav-bar {
+.create-nav-bar, .create-new-game-nav-bar {
   font-size: 18px;
   margin-top: 8px;
   margin-left: 20px;
