@@ -70,11 +70,11 @@ var speedingIncrementSpeed = 5;
 var intervalMiliSeconds = 1000;
 var speed = 10;
 var basicFPSValue = 20;
-var fps; 					/* Is defined by speed+basicFPSValue */
-var wormSize = 4; 			/* The size of the circle */
+var fps; 									/* Is defined by speed+basicFPSValue */
+var wormSize = 4; 				/* The size of the circle */
 var angleStepSize = 1; 		/* How much will it turn */
 var sizeMultiplier = 2;		/* How much will the worm move every interval */
-var currentRound = 1;		/* Set initial value for round, previous start */
+var currentRound = 1;			/* Set initial value for round, previous start */
 var historyDotsSaved = 1000;
 
 /* Canvas and Js Vars */

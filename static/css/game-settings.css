@@ -1,0 +1,83 @@
+#red_label, #blue_label, #green_label, #purple_label, #yellow_label, #cyan_label {
+  font-size: 14px !important;
+}
+
+
+#game-settings-div {
+  font-size: 14px;  
+  left: -1px;
+  top: 40px;
+  width: 400px;
+  height: 400px;
+  background: #272727;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 7px;
+  position: absolute;
+}
+
+#settings-header-text {
+  /*background: white; */
+  font-size: 14px;
+  color: #B5B5B5;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: normal;
+}
+
+#settings-header-comments {
+  font-size: 10px;
+  color: #B5B5B5;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: normal;
+}
+
+/*.ui-dialog-buttonset:hover {
+  background: blue; 
+}*/
+
+.ui-dialog-titlebar-close {
+  display: none;
+/*  font-size: 14px;  
+  left: 80px;
+  top: 40px;
+  border-radius: 10px;
+  padding: 7px;
+  position: absolute;*/
+}
+
+.ui-dialog-buttonset {
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: normal;
+  position: fixed !important; 
+  font-size: 14px !important;
+  left: 270px !important;
+  top: 425px !important;
+  border: 1px solid white;
+  border-radius: 5px;
+}
+
+.ui-dialog-title {
+  top: 200px;
+  font-size: 18px !important;
+/*  background: white;*/
+}
+
+.ui-dialog {
+  background: #272727;
+  color: #B5B5B5;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: normal;
+  position: fixed !important; 
+  font-size: 14px !important;
+  left: -1px !important;
+  top: 40px !important;
+  width: 400px !important;
+  height: 375px !important;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 20px;
+}

@@ -22,7 +22,7 @@ $header = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http:
 		<script src="static/js/modal.js" type="text/javascript"></script>
 
 		<!-- Adding the Styling Sources -->
-		<link href="static/js/jquery-ui-1.8.23.custom.css" rel="stylesheet" type="text/css">
+		<!-- <link href="static/js/jquery-ui-1.8.23.custom.css" rel="stylesheet" type="text/css"> -->
 
 		<link href="static/css/common.css" rel="stylesheet" type="text/css">
 		<link href="static/css/nav-bar.css" rel="stylesheet" type="text/css">
@@ -37,137 +37,52 @@ $header = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http:
 */
 $startContent = '
 		<!-- Game settings start -->
-		<!--
-		<div id="game-settings-div" style="display:none">
-			<div id="settings-header-text">Create a new game: Configure Keys and Settings!</div>
-			<div id="settings-header-comments">Click over the input or in the checkbox to add the worm of the color yo choose!</div>
-			<hr/>
-			<div>
-				<table class="ui-widget ui-widget-content">
-			<tr class="ui-widget-header">
-				<th>Worm</th><th>Play</th><th>Left</th><th>Right</th>
-			</tr>
-			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray" value="Red Worm" readonly="true" id="red_label"/></td>
-				<td align="center"><input type="checkbox" id="red_play" name="red"/></td>
-				<td align="center"><input type="text" id="redLeftInput" size="1"/></td>
-				<td align="center"><input type="text" id="redRightInput" size="1"/></td>
-			</tr>
-			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray;;" value="Blue Worm" readonly="true" id="blue_label"/></td>
-				<td align="center"><input type="checkbox" id="blue_play" name="blue"/></td>
-				<td align="center"><input type="text" id="blueLeftInput" size="1" /></td>
-				<td align="center"><input type="text" id="blueRightInput" size="1" /></td>
-			</tr>
-			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray;" value="Green Worm" readonly="true" id="green_label"/></td>
-				<td align="center"><input type="checkbox" id="green_play" name="green"/></td>
-				<td align="center"><input type="text" id="greenLeftInput" size="1"/></td>
-				<td align="center"><input type="text" id="greenRightInput" size="1"/></td>
-			</tr>
-			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray;" value="Purple Worm" readonly="true" id="purple_label"/></td>
-				<td align="center"><input type="checkbox" id="purple_play" name="purple"/></td>
-				<td align="center"><input type="text" id="purpleLeftInput" size="1"/></td>
-				<td align="center"><input type="text" id="purpleRightInput" size="1"/></td>
-			</tr>
-			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray;" value="Cyan Worm" readonly="true" id="cyan_label"/></td>
-				<td align="center"><input type="checkbox" id="cyan_play" name="cyan"/></td>
-				<td align="center"><input type="text" id="cyanLeftInput" size="1"/></td>
-				<td align="center"><input type="text" id="cyanRightInput" size="1"/></td>
-			</tr>
-			<tr class="ui-widget-content">
-				<td><input type="label" style="color: white; background: lightgray;" value="Yellow Worm" readonly="true" id="yellow_label"/></td>
-				<td align="center"><input type="checkbox" id="yellow_play" name="yellow"/></td>
-				<td align="center"><input type="text" id="yellowLeftInput" size="1"/></td>
-				<td align="center"><input type="text" id="yellowRightInput" size="1"/></td>
-			</tr>
-		</table><hr/>
-
-		<table class="ui-widget ui-widget-content">
-			<tr><td>Hole Points</td>
-				<td><select id="hole_points">
-						<option>None</option>
-						<option>One</option>
-				</select></td></tr>
-			<tr><td>Speed</td>
-				<td><select id="modal_speed">
-						<option>Slow</option>
-						<option>Normal</option>
-						<option>Frantic</option>
-					</select></td></tr>
-			<tr><td>Gap Spacing</td>
-				<td><select id="gap_spacing">
-						<option>Close</option>
-						<option>Normal</option>
-						<option>Far Apart</option>
-					</select></td></tr>
-			<tr><td>Gap Size</td>
-				<td><select id="gap_sizing">
-						<option>Small</option>
-						<option>Normal</option>
-						<option>Large</option>
-					</select></td></tr>
-		</table>
-
-			</div>
-			<hr/>
-			<div>
-				<button id="create-game-from-settings">Create new game</button>
-				<button id="close-game-settings">Close</button>
-			</div>
-		</div>
-		-->
-
-
-		<!-- Demo start -->
 		<div class="demo">
-		<div class="ui-widget" id="dialog-form" title="Create a new game: Configure Keys and Settings!">
-		<p style="font-size: 10px"> Click over the input or in the checkbox to add the worm of the color yo choose! </p>
-		<table class="ui-widget ui-widget-content">
-			<tr class="ui-widget-header">
+		<div id="dialog-form" title="Create a new game: configure Keys and Settings!">
+		<hr/>
+		<table>
+			<tr>
 				<th>Worm</th><th>Play</th><th>Left</th><th>Right</th>
 			</tr>
-			<tr class="ui-widget-content">
+			<tr>
 				<td><input type="label" style="color: white; background: lightgray" value="Red Worm" readonly="true" id="red_label"/></td>
 				<td align="center"><input type="checkbox" id="red_play" name="red"/></td>
 				<td align="center"><input type="text" id="redLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="redRightInput" size="1"/></td>
 			</tr>
-			<tr class="ui-widget-content">
+			<tr>
 				<td><input type="label" style="color: white; background: lightgray;;" value="Blue Worm" readonly="true" id="blue_label"/></td>
 				<td align="center"><input type="checkbox" id="blue_play" name="blue"/></td>
 				<td align="center"><input type="text" id="blueLeftInput" size="1" /></td>
 				<td align="center"><input type="text" id="blueRightInput" size="1" /></td>
 			</tr>
-			<tr class="ui-widget-content">
+			<tr>
 				<td><input type="label" style="color: white; background: lightgray;" value="Green Worm" readonly="true" id="green_label"/></td>
 				<td align="center"><input type="checkbox" id="green_play" name="green"/></td>
 				<td align="center"><input type="text" id="greenLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="greenRightInput" size="1"/></td>
 			</tr>
-			<tr class="ui-widget-content">
+			<tr>
 				<td><input type="label" style="color: white; background: lightgray;" value="Purple Worm" readonly="true" id="purple_label"/></td>
 				<td align="center"><input type="checkbox" id="purple_play" name="purple"/></td>
 				<td align="center"><input type="text" id="purpleLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="purpleRightInput" size="1"/></td>
 			</tr>
-			<tr class="ui-widget-content">
+			<tr>
 				<td><input type="label" style="color: white; background: lightgray;" value="Cyan Worm" readonly="true" id="cyan_label"/></td>
 				<td align="center"><input type="checkbox" id="cyan_play" name="cyan"/></td>
 				<td align="center"><input type="text" id="cyanLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="cyanRightInput" size="1"/></td>
 			</tr>
-			<tr class="ui-widget-content">
+			<tr>
 				<td><input type="label" style="color: white; background: lightgray;" value="Yellow Worm" readonly="true" id="yellow_label"/></td>
 				<td align="center"><input type="checkbox" id="yellow_play" name="yellow"/></td>
 				<td align="center"><input type="text" id="yellowLeftInput" size="1"/></td>
 				<td align="center"><input type="text" id="yellowRightInput" size="1"/></td>
 			</tr>
-		</table><hr/>
-
-		<table class="ui-widget ui-widget-content">
+		</table>
+		<br/>
+		<table>
 			<tr>
 				<td>Hole Points</td>
 				<td>
@@ -204,18 +119,13 @@ $startContent = '
 					</select></td>
 			</tr>
 		</table>
-
+		<hr/>
+		<p style="font-size: 11px"> Click the <strong>worm color</strong> or in the <strong>checkbox</strong> to add the worm of the color yo choose! </p>
 	</div>
+
 	<!-- Modal Content -->
 	<div id="users-contain" class="ui-widget">
-		<h1>Welcome to Pune HTML!</h1>
-		<hr/>
-		<img src="images/wormclean.jpg">
 	</div>
-	<hr/>
-	<button id="create-game">Create new game</button>
-	<button id="post-it">Share!</button>
-	<button id="read-about">About</button>
 	</div>
 	<div class="demo-description"></div>
 	<div id="count_1">1</div>

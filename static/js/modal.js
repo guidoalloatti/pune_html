@@ -1,7 +1,7 @@
 $(function() {
 		// Toggle options and sounds visibility
-		$("#show-options").click(function(){ $("#options-td").toggle() })
-		$("#sounds-nav-bar").click(function(){ $("#sounds-menu").slideToggle("slow"); })
+		$("#show-options").click(function(){ 					 $("#options-td").toggle() })
+		$("#sounds-nav-bar").click(function(){ 				 $("#sounds-menu").slideToggle("slow"); })
 		$("#open-new-game-settings").click(function(){ $("#game-settings-div").slideToggle("slow"); })
 		
 		// Triggers for playing the sounds on the nav bar menu elements
@@ -53,8 +53,8 @@ $(function() {
 
 		$("#dialog-form").dialog({
 			autoOpen: false,
-			height: 440,
-			width: 300,
+			height: 480,
+			width: 380,
 			modal: true,
 			buttons: {
 				"Create a game": function() {

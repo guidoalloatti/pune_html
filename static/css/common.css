@@ -31,20 +31,9 @@
 	border: 1px solid #006666;*/
 }
 
-.div.ui-dialog-buttonpane{
-	font-size: 14px;
+.div.ui-dialog-buttonpane, .ui-widget, .ui-widget-content {
+	font-size: 16px;
 }
-
-.ui-widget{
-	font-size: 14px;
-}
-
-.ui-widget-content{
-	font-size: 14px;
-}
-
-
-
 
 table.colorone {
     color: white;
