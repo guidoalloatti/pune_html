@@ -1,6 +1,7 @@
 /* Nav-bar and Footer Elements */
 .create-nav-bar, .footer-created-by, .pune-nav-bar, 
-#show-options, #sounds-nav-bar, #sounds-menu, .create-new-game-nav-bar {
+#show-options, #sounds-nav-bar, #sounds-menu, .create-new-game-nav-bar,
+#toggle-log {
   color: #B5B5B5;
   text-decoration: none;
   font-family: sans-serif;
@@ -9,7 +10,8 @@
 }
 
 .create-nav-bar:hover, .footer-created-by:hover, .pune-nav-bar:hover,
-#show-options:hover, #sounds-nav-bar:hover, .create-new-game-nav-bar:hover {
+#show-options:hover, #sounds-nav-bar:hover, .create-new-game-nav-bar:hover,
+#toggle-log:hover {
   color: white;
 }
 
@@ -43,15 +45,6 @@
   float: left;
 }
 
-
-/* Sounds clickable element */
-#sounds-nav-bar {
-  font-size: 18px;
-  margin-top: 8px;  
-  left: 307px;
-  top: 3px;
-}
-
 #sounds-menu {
   font-size: 14px;  
   left: 300px;
@@ -77,7 +70,6 @@
 #pause-image { background: lightblue;   }
 #burp-image { background: lightgreen;   }
 
-
 .pune-nav-bar {
   font-size: 24px;
   margin-top: 8px;
@@ -86,22 +78,21 @@
   top: 1px;
 }
 
-#show-options {
+#sounds-nav-bar, #toggle-log, #show-options {
   font-size: 18px;
-  margin-top: 8px;
-  left: 160px;
-  top: 3px;
+  margin-top: 8px;   
+  top: 4px;
 }
+#show-options   { left: 185px; }
+#sounds-nav-bar { left: 320px; }
+#toggle-log     { left: 440px; }
 
 .create-nav-bar, .create-new-game-nav-bar {
-  font-size: 18px;
+  font-size: 24px;
   margin-top: 8px;
   margin-left: 20px;
-  left: 10px;
-  top: 3px;
 }
 
-/* Bars definition */ 
 #nav-bar {
   font-size: 20px;
   font-weight: bold;

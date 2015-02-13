@@ -1,3 +1,12 @@
+/* 
+/ Methods Public from Private
+*/
+var startNewGame;
+var validateNewGame;
+var find_duplicates;
+var setPlayingWorms;
+
+
 /* Match Vars */
 // Who is playing
 /*

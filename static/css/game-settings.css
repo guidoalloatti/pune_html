@@ -2,7 +2,6 @@
   font-size: 14px !important;
 }
 
-
 #game-settings-div {
   font-size: 14px;  
   left: -1px;
@@ -33,18 +32,8 @@
   font-weight: normal;
 }
 
-/*.ui-dialog-buttonset:hover {
-  background: blue; 
-}*/
-
 .ui-dialog-titlebar-close {
   display: none;
-/*  font-size: 14px;  
-  left: 80px;
-  top: 40px;
-  border-radius: 10px;
-  padding: 7px;
-  position: absolute;*/
 }
 
 .ui-dialog-buttonset {
@@ -62,7 +51,6 @@
 .ui-dialog-title {
   top: 200px;
   font-size: 18px !important;
-/*  background: white;*/
 }
 
 .ui-dialog {
