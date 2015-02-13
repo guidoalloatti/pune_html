@@ -156,8 +156,13 @@ function startWorm(color) {
 	players[i].alive 		= true;
 	players[i].playing 		= true;
 	players[i].length 		= 0;
-	players[i].leftKey      = currentKeys[i].left;   //getKey(i, "left");
-	players[i].rightKey		= currentKeys[i].right;  //getKey(i, "right");
+
+	// Debbuging keys 
+	console.log(players[i].leftKey, currentKeys[i].left)
+	console.log(players[i].leftKey, currentKeys[i].right)
+
+	if(!players[i].leftKey) players[i].leftKey  = currentKeys[i].left;   //getKey(i, "left");
+	if(!players[i].rightKey) players[i].rightKey	= currentKeys[i].right;  //getKey(i, "right");
 	players[i].index 		= i;
 }
 
