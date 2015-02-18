@@ -1,0 +1,71 @@
+<!--
+  This is the game log html 
+-->
+<div id="game-details-div" style="display:none;">
+  <div id="log_div">
+    <div id="log_title">
+      Game Log Details 
+      <hr/>
+    </div>
+    <div id="log"></div>
+  </div>
+</div>
+
+<!--
+  This is the game information html 
+-->
+<div id="game-info-div" style="display:none;">
+  <div id="info_div">
+    <div id="info_title">
+      Game Info Details 
+      <hr/>
+    </div>
+    <div id="info">   
+      <div>
+        <div id="speed_label">Current Speed:</div><div id="speed"></div>
+        <div id="round_label">Current Round:</div><div id="rounds"></div>
+        <hr>
+        <div id="longest_color_label">Longest Worm Color:</div><div id="longest"></div>
+        <div id="longest_size_label">Longest Worm Size:</div><div id="longest_size"></div>
+        <hr>
+        <div id="soundStatus">Sound is ON</div>
+        <div id="soundImage"><a onclick="soundSwitcher();"><img src="./static/images/uncheck.png" width="32" height="32" border="0" /></a></div>
+        <div id="pauseStatus">Pause is OFF </div>
+        <div id="pauseImage"><a onclick="pauseSwitcher();"><img src="./static/images/check.png" width="32" height="32" border="0" /></a></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--
+  This is the keys indicator html 
+-->
+<div id="show-keys-div"> 
+ <!-- style="display:none;"> -->
+  <div id="keys-div">
+    <div id="keys-title">
+      Worm: Left Right
+      <hr/>
+    </div>
+    <div id="keys">
+      <div class="key-row" id="redKeyHelpRow" style="display:none;">
+        <div id="red-image-small"></div>&nbsp;Red:&nbsp;<input type="button" class="key-btn" id="redRightButton"><input type="button" class="key-btn" id="redLeftButton">
+      </div>
+      <div class="key-row" id="blueKeyHelpRow" style="display:none;">
+        <div id="blue-image-small"></div>&nbsp;Blue:&nbsp;<input type="button" class="key-btn" id="blueRightButton"><input type="button" class="key-btn" id="blueLeftButton">
+      </div>
+      <div class="key-row" id="greenKeyHelpRow" style="display:none;">
+        <div id="green-image-small"></div>&nbsp;Green:&nbsp;<input type="button" class="key-btn" id="greenRightButton"><input type="button" class="key-btn" id="greenLeftButton">
+      </div>
+      <div class="key-row" id="purpleKeyHelpRow" style="display:none;">
+        <div id="purple-image-small"></div>&nbsp;Purple:&nbsp;<input type="button" class="key-btn" id="purpleRightButton"><input type="button" class="key-btn" id="purpleLeftButton">
+      </div>
+      <div class="key-row" id="yellowKeyHelpRow" style="display:none;">
+        <div id="yellow-image-small"></div>&nbsp;Yellow:&nbsp;<input type="button" class="key-btn" id="yellowRightButton"><input type="button" class="key-btn" id="yellowLeftButton">
+      </div>
+      <div class="key-row" id="cyanKeyHelpRow" style="display:none;">
+        <div id="cyan-image-small"></div>&nbsp;Cyan:&nbsp;<input type="button" class="key-btn" id="cyanRightButton"><input type="button" class="key-btn" id="cyanLeftButton">
+      </div>
+    </div>
+  </div>
+</div>

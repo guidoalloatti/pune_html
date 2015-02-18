@@ -1,11 +1,14 @@
 function getDbKeys(source, id) {
-	$.ajax({ 
+	$.ajax({
 		data: { id : "id", action : "query"},
 		type: "GET", 
 		dataType: "json", 
 		url: rootDir+"/model/keys.php",
 		async: true,
 		success: function(data){
+			console.log("into getDbKeys ajax success answer: ")
+			console.log(data)
+			console.log(source)
 			showAjaxData(data, source);
 		},
 		error: function(data){

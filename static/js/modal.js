@@ -1,9 +1,12 @@
 $(function() {
 	// Toggle options and sounds visibility
-	$("#show-options").click(function(){ 					 $("#options-td").toggle() })
-	$("#sounds-nav-bar").click(function(){ 				 $("#sounds-menu").slideToggle("slow"); })
-	$("#open-new-game-settings").click(function(){ $("#game-settings-div").slideToggle("slow"); })
-	
+	//$("#show-options").click(function(){ 					  $("#options-td").toggle() })
+	$("#sounds-nav-bar").click(function(){ 				  $("#sounds-menu").slideToggle("slow"); })
+	$("#open-new-game-settings").click(function(){  $("#game-settings-div").slideToggle("slow"); })
+	$("#toggle-log").click(function(){ 							$("#game-details-div").slideToggle("slow"); })
+	$("#toggle-info").click(function(){ 						$("#game-info-div").slideToggle("slow"); })
+	$("#toggle-keys").click(function(){ 						$("#show-keys-div").slideToggle("slow"); })
+
 	// Triggers for playing the sounds on the nav bar menu elements
 	$("#play-red-winning-shout").click(function(){ 		playSound("red") })
 	$("#play-purple-winning-shout").click(function(){ playSound("purple")	})

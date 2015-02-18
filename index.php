@@ -11,7 +11,7 @@
           $nav_bar.
           $start_screen.
           $game_canvas.
-          $game_details.
+          $game_details. 
           $footer;
 
   echo $html;

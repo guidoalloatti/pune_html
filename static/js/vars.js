@@ -120,7 +120,6 @@ var hMarker = yMax/6;
 /* Arrays Declarations */
 var keysBeenPressed = new Array();
 var worms = new Array(6);
-
 var rgbColors = new Array(6);
 
 /* XML Settings */
@@ -145,14 +144,22 @@ var currentKeys  = {
 	1 	: { color : "blue", left: -1, right: -1 },
 	2 	: { color : "green", left: -1, right: -1 },
 	3 	: { color : "purple", left: -1, right: -1 },
-	4 	: { color : "cyan", left: -1, right: -1 },
-	5 	: { color : "yellow", left: -1, right: -1}
+	4 	: { color : "yellow", left: -1, right: -1 },
+	5 	: { color : "cyan", left: -1, right: -1}
 };
 
 /* AJAX Calls Vars */
 //var rootDir = "/pune_html";
 var rootDir = "";
-var settings = { id:"", player1:"", player2:"", player3:"", player4:"", player5:"", player6:"", hole_points:"none" };
+var settings = { 
+									id:"", 
+									player1:"", 
+									player2:"", 
+									player3:"", 
+									player4:"", 
+									player5:"", 
+									player6:"", 
+									hole_points:"none" };
 var appStatus = "started";
 
 // Other Status

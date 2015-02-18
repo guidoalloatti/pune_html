@@ -67,31 +67,51 @@ function testKeysPage(source) {
 }
 
 function showAjaxData(data, source){
+	console.log("Into showAjaxData")
+	console.log(data)
+	console.log(source)
 	getKeysArray(data, source);
 }
 
 function getKeysArray(keys, source) {
-	// console.log(keys);
-	// console.log(source);
+	console.log("Into getKeysArray")
+	console.log(keys)
+	console.log(source)
 
 	if(source == "main") {
 		usingDefaultKeys = false;
+
+
+
 		$.each(keys, function() {
 			$.each(this, function(key, value) {
 				var i = 0;
 				$.each(colors, function(){
-					if(key == this+"_r") currentKeys[i]["right"] = value;
-					if(key == this+"_l") currentKeys[i]["left"] = value;
+					if(key == this+"_r") {
+						currentKeys[i]["right"] = value;
+
+					} if(key == this+"_l") {
+						currentKeys[i]["left"] = value;
+					}
 					i++;
 				})
 			})
 		})
 		$("#log").text($("#log").text()+"\nNow using custom Keys!");
 
-		var keys = defaultKeys;
-		if(!usingDefaultKeys) keys = currentKeys;
+		// var keys = defaultKeys;
+		//if(!usingDefaultKeys) 
+		console.log(currentKeys);
+		keys = currentKeys;
 
 		$.each(keys, function(index, key) {
+			// console.log("==========================================")
+			// console.log(index)
+			// console.log(key)
+			// console.log("Worm: " + key["color"])
+			// console.log("left: " + getCharFromKeyCode(key["left"]))
+			// console.log("right: " + getCharFromKeyCode(key["right"]))
+
 			$("#"+key["color"]+"RightButton").val(getCharFromKeyCode(key["right"]));
 			$("#"+key["color"]+"LeftButton").val(getCharFromKeyCode(key["left"]));
 		})

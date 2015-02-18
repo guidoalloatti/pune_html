@@ -64,7 +64,7 @@ class Base {
 		$this->mySqlDBSelect();
 		$this->getTableFields();
 
-
+		var_dump($this->sqlQuery);
 		$this->sqlResult = $this->getResults($this->sqlQuery);
 		while($row = mysql_fetch_array($this->sqlResult)) {
 			foreach($this->fields as $field) {

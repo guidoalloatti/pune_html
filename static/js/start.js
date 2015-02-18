@@ -13,9 +13,11 @@ startNewGame = function () {
       // Show Stuff
       $("#canvas_div").show()
       $("#background").show()
-      $("#show-options").show()
+      //$("#show-options").show()
       $("#sounds-nav-bar").show()
       $("#toggle-log").show()
+      $("#toggle-info").show()
+      $("#toggle-keys").show()
 
       // Do the countdown trick
       $("#count_3").show()

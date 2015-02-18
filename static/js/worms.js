@@ -92,7 +92,7 @@ function start(colors) {
 	context.fillRect(0, 0, xMax, yMax);
 	marker.fillRect(xMax, 0, xMax+100, yMax);
 	drawMarkers();
-	$("#speed").text("Current Speed: "+speed);
+	$("#speed").text(speed);
 	startWorms(colors);
 }
 
@@ -157,9 +157,11 @@ function startWorm(color) {
 	players[i].playing 		= true;
 	players[i].length 		= 0;
 
-	// Debbuging keys 
-	console.log(players[i].leftKey, currentKeys[i].left)
-	console.log(players[i].leftKey, currentKeys[i].right)
+	// Debbuging keys
+	// console.log("color: " + color)
+	// console.log("leftKey: " + players[i].leftKey + " current left key: " + currentKeys[i].left)
+	// console.log("rightKey: " + players[i].rightKey + " current right key: " + currentKeys[i].right)
+
 
 	if(!players[i].leftKey) players[i].leftKey  = currentKeys[i].left;   //getKey(i, "left");
 	if(!players[i].rightKey) players[i].rightKey	= currentKeys[i].right;  //getKey(i, "right");
@@ -193,7 +195,7 @@ function doSpeeding() {
 	playSound("speeding");
 	speed += speedingIncrementSpeed;
 	changeInterval(speed);
-	addMessage("Current Speed: "+speed, "speed");
+	addMessage(speed, "speed");
 }
 
 // This function do the real speeding reduce
@@ -201,7 +203,7 @@ function reduceSpeeding() {
 	playSound("ohh");
 	speed -= speedingIncrementSpeed;
 	changeInterval(speed);
-	addMessage("Current Speed: "+speed, "speed");
+	addMessage(speed, "speed");
 }
 
 // This function evaluates and if random numbers matchs speeds
@@ -460,9 +462,20 @@ function showPixelInfo(currentWorm, imageArray) {
 
 function setKeyHelp() {
 	$.each(players, function(){
-		$("#"+this.color+"KeyHelpRow").css("display", "block");
-		$("#"+this.color+"RightButton").val(String.fromCharCode(this.rightKey));
-		$("#"+this.color+"LeftButton").val(String.fromCharCode(this.leftKey));
+		if(this.playing) {
+			console.log("=============================")
+			console.log("into setKeyHelp: ")
+			console.log("The color is: " + this.color)
+			console.log("The left is: " + this.rightKey)
+			console.log("The right is: " + this.leftKey)
+
+			currentKeys[i]["right"]
+
+
+			$("#"+this.color+"KeyHelpRow").css("display", "block");
+			$("#"+this.color+"RightButton").val(String.fromCharCode(this.rightKey));
+			$("#"+this.color+"LeftButton").val(String.fromCharCode(this.leftKey));
+		}
 	});
 }
 

@@ -1,7 +1,7 @@
 /* Nav-bar and Footer Elements */
 .create-nav-bar, .footer-created-by, .pune-nav-bar, 
 #show-options, #sounds-nav-bar, #sounds-menu, .create-new-game-nav-bar,
-#toggle-log {
+#toggle-log, #toggle-info, #toggle-keys {
   color: #B5B5B5;
   text-decoration: none;
   font-family: sans-serif;
@@ -11,7 +11,7 @@
 
 .create-nav-bar:hover, .footer-created-by:hover, .pune-nav-bar:hover,
 #show-options:hover, #sounds-nav-bar:hover, .create-new-game-nav-bar:hover,
-#toggle-log:hover {
+#toggle-log:hover, #toggle-info:hover, #toggle-keys:hover {
   color: white;
 }
 
@@ -32,14 +32,21 @@
   width: 30px;
   height: 30px;
   border-radius: 30px;
-  width: 30px;
-  height: 30px;
+}
+
+#red-image-small, #blue-image-small, #green-image-small, 
+#purple-image-small, #yellow-image-small, #cyan-image-small  {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
 }
 
 #red-image, #red-text, #green-image, #green-text, #purple-image, #purple-text,
 #blue-image, #blue-text, #yellow-image, #yellow-text, #cyan-image, #cyan-text, 
 #die-image, #die-text, #yabass-image, #yabass-text, #winning-image, #winning-text,
-#speeding-image, #speeding-text, #pause-image, #pause-text, #burp-image, #burp-text
+#speeding-image, #speeding-text, #pause-image, #pause-text, #burp-image, #burp-text,
+#red-image-small, #blue-image-small, #green-image-small, 
+#purple-image-small, #yellow-image-small, #cyan-image-small
 {
   text-align: left;
   float: left;
@@ -57,12 +64,12 @@
   padding: 7px;
 }
 
-#red-image    { background: red;      }
-#blue-image   { background: blue;     }
-#green-image  { background: green;    }
-#purple-image { background: purple;   }
-#yellow-image {  background: yellow;  }
-#cyan-image   { background: cyan;     }
+#red-image, #red-image-small       { background: red;      }
+#blue-image, #blue-image-small     { background: blue;     }
+#green-image, #green-image-small   { background: green;    }
+#purple-image, #purple-image-small { background: purple;   }
+#yellow-image, #yellow-image-small {  background: yellow;  }
+#cyan-image, #cyan-image-small     { background: cyan;     }
 #die-image    { background: black;    }
 #yabass-image { background: orange;   }
 #speeding-image { background: gray;   }
@@ -78,7 +85,7 @@
   top: 1px;
 }
 
-#sounds-nav-bar, #toggle-log, #show-options {
+#sounds-nav-bar, #toggle-info, #toggle-log, #show-options, #toggle-keys {
   font-size: 18px;
   margin-top: 8px;   
   top: 4px;
@@ -86,6 +93,8 @@
 #show-options   { left: 185px; }
 #sounds-nav-bar { left: 320px; }
 #toggle-log     { left: 440px; }
+#toggle-info    { left: 550px; }
+#toggle-keys    { left: 660px; }
 
 .create-nav-bar, .create-new-game-nav-bar {
   font-size: 24px;

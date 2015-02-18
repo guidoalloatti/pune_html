@@ -40,9 +40,9 @@ CREATE TABLE `keys` (
 
 --
 -- Dumping data for table `keys`
---
-
-INSERT INTO `keys` VALUES(1, 56, 65, 876, 56, 987, 89, 67, 897, 67, 897, 65, 879, 546, 786, 0);
+--  
+INSERT INTO `keys` (red_r, red_l, blue_r, blue_l, green_r, green_l, purple_r, purple_l, cyan_r, cyan_l, yellow_r, yellow_l, pause, sound, match_id)
+VALUES (50, 49, 55, 54, 57, 48, 122, 120, 46, 45, 118, 98, 32, 112, 1);
 
 -- --------------------------------------------------------
 
