@@ -13,7 +13,6 @@ startNewGame = function () {
       // Show Stuff
       $("#canvas_div").show()
       $("#background").show()
-      //$("#show-options").show()
       $("#sounds-nav-bar").show()
       $("#toggle-log").show()
       $("#toggle-info").show()

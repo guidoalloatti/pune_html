@@ -18,9 +18,9 @@ function soundSwitcher() {
 }
 
 function playSound(audio) {
-	if(soundOn) {
-		var audio = new Audio("./static/sounds/" + audio + ".mp3");
-		audio.play();
+	if(soundOn && audio != "") {
+		var audio = new Audio("./static/sounds/" + audio + ".mp3")
+		audio.play()
 	}
 }
 

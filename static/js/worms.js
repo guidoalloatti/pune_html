@@ -2,14 +2,14 @@
 $(document).ready(function() {
 	/* The games is on */
 	// $("#background").show(); // This shows the complete game screen
-	$(".demo").hide();       // This hides the start menu screen
+	//$(".demo").hide();       // This hides the start menu screen
 	/* To start the game with custom settings just comment the 2 lines before */
 });
 
 // The Function that starts the game including canvas and game
 function startGame(colors) {
-	console.log("Starting Game with id: " + gameId)
-	console.log("Getting Keys from source: " + source)
+	// console.log("Starting Game with id: " + gameId)
+	// console.log("Getting Keys from source: " + source)
 
 	getDbKeys(source, gameId);
 	// getDbSettings(gameId);
@@ -30,7 +30,7 @@ function startGame(colors) {
 		doSpeeding();
 		isNewRound = true;
 		speed = startingSpeed;
-		$("#rounds").text("1");
+		addMessage(currentRound, "rounds")	
 		changeInterval(speed);
 		setKeyHelp();
 	} else {
@@ -86,14 +86,14 @@ function worm() {
 
 // Starting the contexts, set speeding and start Worms
 function start(colors) {
-	setConfigurationOptions();
-	setContextProperties();
-	setMarkerProperties();	
-	context.fillRect(0, 0, xMax, yMax);
-	marker.fillRect(xMax, 0, xMax+100, yMax);
-	drawMarkers();
-	$("#speed").text(speed);
-	startWorms(colors);
+	setConfigurationOptions()
+	setContextProperties()
+	setMarkerProperties()
+	context.fillRect(0, 0, xMax, yMax)
+	marker.fillRect(xMax, 0, xMax+100, yMax)
+	drawMarkers()
+	addMessage(speed/5, "speed")
+	startWorms(colors)
 }
 
 // Setting options from the configuration modal
@@ -171,16 +171,14 @@ function startWorm(color) {
 // This function gets the worm who is winning with it size
 function getLongestWorm() {
 	$.each(players, function() {		
-		if( this.playing && this.alive && this.length > longestWormSize) {
-			longestWorm       = this;
-			longestWormSize   = this.length;
-			longestWormColor  = this.color;
-			message = "Longest Worm: "+ longestWormColor;
-			addMessage(message, "longest");
-			message = "Size: "+ (longestWormSize/10) +" cm";  
-			addMessage(message, "longest_size");
+		if(this.playing && this.alive && this.length > longestWormSize) {
+			longestWorm       = this
+			longestWormSize   = this.length
+			longestWormColor  = this.color
+			addMessage(longestWormColor, "longest")
+			addMessage(longestWormSize, "longest_size")
 		}
-	});
+	})
 }
 
 // Set Time interval (must not exists any more when render will be implemented)
@@ -192,26 +190,25 @@ function changeInterval(speed) {
 
 // This function do the real speeding
 function doSpeeding() {
-	playSound("speeding");
-	speed += speedingIncrementSpeed;
-	changeInterval(speed);
-	addMessage(speed, "speed");
+	playSound("speeding")
+	speed += speedingIncrementSpeed
+	changeInterval(speed)
+	addMessage(speed/5, "speed")
 }
 
 // This function do the real speeding reduce
 function reduceSpeeding() {
-	playSound("ohh");
-	speed -= speedingIncrementSpeed;
-	changeInterval(speed);
-	addMessage(speed, "speed");
+	playSound("ohh")
+	speed -= speedingIncrementSpeed
+	changeInterval(speed)
+	addMessage(speed/5, "speed")
 }
 
 // This function evaluates and if random numbers matchs speeds
 function speeding() {
-	random_1 = Math.floor(Math.random()*(speedingChance+speed));
-	random_2 = (speedingChance+speed) - Math.floor(Math.random()*(speedingChance+speed));
-	if(random_1 == random_2)
-		doSpeeding();
+	random_1 = Math.floor(Math.random()*(speedingChance+speed))
+	random_2 = (speedingChance+speed) - Math.floor(Math.random()*(speedingChance+speed))
+	if(random_1 == random_2) doSpeeding()
 }
 
 // This function move each worm and is called in the time interval
@@ -307,12 +304,11 @@ function isWormHit(currentWorm) {
 
 // Stablish the current round
 function setRound() {
-	
-	speed = startingSpeed;
-	changeInterval(speed);
-	addMessage("Current Round: "+currentRound, "rounds");
-	addMessage("Current Speed: "+speed, "speed");
-	currentRound++;
+	speed = startingSpeed
+	changeInterval(speed)
+	currentRound++
+	addMessage(currentRound, "rounds")
+	addMessage(speed/5, "speed")
 }
 
 // Huge function, move a worm, evaluate if the worm has crushed 
@@ -345,28 +341,26 @@ function wormIsAlive(currentWorm) {
 	
 // The worm is dead, so we need to kill her	
 function wormCrushes(currentWorm) {
-	playSound("die");
-	currentWorm.alive = false;
-	getLongestWorm();
+	playSound("die")
+	currentWorm.alive = false
+	getLongestWorm()
 	addScore();
-	getWormsAlive();
-	
+	getWormsAlive();	
 	if(wormsAlive < 2) lastWormCrushes(currentWorm);
-
-	drawMarkers();
-	drawScore();
-	getLongestWorm();
+	drawMarkers()
+	drawScore()
+	getLongestWorm()
 }
 
 // The last worm is dead, needs to start a new round and maybe a new match
 function lastWormCrushes(currentWorm) {
-	clearKeys();
-	getMaxScore();
-	getScoreToWin();
-	setRound();
+	clearKeys()
+	getMaxScore()
+	getScoreToWin()
+	setRound()
 
-	if(maxScore >= scoreToWin) matchOver(currentWorm);
-	else roundOver(currentWorm);
+	if(maxScore >= scoreToWin) matchOver(currentWorm)
+	else roundOver(currentWorm)
 }
 
 // This function is called when the match is over
@@ -428,11 +422,7 @@ function getWormIndexByColor(color) {
 	}
 }
 
-// This function adds a message to different textareas
-function addMessage(message, id) {
-	if(id == "howto") $("#"+id).text(message);
-	else $("#"+id).val(message);
-}
+
 
 // This function shows the current worm info
 function showWormInfo(currentWorm) {
@@ -463,15 +453,12 @@ function showPixelInfo(currentWorm, imageArray) {
 function setKeyHelp() {
 	$.each(players, function(){
 		if(this.playing) {
-			console.log("=============================")
-			console.log("into setKeyHelp: ")
-			console.log("The color is: " + this.color)
-			console.log("The left is: " + this.rightKey)
-			console.log("The right is: " + this.leftKey)
-
+			// console.log("=============================")
+			// console.log("into setKeyHelp: ")
+			// console.log("The color is: " + this.color)
+			// console.log("The left is: " + this.rightKey)
+			// console.log("The right is: " + this.leftKey)
 			currentKeys[i]["right"]
-
-
 			$("#"+this.color+"KeyHelpRow").css("display", "block");
 			$("#"+this.color+"RightButton").val(String.fromCharCode(this.rightKey));
 			$("#"+this.color+"LeftButton").val(String.fromCharCode(this.leftKey));

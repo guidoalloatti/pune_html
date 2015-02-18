@@ -54,10 +54,10 @@
 
 #sounds-menu {
   font-size: 14px;  
-  left: 300px;
-  top: 40px;
+  left: 948px;
+  top: 310px;
   width: 495px;
-  height: 150px;
+  height: 250px;
   background: #272727;
   border: 1px solid white;
   border-radius: 10px;
@@ -90,11 +90,10 @@
   margin-top: 8px;   
   top: 4px;
 }
-#show-options   { left: 185px; }
-#sounds-nav-bar { left: 320px; }
-#toggle-log     { left: 440px; }
-#toggle-info    { left: 550px; }
-#toggle-keys    { left: 660px; }
+#sounds-nav-bar { left: 220px; }
+#toggle-log     { left: 300px; }
+#toggle-info    { left: 350px; }
+#toggle-keys    { left: 405px; }
 
 .create-nav-bar, .create-new-game-nav-bar {
   font-size: 24px;
