@@ -4,32 +4,10 @@
 var startNewGame;
 var validateNewGame;
 var find_duplicates;
-var setPlayingWorms;
-
-
-/* Match Vars */
-// Who is playing
-/*
-var worms = new Array();
-worms[0] = true;
-worms[1] = true;
-worms[2] = false; //true;
-worms[3] = false; //true;
-worms[4] = false; //true;
-worms[5] = false; //true;
-*/
 
 // Who is playing
 var players = new Array();
 var playingColors;
-/*
-players[0] = false;
-players[1] = false;
-players[2] = false; //true;
-players[3] = false; //true;
-players[4] = false;	//true;
-players[5] = false; //true;
-*/
 
 // Which are they colors
 var colors = new Array();
@@ -39,7 +17,6 @@ colors[2] = "green";
 colors[3] = "purple";
 colors[4] = "cyan";
 colors[5] = "yellow";
-
 
 /* Game Vars */
 // Setup Vars
@@ -151,8 +128,7 @@ var currentKeys  = {
 /* AJAX Calls Vars */
 //var rootDir = "/pune_html";
 var rootDir = "";
-var settings = { 
-									id:"", 
+var settings =  { id:"", 
 									player1:"", 
 									player2:"", 
 									player3:"", 
