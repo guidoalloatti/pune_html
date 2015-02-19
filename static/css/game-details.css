@@ -1,0 +1,159 @@
+/*
+/ This are the styles for the info data showing in the nav bar activated div
+*/
+#speed_label, #speed, #round_label, #rounds, #longest_color_label, 
+#longest, #longest_size_label, #longest_size, #soundStatus, #soundImage,
+#pauseStatus, #pauseImage {
+  float: left;
+  font-family: sans-serif;
+}
+
+/*
+/ This are the styles for the keys showing in the nav bar activated div
+*/
+#show-keys-div {
+  font-size: 14px;  
+  left: 948px;
+  top: 43px;
+  width: 150px;
+  height: 250px;
+  background: #272727;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 7px;
+  position: fixed;
+}
+#keys-title {
+  color: #B5B5B5;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: normal;
+  position: fixed;
+  font-size: 18px;
+  margin-bottom: 40px;
+}
+
+#keys, .key-row{
+  width: 130px;
+  margin-top: 12px;
+  margin-left: 10px;
+  position: relative;
+  clear: both;
+  color: #B5B5B5;
+  text-decoration: none;  
+  font-weight: normal;
+  font-size: 16px;
+  display: table-cell;
+  vertical-align: middle;
+  font-family: sans-serif;
+}
+#keys {
+  padding-top: 35px;
+}
+.key-btn {
+  text-align: right;
+  float: right;
+}
+
+.close-panel-btn {
+  position: absolute;  
+  border: 1px solid black;
+  top: 240px;
+  left: 4px;
+  border-radius: 5px;
+}
+
+.close-panel-btn:hover {
+  color: white;
+  border: 1px solid white;
+}
+
+/*
+/ This are the styles for the game info in the nav bar activated div
+*/
+#pauseStatus, #soundStatus {
+  margin-top: 10px;
+}
+#sound-panel-div, #pause-panel-div {
+  text-align: left;
+  float: left;
+  display: table-cell;
+  vertical-align: bottom;
+  background: grey;
+  width: 110px;
+  white-space: nowrap;
+  border: 1px solid white;
+}
+
+#game-info-div {
+  font-size: 14px;  
+  left: 780px;
+  top: 43px;
+  width: 150px;
+  height: 250px;
+  background: #272727;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 7px;
+  position: fixed;
+}
+#info_title {
+  color: #B5B5B5;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: normal;
+  position: fixed;
+  font-size: 18px;
+}
+#info {
+  white-space: pre;
+  clear: both;
+  display: block;
+  overflow: auto;
+  width: 140px;
+  height: 23  0px;
+  color: #B5B5B5;
+  text-decoration: none;  
+  font-weight: normal;
+  position: fixed;
+  font-size: 12px;
+}
+
+/*
+/ This are the styles for the logs showing in the nav bar activated div
+*/
+#game-details-div {
+  font-size: 14px;  
+  left: 780px;
+  top: 310px;
+  width: 150px;
+  height: 250px;
+  background: #272727;
+  border: 1px solid white;
+  border-radius: 10px;
+  padding: 7px;
+  position: fixed;
+}
+#log_title {
+  color: #B5B5B5;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: normal;
+  position: fixed;
+  font-size: 18px;
+}
+#log {
+  white-space: pre;
+  clear: both;
+  display: block;
+  overflow: auto;
+  width: 140px;
+  height: 200px;
+  margin-top: 40px;
+  color: #B5B5B5;
+  text-decoration: none;
+  font-family: sans-serif;
+  font-weight: normal;
+  position: fixed;
+  font-size: 12px;
+}
