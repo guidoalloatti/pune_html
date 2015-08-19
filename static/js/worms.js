@@ -44,21 +44,21 @@ function changeAngle(direction, currentWorm) {
 function worm() {
 	this.color
 	this.x
-  this.y
-  this.leftKey
+  	this.y
+  	this.leftKey
 	this.rightKey
 	this.angle
-	this.previousX 			 = new Array(historyDotsSaved)
-	this.previousY 			 = new Array(historyDotsSaved)
+	this.previousX 		 = new Array(historyDotsSaved)
+	this.previousY 		 = new Array(historyDotsSaved)
 	this.previousHole 	 = new Array(historyDotsSaved)
-	this.alive 					 = false
-	this.playing 				 = false
-	this.score 					 = 0
-	this.length 				 = 0
-	this.defaultKeys 		 = true
+	this.alive 			 = false
+	this.playing 		 = false
+	this.score 			 = 0
+	this.length 		 = 0
+	this.defaultKeys 	 = true
 	this.lastHoleStarted = 0
-	this.index					 = 0
-	this.holeScore			 = 0
+	this.index			 = 0
+	this.holeScore		 = 0
 }
 
 // Starting the contexts, set speeding and start Worms
@@ -128,11 +128,11 @@ function startWorm(color) {
 
 	players[i].x 			 = x
 	players[i].y 			 = y
-	players[i].angle 	 = angle
-	players[i].color 	 = color
-	players[i].alive 	 = true
-	players[i].playing = true
-	players[i].length  = 0
+	players[i].angle 	 	 = angle
+	players[i].color 	 	 = color
+	players[i].alive 	 	 = true
+	players[i].playing 		 = true
+	players[i].length  		 = 0
 
 	if(!players[i].leftKey) players[i].leftKey  = currentKeys[i].left
 	if(!players[i].rightKey) players[i].rightKey	= currentKeys[i].right
@@ -159,32 +159,13 @@ function changeInterval(speed) {
 	if(!onPause) interval = setInterval(moveWorms, intervalMiliSeconds/fps);
 }
 
-// This function do the real speeding
-function doSpeeding() {
-	playSound("speeding")
-	speed += speedingIncrementSpeed
-	changeInterval(speed)
-	addMessage(speed/5, "speed")
-}
-
-// This function do the real speeding reduce
-function reduceSpeeding() {
-	playSound("ohh")
-	speed -= speedingIncrementSpeed
-	changeInterval(speed)
-	addMessage(speed/5, "speed")
-}
-
-// This function evaluates and if random numbers matchs speeds
-function speeding() {
-	random_1 = Math.floor(Math.random()*(speedingChance+speed))
-	random_2 = (speedingChance+speed) - Math.floor(Math.random()*(speedingChance+speed))
-	if(random_1 == random_2) doSpeeding()
-}
-
 // This function move each worm and is called in the time interval
 function moveWorms() {
-	if(onPause) return
+	if(onPause) {
+		trackPauseMoves()
+		return
+	}
+	trackMoves()
 	speeding()
 	modifyWormsAngle()
 	$.each(players, function() {	
@@ -339,6 +320,7 @@ function matchOver(currentWorm) {
 	isNewRound = false
 	gameHasStarted = false
 	alert("Winner!\nThe champion worm with "+maxScore+" points is....\nThe glorious "+winningWorm+" worm!!")
+	pause()
 }
 
 // This function is called when the round is over

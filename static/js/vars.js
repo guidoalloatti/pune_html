@@ -4,6 +4,8 @@
 var startNewGame;
 var validateNewGame;
 var find_duplicates;
+var moves = 0;
+var pauseMoves = 0;
 
 // Who is playing
 var players = new Array();

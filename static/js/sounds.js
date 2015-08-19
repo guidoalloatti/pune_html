@@ -40,6 +40,6 @@ function pauseSwitcher() {
 
 //Pause Function
 function pause() {
-	onPause = !onPause
 	playSound("pause")
+	onPause = !onPause
 }
