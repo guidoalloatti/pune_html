@@ -1,0 +1,203 @@
+<div id="local-setup" class="setup-screen">
+  <div class="setup-header">Local Game Setup</div>
+  <div class="demo">
+    <div id="local-setup-backdrop" class="local-setup-backdrop"></div>
+    <div id="dialog-form" title="Create a new game: configure Keys and Settings!">
+      <div class="online-hero">
+        <div class="online-hero-image"><img src="./static/images/wormclean.jpg" alt="Pune worms" /></div>
+        <div class="online-hero-text">
+          <div class="online-title">Play Local</div>
+          <div class="online-subtitle">Select worms and assign keys</div>
+        </div>
+      </div>
+      <div class="local-setup-intro">Select your worms and keys</div>
+      <div class="worm-grid">
+        <div class="worm-card">
+          <div class="worm-header">
+            <div class="worm-label" id="red_label">Red Worm</div>
+            <label class="worm-toggle"><input type="checkbox" id="red_play" name="red"/> Play</label>
+          </div>
+          <div class="worm-keys">
+            <label>Left</label><input type="text" id="redLeftInput" size="1"/>
+            <label>Right</label><input type="text" id="redRightInput" size="1"/>
+          </div>
+        </div>
+        <div class="worm-card">
+          <div class="worm-header">
+            <div class="worm-label" id="blue_label">Blue Worm</div>
+            <label class="worm-toggle"><input type="checkbox" id="blue_play" name="blue"/> Play</label>
+          </div>
+          <div class="worm-keys">
+            <label>Left</label><input type="text" id="blueLeftInput" size="1" />
+            <label>Right</label><input type="text" id="blueRightInput" size="1" />
+          </div>
+        </div>
+        <div class="worm-card">
+          <div class="worm-header">
+            <div class="worm-label" id="green_label">Green Worm</div>
+            <label class="worm-toggle"><input type="checkbox" id="green_play" name="green"/> Play</label>
+          </div>
+          <div class="worm-keys">
+            <label>Left</label><input type="text" id="greenLeftInput" size="1"/>
+            <label>Right</label><input type="text" id="greenRightInput" size="1"/>
+          </div>
+        </div>
+        <div class="worm-card">
+          <div class="worm-header">
+            <div class="worm-label" id="purple_label">Purple Worm</div>
+            <label class="worm-toggle"><input type="checkbox" id="purple_play" name="purple"/> Play</label>
+          </div>
+          <div class="worm-keys">
+            <label>Left</label><input type="text" id="purpleLeftInput" size="1"/>
+            <label>Right</label><input type="text" id="purpleRightInput" size="1"/>
+          </div>
+        </div>
+        <div class="worm-card">
+          <div class="worm-header">
+            <div class="worm-label" id="yellow_label">Yellow Worm</div>
+            <label class="worm-toggle"><input type="checkbox" id="yellow_play" name="yellow"/> Play</label>
+          </div>
+          <div class="worm-keys">
+            <label>Left</label><input type="text" id="yellowLeftInput" size="1"/>
+            <label>Right</label><input type="text" id="yellowRightInput" size="1"/>
+          </div>
+        </div>
+        <div class="worm-card">
+          <div class="worm-header">
+            <div class="worm-label" id="cyan_label">Cyan Worm</div>
+            <label class="worm-toggle"><input type="checkbox" id="cyan_play" name="cyan"/> Play</label>
+          </div>
+          <div class="worm-keys">
+            <label>Left</label><input type="text" id="cyanLeftInput" size="1"/>
+            <label>Right</label><input type="text" id="cyanRightInput" size="1"/>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <table>
+        <tr>
+          <td>Hole Points</td>
+          <td>
+            <select id="hole_points">
+              <option>None</option>
+              <option>One</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Speed</td>
+          <td>
+            <select id="modal_speed">
+              <option>Slow</option>
+              <option>Normal</option>
+              <option>Frantic</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>Gap Spacing</td>
+          <td><select id="gap_spacing">
+              <option>Close</option>
+              <option>Normal</option>
+              <option>Far Apart</option>
+            </select></td>
+        </tr>
+        <tr>
+          <td>Gap Size</td>
+          <td><select id="gap_sizing">
+              <option>Small</option>
+              <option>Normal</option>
+              <option>Large</option>
+            </select></td>
+        </tr>
+      </table>
+      <hr/>
+      <p class="local-setup-hint">Click a worm to enable it and press keys to assign left/right.</p>
+      <div class="dialog-actions">
+        <button id="dialog-create" type="button">Create a game</button>
+        <button id="dialog-close" type="button">Back</button>
+      </div>
+    </div>
+
+    <div id="settings-dialog" title="Settings">
+      <div class="settings-row">
+        <label for="settings_hole_points">Hole Points</label>
+        <select id="settings_hole_points">
+          <option>None</option>
+          <option>One</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label for="settings_speed">Speed</label>
+        <select id="settings_speed">
+          <option>Slow</option>
+          <option>Normal</option>
+          <option>Frantic</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label for="settings_gap_spacing">Gap Spacing</label>
+        <select id="settings_gap_spacing">
+          <option>Close</option>
+          <option>Normal</option>
+          <option>Far Apart</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <label for="settings_gap_sizing">Gap Size</label>
+        <select id="settings_gap_sizing">
+          <option>Small</option>
+          <option>Normal</option>
+          <option>Large</option>
+        </select>
+      </div>
+      <div class="settings-keys">
+        <div class="settings-keys-title">Player Keys</div>
+        <table class="settings-keys-table">
+          <tr>
+            <th>Worm</th><th>Left</th><th>Right</th>
+          </tr>
+          <tr>
+            <td>Red</td>
+            <td><input id="settings_red_left" type="text" size="1" /></td>
+            <td><input id="settings_red_right" type="text" size="1" /></td>
+          </tr>
+          <tr>
+            <td>Blue</td>
+            <td><input id="settings_blue_left" type="text" size="1" /></td>
+            <td><input id="settings_blue_right" type="text" size="1" /></td>
+          </tr>
+          <tr>
+            <td>Green</td>
+            <td><input id="settings_green_left" type="text" size="1" /></td>
+            <td><input id="settings_green_right" type="text" size="1" /></td>
+          </tr>
+          <tr>
+            <td>Purple</td>
+            <td><input id="settings_purple_left" type="text" size="1" /></td>
+            <td><input id="settings_purple_right" type="text" size="1" /></td>
+          </tr>
+          <tr>
+            <td>Yellow</td>
+            <td><input id="settings_yellow_left" type="text" size="1" /></td>
+            <td><input id="settings_yellow_right" type="text" size="1" /></td>
+          </tr>
+          <tr>
+            <td>Cyan</td>
+            <td><input id="settings_cyan_left" type="text" size="1" /></td>
+            <td><input id="settings_cyan_right" type="text" size="1" /></td>
+          </tr>
+        </table>
+        <div class="settings-hint">Click a box and press a key.</div>
+      </div>
+      <div class="dialog-actions">
+        <button id="settings-reset" type="button">Reset Defaults</button>
+        <button id="settings-save" type="button">Save Settings</button>
+        <button id="settings-close" type="button">Close</button>
+      </div>
+    </div>
+
+    <div id="users-contain" class="ui-widget"></div>
+  </div>
+  <div class="demo-description"></div>
+</div>

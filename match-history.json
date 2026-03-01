@@ -1,0 +1,30 @@
+[
+  {
+    "room": "4UC2A",
+    "winner": "red",
+    "maxScore": 1,
+    "round": 11,
+    "players": [
+      {
+        "id": 11,
+        "color": "red",
+        "score": 1
+      }
+    ],
+    "timestamp": 1772345457695
+  },
+  {
+    "room": "TKDCY",
+    "winner": "red",
+    "maxScore": 1,
+    "round": 5,
+    "players": [
+      {
+        "id": 13,
+        "color": "red",
+        "score": 1
+      }
+    ],
+    "timestamp": 1772345584290
+  }
+]

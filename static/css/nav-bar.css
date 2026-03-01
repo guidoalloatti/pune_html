@@ -1,7 +1,7 @@
 /* Nav-bar and Footer Elements */
 .create-nav-bar, .footer-created-by, .pune-nav-bar, 
 #show-options, #sounds-nav-bar, #sounds-menu, .create-new-game-nav-bar,
-#toggle-log, #toggle-info, #toggle-keys {
+#toggle-log, #toggle-info, #toggle-keys, #fullscreen-toggle, #open-help {
   color: #B5B5B5;
   text-decoration: none;
   font-family: sans-serif;
@@ -11,7 +11,7 @@
 
 .create-nav-bar:hover, .footer-created-by:hover, .pune-nav-bar:hover,
 #show-options:hover, #sounds-nav-bar:hover, .create-new-game-nav-bar:hover,
-#toggle-log:hover, #toggle-info:hover, #toggle-keys:hover {
+#toggle-log:hover, #toggle-info:hover, #toggle-keys:hover, #fullscreen-toggle:hover, #open-help:hover {
   color: white;
 }
 
@@ -85,15 +85,19 @@
   top: 1px;
 }
 
-#sounds-nav-bar, #toggle-info, #toggle-log, #show-options, #toggle-keys {
+#sounds-nav-bar, #toggle-info, #toggle-log, #show-options, #toggle-keys, #fullscreen-toggle, #open-help {
   font-size: 18px;
   margin-top: 8px;   
   top: 4px;
 }
-#sounds-nav-bar { left: 220px; }
-#toggle-log     { left: 300px; }
-#toggle-info    { left: 350px; }
-#toggle-keys    { left: 405px; }
+#set-game { left: 20px; top: 4px; }
+#open-settings { left: 140px; top: 4px; position: fixed; font-size: 18px; }
+#fullscreen-toggle { left: 260px; }
+#open-help { left: 370px; }
+#sounds-nav-bar { left: 470px; }
+#toggle-log     { left: 560px; }
+#toggle-info    { left: 620px; }
+#toggle-keys    { left: 690px; }
 
 .create-nav-bar, .create-new-game-nav-bar {
   font-size: 24px;
@@ -112,4 +116,98 @@
   color: white;
   background: #272727;
   border: 1px solid white;
+}
+
+/* Modern responsive header */
+#nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: auto;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 8px 14px;
+  background: rgba(20, 24, 36, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  z-index: 50;
+  flex-wrap: wrap;
+}
+
+#nav-bar > div {
+  position: static;
+  margin: 0;
+}
+
+#nav-bar a {
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #cfd6ff;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, border-color 0.12s ease;
+}
+
+#nav-bar a:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+#nav-bar #set-game,
+#nav-bar #open-settings,
+#nav-bar #fullscreen-toggle,
+#nav-bar #open-help,
+#nav-bar #sounds-nav-bar,
+#nav-bar #toggle-log,
+#nav-bar #toggle-info,
+#nav-bar #toggle-keys {
+  left: auto;
+  top: auto;
+  margin: 0;
+}
+
+#nav-bar #mode-indicator {
+  position: static;
+  right: auto;
+  top: auto;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+#nav-bar .pune-nav-bar {
+  font-size: 16px;
+  padding: 6px 12px;
+}
+
+@media (max-width: 720px) {
+  #nav-bar {
+    justify-content: space-between;
+    gap: 8px;
+    padding: 8px 10px;
+  }
+
+  #nav-bar a {
+    font-size: 12px;
+    padding: 6px 8px;
+  }
+
+  #nav-bar #mode-indicator {
+    width: 100%;
+    text-align: center;
+  }
 }

@@ -1,0 +1,598 @@
+"use strict";
+
+import { $, $$, show, hide, toggle } from "./dom.js";
+import { state } from "./state.js";
+import { playSound } from "./sounds.js";
+import { saveKeysData, saveSettingsData, loadSettingsData, recordMatchStats, loadStatsData } from "./storage.js";
+import { startNewGame, find_duplicates } from "./game.js";
+
+function setModeStatus(text) {
+  const status = $("#mode-status");
+  if (status) status.textContent = text;
+}
+
+function setGameNavVisible(isVisible) {
+  const create = $("#set-game");
+  if (create) create.style.display = isVisible ? "" : "none";
+}
+
+export function lockModeSelection(locked) {
+  const localBtn = $("#choose-local");
+  const onlineBtn = $("#choose-online");
+  if (localBtn) localBtn.disabled = locked;
+  if (onlineBtn) onlineBtn.disabled = locked;
+}
+
+function getSummaryElements() {
+  return {
+    overlay: $("#match-summary"),
+    title: $("#match-summary-title"),
+    winner: $("#match-summary-winner"),
+    list: $("#match-summary-list"),
+    rematch: $("#match-rematch"),
+    close: $("#match-close"),
+  };
+}
+
+export function showMatchSummary({ mode, winner, maxScore, players, canRematch }) {
+  const { overlay, title, winner: winnerEl, list, rematch, close } = getSummaryElements();
+  if (!overlay || !title || !winnerEl || !list || !rematch || !close) return;
+  overlay.dataset.mode = mode;
+  title.textContent = "Match Over";
+  const winnerLabel = winner ? `${winner} wins with ${maxScore} points.` : "It\'s a tie.";
+  winnerEl.textContent = winnerLabel;
+  const statsData = recordMatchStats({ winner, players });
+  list.innerHTML = "";
+  players.forEach((p) => {
+    const row = document.createElement("div");
+    row.className = "match-summary-row";
+    const name = p.name || p.color || `Player ${p.id}`;
+    const stats = statsData.players[name] || { games: 0, wins: 0, best: 0 };
+    const nameSpan = document.createElement("span");
+    nameSpan.textContent = name;
+    const scoreSpan = document.createElement("span");
+    scoreSpan.textContent = String(p.score);
+    const statsSpan = document.createElement("span");
+    statsSpan.className = "match-summary-stats";
+    statsSpan.textContent = `W:${stats.wins} G:${stats.games} Best:${stats.best}`;
+    row.appendChild(nameSpan);
+    row.appendChild(scoreSpan);
+    row.appendChild(statsSpan);
+    list.appendChild(row);
+  });
+  rematch.textContent = mode === "online" ? "Rematch (Host)" : "Play Again";
+  rematch.disabled = !canRematch;
+  overlay.style.display = "flex";
+}
+
+export function hideMatchSummary() {
+  const { overlay } = getSummaryElements();
+  if (overlay) overlay.style.display = "none";
+}
+
+function showTutorial() {
+  const overlay = $("#tutorial-overlay");
+  if (overlay) overlay.style.display = "flex";
+}
+
+function hideTutorial() {
+  const overlay = $("#tutorial-overlay");
+  if (overlay) overlay.style.display = "none";
+  window.localStorage.setItem("puneTutorialSeen", "1");
+}
+
+function updateFullscreenLabel() {
+  const btn = $("#fullscreen-toggle");
+  if (!btn) return;
+  btn.textContent = document.fullscreenElement ? "Exit Fullscreen" : "Fullscreen";
+}
+
+function toggleFullscreen() {
+  if (document.fullscreenElement) {
+    document.exitFullscreen?.();
+  } else {
+    document.documentElement.requestFullscreen?.();
+  }
+}
+
+export function applySettingsToUI(settingsArray) {
+  settingsArray.forEach((setting) => {
+    Object.entries(setting).forEach(([key, value]) => {
+      if (key == "player_1" && value == 1) labelClicked("red", "label");
+      if (key == "player_2" && value == 1) labelClicked("blue", "label");
+      if (key == "player_3" && value == 1) labelClicked("green", "label");
+      if (key == "player_4" && value == 1) labelClicked("purple", "label");
+      if (key == "player_5" && value == 1) labelClicked("cyan", "label");
+      if (key == "player_6" && value == 1) labelClicked("yellow", "label");
+      if (key == "hole_points") {
+        const el = $("#hole_points");
+        if (el) el.value = value;
+      }
+      if (key == "start_speed") {
+        const el = $("#modal_speed");
+        if (el) el.value = value;
+      }
+      if (key == "gap_space") {
+        const el = $("#gap_spacing");
+        if (el) el.value = value;
+      }
+      if (key == "gap_size") {
+        const el = $("#gap_sizing");
+        if (el) el.value = value;
+      }
+    });
+  });
+}
+
+export function labelClicked(color, caller) {
+  const play = $("#" + color + "_play");
+  const label = $("#" + color + "_label");
+  const left = $("#" + color + "LeftInput");
+  const right = $("#" + color + "RightInput");
+  if (!play || !label || !left || !right) return;
+
+  const idx = state.colors.indexOf(color);
+  const defaults = state.defaultKeys[idx];
+  const current = state.currentKeys[idx];
+  const ensureDefaults = () => {
+    const leftCode = parseInt(left.getAttribute("name") || "", 10);
+    const rightCode = parseInt(right.getAttribute("name") || "", 10);
+    if (!Number.isFinite(leftCode)) setMoveKey(color, "left", current.left > 0 ? current.left : defaults.left);
+    if (!Number.isFinite(rightCode)) setMoveKey(color, "right", current.right > 0 ? current.right : defaults.right);
+  };
+
+  if (caller == "check") {
+    if (play.checked == true) {
+      label.style.color = color;
+      label.style.background = "white";
+      show(left);
+      show(right);
+      ensureDefaults();
+    } else {
+      label.style.color = "white";
+      label.style.background = "lightgray";
+      hide(left);
+      hide(right);
+    }
+  } else if (caller == "label") {
+    if (play.checked == true) {
+      label.style.color = "white";
+      label.style.background = "lightgray";
+      play.checked = false;
+      hide(left);
+      hide(right);
+    } else {
+      label.style.color = "white";
+      label.style.background = color;
+      play.checked = true;
+      show(left);
+      show(right);
+      ensureDefaults();
+    }
+  }
+}
+
+export function setMoveKey(color, direction, code) {
+  if (code != 9) {
+    const input = $("#" + color + capitalize(direction) + "Input");
+    if (input) {
+      input.value = String.fromCharCode(code);
+      input.setAttribute("name", code);
+    }
+  }
+}
+
+export function saveSettings() {
+  const settings = {
+    hole_points: $("#hole_points").value,
+    start_speed: $("#modal_speed").value,
+    gap_space: $("#gap_spacing").value,
+    gap_size: $("#gap_sizing").value,
+    player_1: $("#red_play").checked,
+    player_2: $("#blue_play").checked,
+    player_3: $("#green_play").checked,
+    player_4: $("#purple_play").checked,
+    player_5: $("#cyan_play").checked,
+    player_6: $("#yellow_play").checked,
+  };
+
+  const keys = {
+    red_r: $("#redRightInput").getAttribute("name"),
+    red_l: $("#redLeftInput").getAttribute("name"),
+    blue_r: $("#blueRightInput").getAttribute("name"),
+    blue_l: $("#blueLeftInput").getAttribute("name"),
+    green_r: $("#greenRightInput").getAttribute("name"),
+    green_l: $("#greenLeftInput").getAttribute("name"),
+    purple_r: $("#purpleRightInput").getAttribute("name"),
+    purple_l: $("#purpleLeftInput").getAttribute("name"),
+    cyan_r: $("#cyanRightInput").getAttribute("name"),
+    cyan_l: $("#cyanLeftInput").getAttribute("name"),
+    yellow_r: $("#yellowRightInput").getAttribute("name"),
+    yellow_l: $("#yellowLeftInput").getAttribute("name"),
+  };
+
+  saveSettingsData(settings);
+  saveKeysData(keys);
+}
+
+function openSettingsDialog() {
+  const dialog = $("#settings-dialog");
+  const backdrop = ensureBackdrop();
+  if (dialog) dialog.style.display = "block";
+  if (backdrop) backdrop.style.display = "block";
+
+  $("#settings_hole_points").value = $("#hole_points").value;
+  $("#settings_speed").value = $("#modal_speed").value;
+  $("#settings_gap_spacing").value = $("#gap_spacing").value;
+  $("#settings_gap_sizing").value = $("#gap_sizing").value;
+
+  populateKeySettings();
+}
+
+function closeSettingsDialog() {
+  const dialog = $("#settings-dialog");
+  const backdrop = $("#modal-backdrop");
+  if (dialog) dialog.style.display = "none";
+  if (backdrop) backdrop.style.display = "none";
+}
+
+function showModeSelect() {
+  document.body.classList.remove("show-local-setup", "show-online-setup");
+  show($("#start-body"));
+  hide($("#local-setup"));
+  hide($("#online-setup"));
+  hide($("#background"));
+  hide($("#canvas_div"));
+  closeDialog();
+  closeSettingsDialog();
+  lockModeSelection(false);
+  setModeStatus("Select");
+  const localBackdrop = $("#local-setup-backdrop");
+  if (localBackdrop) localBackdrop.style.display = "none";
+  const onlineBackdrop = $("#online-setup-backdrop");
+  if (onlineBackdrop) onlineBackdrop.style.display = "none";
+}
+
+function showLocalSetup() {
+  document.body.classList.add("show-local-setup");
+  document.body.classList.remove("show-online-setup");
+  hide($("#start-body"));
+  show($("#local-setup"));
+  hide($("#online-setup"));
+  setModeStatus("Local setup");
+  const dialog = $("#dialog-form");
+  if (dialog) dialog.style.display = "block";
+  const demo = $(".demo");
+  if (demo) demo.style.display = "";
+  const backdrop = $("#modal-backdrop");
+  if (backdrop) backdrop.style.display = "none";
+  const localBackdrop = $("#local-setup-backdrop");
+  if (localBackdrop) localBackdrop.style.display = "block";
+}
+
+function showOnlineSetup() {
+  document.body.classList.add("show-online-setup");
+  document.body.classList.remove("show-local-setup");
+  hide($("#start-body"));
+  hide($("#local-setup"));
+  show($("#online-setup"));
+  setModeStatus("Online setup");
+  const onlineBackdrop = $("#online-setup-backdrop");
+  if (onlineBackdrop) onlineBackdrop.style.display = "block";
+}
+
+function applySettingsFromDialog() {
+  if (!validateSettingsKeys()) return;
+  $("#hole_points").value = $("#settings_hole_points").value;
+  $("#modal_speed").value = $("#settings_speed").value;
+  $("#gap_spacing").value = $("#settings_gap_spacing").value;
+  $("#gap_sizing").value = $("#settings_gap_sizing").value;
+
+  applyKeySettings();
+  saveSettings();
+  closeSettingsDialog();
+}
+
+function validateSettingsKeys() {
+  const keyCodes = [];
+  state.colors.forEach((color, idx) => {
+    const leftInput = $("#settings_" + color + "_left");
+    const rightInput = $("#settings_" + color + "_right");
+    const leftCode = getKeyInputCode(leftInput) ?? state.currentKeys[idx].left;
+    const rightCode = getKeyInputCode(rightInput) ?? state.currentKeys[idx].right;
+    if (leftCode != null) keyCodes.push(String(leftCode));
+    if (rightCode != null) keyCodes.push(String(rightCode));
+  });
+
+  const duplicates = find_duplicates(keyCodes);
+  if (duplicates.length === 0) return true;
+
+  const display = duplicates
+    .map((code) => String.fromCharCode(parseInt(code, 10)))
+    .join(", ");
+  alert("Duplicate keys detected: " + display);
+  return false;
+}
+
+function setKeyInput(input, keyCode) {
+  if (!input) return;
+  input.value = String.fromCharCode(keyCode);
+  input.dataset.keycode = String(keyCode);
+}
+
+function getKeyInputCode(input) {
+  if (!input) return null;
+  const code = parseInt(input.dataset.keycode || "", 10);
+  return Number.isFinite(code) ? code : null;
+}
+
+function populateKeySettings() {
+  const keyset = state.usingDefaultKeys ? state.defaultKeys : state.currentKeys;
+  state.colors.forEach((color, idx) => {
+    const leftInput = $("#settings_" + color + "_left");
+    const rightInput = $("#settings_" + color + "_right");
+    setKeyInput(leftInput, keyset[idx].left);
+    setKeyInput(rightInput, keyset[idx].right);
+  });
+}
+
+function applyKeySettings() {
+  state.colors.forEach((color, idx) => {
+    const leftInput = $("#settings_" + color + "_left");
+    const rightInput = $("#settings_" + color + "_right");
+    const leftCode = getKeyInputCode(leftInput) ?? state.currentKeys[idx].left;
+    const rightCode = getKeyInputCode(rightInput) ?? state.currentKeys[idx].right;
+
+    state.currentKeys[idx].left = leftCode;
+    state.currentKeys[idx].right = rightCode;
+
+    const mainLeft = $("#" + color + "LeftInput");
+    const mainRight = $("#" + color + "RightInput");
+    if (mainLeft) {
+      mainLeft.value = String.fromCharCode(leftCode);
+      mainLeft.setAttribute("name", leftCode);
+    }
+    if (mainRight) {
+      mainRight.value = String.fromCharCode(rightCode);
+      mainRight.setAttribute("name", rightCode);
+    }
+  });
+  state.usingDefaultKeys = false;
+}
+
+function bindSettingsKeyInputs() {
+  state.colors.forEach((color) => {
+    const leftInput = $("#settings_" + color + "_left");
+    const rightInput = $("#settings_" + color + "_right");
+    if (leftInput) {
+      leftInput.addEventListener("keydown", (e) => {
+        e.preventDefault();
+        setKeyInput(leftInput, e.keyCode);
+      });
+    }
+    if (rightInput) {
+      rightInput.addEventListener("keydown", (e) => {
+        e.preventDefault();
+        setKeyInput(rightInput, e.keyCode);
+      });
+    }
+  });
+}
+
+function resetSettingsDefaults() {
+  $("#settings_hole_points").value = "None";
+  $("#settings_speed").value = "Normal";
+  $("#settings_gap_spacing").value = "Normal";
+  $("#settings_gap_sizing").value = "Normal";
+
+  state.colors.forEach((color, idx) => {
+    const leftInput = $("#settings_" + color + "_left");
+    const rightInput = $("#settings_" + color + "_right");
+    setKeyInput(leftInput, state.defaultKeys[idx].left);
+    setKeyInput(rightInput, state.defaultKeys[idx].right);
+  });
+  state.usingDefaultKeys = true;
+}
+
+export function openDialog() {
+  const dialog = $("#dialog-form");
+  const backdrop = ensureBackdrop();
+  if (dialog) dialog.style.display = "block";
+  if (backdrop) backdrop.style.display = "block";
+}
+
+export function closeDialog() {
+  const dialog = $("#dialog-form");
+  const backdrop = $("#modal-backdrop");
+  if (dialog) dialog.style.display = "none";
+  if (backdrop) backdrop.style.display = "none";
+}
+
+function ensureBackdrop() {
+  let backdrop = $("#modal-backdrop");
+  if (!backdrop) {
+    backdrop = document.createElement("div");
+    backdrop.id = "modal-backdrop";
+    document.body.appendChild(backdrop);
+    backdrop.addEventListener("click", closeDialog);
+  }
+  return backdrop;
+}
+
+function capitalize(str) {
+  return str.substr(0, 1).toUpperCase() + str.substr(1);
+}
+
+export function bindUI() {
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape") return;
+    const tutorial = $("#tutorial-overlay");
+    if (tutorial && tutorial.style.display !== "none") {
+      event.preventDefault();
+      hideTutorial();
+      return;
+    }
+    const inSetup = document.body.classList.contains("show-local-setup")
+      || document.body.classList.contains("show-online-setup");
+    if (!inSetup) return;
+    event.preventDefault();
+    showModeSelect();
+  });
+
+  // Dialog open events
+  const setGame = $("#set-game");
+  if (setGame) setGame.addEventListener("click", showLocalSetup);
+
+  const chooseLocal = $("#choose-local");
+  const chooseOnline = $("#choose-online");
+  if (chooseLocal) chooseLocal.addEventListener("click", showLocalSetup);
+  if (chooseOnline) chooseOnline.addEventListener("click", showOnlineSetup);
+
+  const dialogCreate = $("#dialog-create");
+  const dialogClose = $("#dialog-close");
+  if (dialogCreate) dialogCreate.addEventListener("click", () => {
+    closeDialog();
+    setModeStatus("Local match");
+    lockModeSelection(true);
+    startNewGame();
+  });
+  if (dialogClose) dialogClose.addEventListener("click", showModeSelect);
+
+  const openSettings = $("#open-settings");
+  if (openSettings) openSettings.addEventListener("click", openSettingsDialog);
+  const openHelp = $("#open-help");
+  const tutorialClose = $("#tutorial-close");
+  if (openHelp) openHelp.addEventListener("click", showTutorial);
+  if (tutorialClose) tutorialClose.addEventListener("click", hideTutorial);
+  const fullscreenToggle = $("#fullscreen-toggle");
+  if (fullscreenToggle) fullscreenToggle.addEventListener("click", (e) => {
+    e.preventDefault();
+    toggleFullscreen();
+  });
+  document.addEventListener("fullscreenchange", updateFullscreenLabel);
+
+  const summary = getSummaryElements();
+  if (summary.close) summary.close.addEventListener("click", hideMatchSummary);
+  if (summary.rematch) {
+    summary.rematch.addEventListener("click", () => {
+      const mode = summary.overlay?.dataset.mode || "local";
+      if (mode === "online") {
+        hideMatchSummary();
+        document.dispatchEvent(new Event("pune-online-rematch"));
+      } else {
+        hideMatchSummary();
+        startNewGame();
+      }
+    });
+  }
+  const settingsSave = $("#settings-save");
+  const settingsClose = $("#settings-close");
+  const settingsReset = $("#settings-reset");
+  if (settingsSave) settingsSave.addEventListener("click", applySettingsFromDialog);
+  if (settingsClose) settingsClose.addEventListener("click", closeSettingsDialog);
+  if (settingsReset) settingsReset.addEventListener("click", resetSettingsDefaults);
+
+  const onlineBack = $("#online-back");
+  if (onlineBack) onlineBack.addEventListener("click", showModeSelect);
+
+  // Close panels
+  const infoClose = $("#info-close-btn");
+  const logClose = $("#log-close-btn");
+  const keysClose = $("#keys-close-btn");
+  const soundsClose = $("#sounds-close-btn");
+  if (infoClose) infoClose.addEventListener("click", () => toggle($("#game-info-div")));
+  if (logClose) logClose.addEventListener("click", () => toggle($("#game-details-div")));
+  if (keysClose) keysClose.addEventListener("click", () => toggle($("#show-keys-div")));
+  if (soundsClose) soundsClose.addEventListener("click", () => toggle($("#sounds-menu")));
+
+  // Nav bar buttons action
+  const toggleLog = $("#toggle-log");
+  const toggleInfo = $("#toggle-info");
+  const toggleKeys = $("#toggle-keys");
+  const soundsNav = $("#sounds-nav-bar");
+  if (toggleLog) toggleLog.addEventListener("click", () => toggle($("#game-details-div")));
+  if (toggleInfo) toggleInfo.addEventListener("click", () => toggle($("#game-info-div")));
+  if (toggleKeys) toggleKeys.addEventListener("click", () => toggle($("#show-keys-div")));
+  if (soundsNav) soundsNav.addEventListener("click", () => toggle($("#sounds-menu")));
+
+  // Sounds triggers
+  const soundMap = [
+    ["#play-red-winning-shout", "red"],
+    ["#play-purple-winning-shout", "purple"],
+    ["#play-blue-winning-shout", "blue"],
+    ["#play-green-winning-shout", "green"],
+    ["#play-yellow-winning-shout", "yellow"],
+    ["#play-cyan-winning-shout", "cyan"],
+    ["#die-shout", "die"],
+    ["#yabass-shout", "yabass"],
+    ["#winning-shout", "win"],
+    ["#speeding-shout", "speeding"],
+    ["#pause-shout", "pause"],
+    ["#burp-shout", "burp"],
+  ];
+  soundMap.forEach(([sel, sound]) => {
+    const el = $(sel);
+    if (el) el.addEventListener("click", () => playSound(sound));
+  });
+
+  // Settings inputs
+  state.colors.forEach((color) => {
+    const play = $("#" + color + "_play");
+    const label = $("#" + color + "_label");
+    const leftInput = $("#" + color + "LeftInput");
+    const rightInput = $("#" + color + "RightInput");
+
+    if (play) play.addEventListener("click", () => labelClicked(color, "check"));
+    if (label) label.addEventListener("click", () => labelClicked(color, "label"));
+
+    if (leftInput) leftInput.addEventListener("keydown", (e) => { e.preventDefault(); setMoveKey(color, "left", e.keyCode); });
+    if (rightInput) rightInput.addEventListener("keydown", (e) => { e.preventDefault(); setMoveKey(color, "right", e.keyCode); });
+
+    if (leftInput) hide(leftInput);
+    if (rightInput) hide(rightInput);
+  });
+
+  const settingsData = loadSettingsData();
+  state.players.length = 0;
+  settingsData.forEach((s) => state.players.push(s));
+  applySettingsToUI(settingsData);
+
+  setModeStatus("Select");
+
+  bindSettingsKeyInputs();
+
+  if (!window.localStorage.getItem("puneTutorialSeen")) {
+    showTutorial();
+  }
+
+  updateFullscreenLabel();
+
+  document.addEventListener("pune-local-match-over", () => {
+    lockModeSelection(false);
+    showModeSelect();
+    setGameNavVisible(true);
+  });
+
+  document.addEventListener("pune-local-match-summary", (event) => {
+    const detail = event.detail || {};
+    showMatchSummary({
+      mode: "local",
+      winner: detail.winner,
+      maxScore: detail.maxScore,
+      players: detail.players || [],
+      canRematch: true,
+    });
+  });
+
+  document.addEventListener("pune-local-game-start", () => {
+    setGameNavVisible(false);
+  });
+
+  document.addEventListener("pune-online-game-start", () => {
+    setGameNavVisible(false);
+  });
+
+  document.addEventListener("pune-online-game-over", () => {
+    setGameNavVisible(true);
+  });
+}
