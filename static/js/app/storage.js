@@ -38,8 +38,8 @@ const buildDefaultKeys = () => ([
 
 const buildDefaultSettings = () => ([
   {
-    player_1: 0,
-    player_2: 0,
+    player_1: 1,
+    player_2: 1,
     player_3: 0,
     player_4: 0,
     player_5: 0,

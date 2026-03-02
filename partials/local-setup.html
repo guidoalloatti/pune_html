@@ -4,35 +4,35 @@
     <div id="local-setup-backdrop" class="local-setup-backdrop"></div>
     <div id="dialog-form" title="Create a new game: configure Keys and Settings!">
       <div class="online-hero">
-        <div class="online-hero-image"><img src="./static/images/wormclean.jpg" alt="Pune worms" /></div>
+        <div class="online-hero-image"><img src="./static/images/pune3.png" alt="Pune worms" /></div>
         <div class="online-hero-text">
           <div class="online-title">Play Local</div>
-          <div class="online-subtitle">Select worms and assign keys</div>
+          <div class="online-subtitle">Click a worm to enable it and press keys to assign left/right.</div>
         </div>
       </div>
-      <div class="local-setup-intro">Select your worms and keys</div>
+      <div class="online-action-title">Players</div>
       <div class="worm-grid">
-        <div class="worm-card">
+        <div class="worm-card worm-row worm-red">
           <div class="worm-header">
             <div class="worm-label" id="red_label">Red Worm</div>
-            <label class="worm-toggle"><input type="checkbox" id="red_play" name="red"/> Play</label>
+            <label class="worm-toggle"><input type="checkbox" id="red_play" name="red" checked/> Play</label>
           </div>
           <div class="worm-keys">
             <label>Left</label><input type="text" id="redLeftInput" size="1"/>
             <label>Right</label><input type="text" id="redRightInput" size="1"/>
           </div>
         </div>
-        <div class="worm-card">
+        <div class="worm-card worm-row worm-blue">
           <div class="worm-header">
             <div class="worm-label" id="blue_label">Blue Worm</div>
-            <label class="worm-toggle"><input type="checkbox" id="blue_play" name="blue"/> Play</label>
+            <label class="worm-toggle"><input type="checkbox" id="blue_play" name="blue" checked/> Play</label>
           </div>
           <div class="worm-keys">
             <label>Left</label><input type="text" id="blueLeftInput" size="1" />
             <label>Right</label><input type="text" id="blueRightInput" size="1" />
           </div>
         </div>
-        <div class="worm-card">
+        <div class="worm-card worm-row worm-green">
           <div class="worm-header">
             <div class="worm-label" id="green_label">Green Worm</div>
             <label class="worm-toggle"><input type="checkbox" id="green_play" name="green"/> Play</label>
@@ -42,7 +42,7 @@
             <label>Right</label><input type="text" id="greenRightInput" size="1"/>
           </div>
         </div>
-        <div class="worm-card">
+        <div class="worm-card worm-row worm-purple">
           <div class="worm-header">
             <div class="worm-label" id="purple_label">Purple Worm</div>
             <label class="worm-toggle"><input type="checkbox" id="purple_play" name="purple"/> Play</label>
@@ -52,7 +52,7 @@
             <label>Right</label><input type="text" id="purpleRightInput" size="1"/>
           </div>
         </div>
-        <div class="worm-card">
+        <div class="worm-card worm-row worm-yellow">
           <div class="worm-header">
             <div class="worm-label" id="yellow_label">Yellow Worm</div>
             <label class="worm-toggle"><input type="checkbox" id="yellow_play" name="yellow"/> Play</label>
@@ -62,7 +62,7 @@
             <label>Right</label><input type="text" id="yellowRightInput" size="1"/>
           </div>
         </div>
-        <div class="worm-card">
+        <div class="worm-card worm-row worm-cyan">
           <div class="worm-header">
             <div class="worm-label" id="cyan_label">Cyan Worm</div>
             <label class="worm-toggle"><input type="checkbox" id="cyan_play" name="cyan"/> Play</label>
@@ -73,49 +73,45 @@
           </div>
         </div>
       </div>
-      <hr>
-      <table>
-        <tr>
-          <td>Hole Points</td>
-          <td>
+      <div class="online-action-divider"></div>
+      <div class="local-settings-grid">
+        <div class="local-settings-header online-action-title">
+          <span>Game Settings</span>
+          <button id="dialog-create" class="start-host-btn" type="button">🚀 Create Game</button>
+        </div>
+        <div class="local-settings-fields">
+          <div class="online-row">
+            <label for="hole_points">Hole Points</label>
             <select id="hole_points">
               <option>None</option>
               <option>One</option>
             </select>
-          </td>
-        </tr>
-        <tr>
-          <td>Speed</td>
-          <td>
+          </div>
+          <div class="online-row">
+            <label for="modal_speed">Speed</label>
             <select id="modal_speed">
               <option>Slow</option>
               <option>Normal</option>
               <option>Frantic</option>
             </select>
-          </td>
-        </tr>
-        <tr>
-          <td>Gap Spacing</td>
-          <td><select id="gap_spacing">
+          </div>
+          <div class="online-row">
+            <label for="gap_spacing">Gap Spacing</label>
+            <select id="gap_spacing">
               <option>Close</option>
               <option>Normal</option>
               <option>Far Apart</option>
-            </select></td>
-        </tr>
-        <tr>
-          <td>Gap Size</td>
-          <td><select id="gap_sizing">
+            </select>
+          </div>
+          <div class="online-row">
+            <label for="gap_sizing">Gap Size</label>
+            <select id="gap_sizing">
               <option>Small</option>
               <option>Normal</option>
               <option>Large</option>
-            </select></td>
-        </tr>
-      </table>
-      <hr/>
-      <p class="local-setup-hint">Click a worm to enable it and press keys to assign left/right.</p>
-      <div class="dialog-actions">
-        <button id="dialog-create" type="button">Create a game</button>
-        <button id="dialog-close" type="button">Back</button>
+            </select>
+          </div>
+        </div>
       </div>
     </div>
 

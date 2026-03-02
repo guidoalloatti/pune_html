@@ -85,38 +85,60 @@
   border: 1px solid white;
 }
 
-#game-info-div {
-  font-size: 14px;  
-  left: 780px;
-  top: 43px;
-  width: 150px;
-  height: 250px;
-  background: #272727;
-  border: 1px solid white;
-  border-radius: 10px;
-  padding: 7px;
+.info-modal {
   position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 30;
 }
+
+.info-card {
+  background: linear-gradient(160deg, rgba(36, 41, 56, 0.98), rgba(20, 24, 35, 0.98));
+  color: #fff;
+  padding: 22px;
+  border-radius: 16px;
+  max-width: 640px;
+  width: 94%;
+  text-align: left;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+}
+
+.info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
 #info_title {
-  color: #B5B5B5;
-  text-decoration: none;
+  color: #cdd4ff;
   font-family: sans-serif;
-  font-weight: normal;
-  position: fixed;
-  font-size: 18px;
+  font-weight: 600;
+  font-size: 22px;
 }
+
 #info {
-  white-space: pre;
-  clear: both;
+  white-space: pre-wrap;
   display: block;
   overflow: auto;
-  width: 140px;
-  height: 23  0px;
-  color: #B5B5B5;
-  text-decoration: none;  
-  font-weight: normal;
-  position: fixed;
-  font-size: 12px;
+  max-height: 360px;
+  color: #e3e8ff;
+  font-family: sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.info-header button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #2b2f3b;
+  color: #fff;
+  font-size: 14px;
 }
 
 /*

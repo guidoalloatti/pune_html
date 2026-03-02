@@ -238,6 +238,7 @@ function closeSettingsDialog() {
 
 function showModeSelect() {
   document.body.classList.remove("show-local-setup", "show-online-setup");
+  document.body.classList.remove("online-mobile");
   show($("#start-body"));
   hide($("#local-setup"));
   hide($("#online-setup"));
@@ -251,6 +252,7 @@ function showModeSelect() {
   if (localBackdrop) localBackdrop.style.display = "none";
   const onlineBackdrop = $("#online-setup-backdrop");
   if (onlineBackdrop) onlineBackdrop.style.display = "none";
+  document.dispatchEvent(new Event("pune-online-mode-change"));
 }
 
 function showLocalSetup() {
@@ -268,6 +270,17 @@ function showLocalSetup() {
   if (backdrop) backdrop.style.display = "none";
   const localBackdrop = $("#local-setup-backdrop");
   if (localBackdrop) localBackdrop.style.display = "block";
+
+  const redPlay = $("#red_play");
+  const bluePlay = $("#blue_play");
+  if (redPlay && !redPlay.checked) {
+    redPlay.checked = true;
+    labelClicked("red", "check");
+  }
+  if (bluePlay && !bluePlay.checked) {
+    bluePlay.checked = true;
+    labelClicked("blue", "check");
+  }
 }
 
 function showOnlineSetup() {
@@ -279,6 +292,7 @@ function showOnlineSetup() {
   setModeStatus("Online setup");
   const onlineBackdrop = $("#online-setup-backdrop");
   if (onlineBackdrop) onlineBackdrop.style.display = "block";
+  document.dispatchEvent(new Event("pune-online-mode-change"));
 }
 
 function applySettingsFromDialog() {
@@ -423,7 +437,47 @@ function capitalize(str) {
   return str.substr(0, 1).toUpperCase() + str.substr(1);
 }
 
+function updateInfoModal() {
+  const info = $("#info");
+  if (!info) return;
+  const lines = [];
+  const mode = document.body.classList.contains("online-active") ? "Online" : "Local";
+  lines.push(`Mode: ${mode}`);
+  lines.push(`Round: ${state.roundNumber || state.currentRound || 0}`);
+  lines.push(`Worms alive: ${state.wormsAlive || 0}`);
+  lines.push(`Score to win: ${state.scoreToWin || 0}`);
+  lines.push(`Max score: ${state.maxScore || 0}`);
+  lines.push(`Winning worm: ${state.winningWorm || "-"}`);
+  lines.push(`Longest worm: ${state.longestWormColor || "-"} (${state.longestWormSize || 0})`);
+  lines.push("");
+  lines.push("Settings:");
+  lines.push(`- Hole points: ${state.holePoints || "None"}`);
+  lines.push(`- Speed: ${state.modalSpeed || "Normal"}`);
+  lines.push(`- Gap spacing: ${state.gapSpacing || "Normal"}`);
+  lines.push(`- Gap size: ${state.gapSizing || "Normal"}`);
+  lines.push("");
+  lines.push("Gameplay:");
+  lines.push(`- FPS: ${state.fps || 0}`);
+  lines.push(`- Worm size: ${state.wormSize || 0}`);
+  lines.push(`- Arena: ${state.xMax || 0} x ${state.yMax || 0}`);
+  info.textContent = lines.join("\n");
+}
+
 export function bindUI() {
+  const wormCards = document.querySelectorAll(".worm-card");
+  wormCards.forEach((card) => {
+    card.addEventListener("click", (event) => {
+      const target = event.target;
+      if (target instanceof HTMLInputElement) {
+        if (target.type === "text" || target.type === "checkbox") return;
+      }
+      if (target instanceof HTMLLabelElement) return;
+      const checkbox = card.querySelector("input[type='checkbox']");
+      if (!checkbox) return;
+      checkbox.click();
+    });
+  });
+
   document.addEventListener("keydown", (event) => {
     if (event.key !== "Escape") return;
     const tutorial = $("#tutorial-overlay");
@@ -511,7 +565,10 @@ export function bindUI() {
   const toggleKeys = $("#toggle-keys");
   const soundsNav = $("#sounds-nav-bar");
   if (toggleLog) toggleLog.addEventListener("click", () => toggle($("#game-details-div")));
-  if (toggleInfo) toggleInfo.addEventListener("click", () => toggle($("#game-info-div")));
+  if (toggleInfo) toggleInfo.addEventListener("click", () => {
+    updateInfoModal();
+    toggle($("#game-info-div"));
+  });
   if (toggleKeys) toggleKeys.addEventListener("click", () => toggle($("#show-keys-div")));
   if (soundsNav) soundsNav.addEventListener("click", () => toggle($("#sounds-menu")));
 
@@ -550,12 +607,27 @@ export function bindUI() {
 
     if (leftInput) hide(leftInput);
     if (rightInput) hide(rightInput);
+
+    if (play && play.checked) {
+      labelClicked(color, "check");
+    }
   });
 
   const settingsData = loadSettingsData();
   state.players.length = 0;
   settingsData.forEach((s) => state.players.push(s));
   applySettingsToUI(settingsData);
+
+  const redPlay = $("#red_play");
+  const bluePlay = $("#blue_play");
+  if (redPlay && !redPlay.checked) {
+    redPlay.checked = true;
+    labelClicked("red", "check");
+  }
+  if (bluePlay && !bluePlay.checked) {
+    bluePlay.checked = true;
+    labelClicked("blue", "check");
+  }
 
   setModeStatus("Select");
 

@@ -74,6 +74,34 @@ export function initRenderer() {
     markerContainer.innerHTML = "";
     markerContainer.appendChild(markerApp.view);
   }
+
+  resizeRenderer();
+  window.addEventListener("resize", resizeRenderer);
+  document.addEventListener("pune-online-mode-change", resizeRenderer);
+  document.addEventListener("pune-online-game-start", resizeRenderer);
+  document.addEventListener("pune-online-game-over", resizeRenderer);
+}
+
+export function resizeRenderer() {
+  if (!app || !markerApp || !markerLayer) return;
+
+  const isOnlineMobile = document.body.classList.contains("online-mobile");
+  const padding = isOnlineMobile ? 16 : 0;
+  const maxWidth = window.innerWidth - padding;
+  const maxHeight = window.innerHeight - (isOnlineMobile ? 140 : 80);
+  const scale = Math.min(maxWidth / state.xMax, maxHeight / state.yMax, 1);
+
+  app.stage.scale.set(scale);
+  app.renderer.resize(Math.max(1, Math.floor(state.xMax * scale)), Math.max(1, Math.floor(state.yMax * scale)));
+
+  if (isOnlineMobile) {
+    const markerHeight = 56;
+    markerApp.renderer.resize(app.renderer.width, markerHeight);
+    markerLayer.scale.set(markerApp.renderer.width / 100, markerHeight / state.yMax);
+  } else {
+    markerApp.renderer.resize(100, Math.max(1, Math.floor(state.yMax * scale)));
+    markerLayer.scale.set(1, scale);
+  }
 }
 
 export function clearScreen() {
@@ -129,12 +157,17 @@ export function drawMarkerBlocks(colors, x, y, w, h) {
 export function updateScoreDisplay(players, scoreX, scoreY, yMax) {
   if (!markerApp) return;
 
+  const availableHeight = markerApp.renderer?.height || yMax;
+  const compact = availableHeight < 120;
+  const fontSize = compact ? 18 : 40;
+  const strokeSize = compact ? 2 : 3;
+
   const style = new PIXI.TextStyle({
     fontFamily: "serif",
-    fontSize: 40,
+    fontSize,
     fill: 0xffffff,
     stroke: 0x000000,
-    strokeThickness: 3,
+    strokeThickness: strokeSize,
   });
 
   if (scoreTexts.length < players.length) {
@@ -146,14 +179,20 @@ export function updateScoreDisplay(players, scoreX, scoreY, yMax) {
     }
   }
 
-  players.forEach((p) => {
-    const idx = p.index;
+  const rowCount = Math.max(players.length, 1);
+  const rowHeight = compact ? (availableHeight / rowCount) : (yMax / 6);
+  const baseY = compact ? (rowHeight / 2) : scoreY;
+  const baseX = compact ? 8 : scoreX;
+
+  players.forEach((p, i) => {
+    const idx = i;
     const score = p.playing && p.score < 10 ? "0" + p.score : String(p.score);
     const text = scoreTexts[idx];
     if (!text) return;
+    if (text.style?.fontSize !== fontSize) text.style = style;
     text.text = score;
-    text.x = scoreX;
-    text.y = scoreY + (idx * (yMax / 6));
+    text.x = baseX;
+    text.y = baseY + (idx * rowHeight);
   });
 }
 

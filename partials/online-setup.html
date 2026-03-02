@@ -1,129 +1,92 @@
 <div id="online-setup" class="setup-screen">
-  <div class="setup-header">Online Game Setup</div>
   <div id="online-setup-backdrop" class="online-setup-backdrop"></div>
   <div id="online-lobby">
     <div class="online-hero">
-      <div class="online-hero-image"><img src="./static/images/wormclean.jpg" alt="Pune worms" /></div>
+      <div class="online-hero-image"><img src="./static/images/pune2.png" alt="Pune worms" /></div>
       <div class="online-hero-text">
         <div class="online-title">Play Online</div>
         <div class="online-subtitle">Create or join a match in seconds</div>
       </div>
+      <div class="online-hero-controls">
+        <div class="online-hero-controls-title">Default Controls</div>
+        <div class="online-row">
+          <button id="mobile-left" type="button">◀ Left</button>
+          <button id="mobile-right" type="button">Right ▶</button>
+        </div>
+        <div id="touch-hint" class="touch-hint">Touch and hold the buttons to steer.</div>
+      </div>
     </div>
     <div class="online-grid">
-      <div class="online-section online-actions">
-        <div class="online-section-title">Quick Actions</div>
+      <div class="online-actions">
         <div class="online-actions-grid">
-          <div class="online-action-group">
-            <div class="online-action-title">Room</div>
-            <div class="online-row">
-              <button id="create-room-btn" type="button">Create Room</button>
-              <button id="autojoin-room-btn" type="button">Autojoin Random</button>
+          <div class="online-action-group online-action-group-all">
+            <div class="online-action-title">Game</div>
+            <div class="online-row room-create-row">
+              <button id="create-room-btn" class="room-action-btn room-create-btn" type="button">➕ Create Game</button>
             </div>
-            <div class="online-row">
+            <div class="online-row room-code-row">
               <input id="room-code" type="text" placeholder="ROOM CODE" maxlength="5" />
-              <button id="join-room-btn" type="button">Join Room</button>
+              <button id="join-room-btn" class="room-action-btn" type="button">Join Game</button>
+            </div>
+            <div class="online-row room-actions-row">
+              <button id="copy-room-btn" class="room-action-btn" type="button">📋 Copy Game Code</button>
+              <button id="paste-room-btn" class="room-action-btn" type="button">📥 Paste Game Code</button>
+            </div>
+            <br>
+            <div class="online-row">
+              <button id="start-online-btn" class="start-host-btn" type="button" style="display: none;">🚀 Start Game</button>
+            </div>
+            <div class="online-action-divider"></div>
+            <div class="online-action-title">Game Settings</div>
+            <div class="online-row">
+              <label for="online_hole_points">Hole Points</label>
+              <select id="online_hole_points">
+                <option>None</option>
+                <option>One</option>
+              </select>
             </div>
             <div class="online-row">
-              <button id="leave-room" type="button">Leave Room</button>
-              <button id="online-back" type="button">Back</button>
+              <label for="online_speed">Speed</label>
+              <select id="online_speed">
+                <option>Slow</option>
+                <option>Normal</option>
+                <option>Frantic</option>
+              </select>
+            </div>
+            <div class="online-row">
+              <label for="online_gap_spacing">Gap Spacing</label>
+              <select id="online_gap_spacing">
+                <option>Close</option>
+                <option>Normal</option>
+                <option>Far Apart</option>
+              </select>
+            </div>
+            <div class="online-row">
+              <label for="online_gap_sizing">Gap Size</label>
+              <select id="online_gap_sizing">
+                <option>Small</option>
+                <option>Normal</option>
+                <option>Large</option>
+              </select>
+            </div>
+            <div class="online-action-divider"></div>
+            <div class="online-action-title">Players & Chat</div>
+            <div class="online-subsection">
+              <div class="online-row profile-row">
+                <div class="profile-input">
+                  <input id="profile-name" type="text" maxlength="16" placeholder="Player" />
+                  <input id="profile-color" type="color" value="#6de38c" />
+                </div>
+              </div>
+              <div id="online-players"></div>
+              <div id="online-chat-log"></div>
+              <div class="online-row">
+                <input id="online-chat-input" type="text" placeholder="Type a message" />
+                <button id="online-chat-send" type="button">Send</button>
+              </div>
             </div>
           </div>
-          <div class="online-action-group">
-            <div class="online-action-title">Match</div>
-            <div class="online-row">
-              <button id="ready-toggle" type="button">Ready Up</button>
-              <button id="role-toggle" type="button">Switch to Spectator</button>
-            </div>
-            <div class="online-row">
-              <button id="start-online-btn" type="button">Start (Host)</button>
-            </div>
-          </div>
-          <div class="online-action-group">
-            <div class="online-action-title">Mobile Controls</div>
-            <div class="online-row">
-              <button id="mobile-left" type="button">◀ Left</button>
-              <button id="mobile-right" type="button">Right ▶</button>
-            </div>
-            <div id="touch-hint" class="touch-hint">Touch and hold the buttons to steer.</div>
-          </div>
         </div>
-      </div>
-
-      <div class="online-section online-profile">
-        <div class="online-section-title">Your Profile</div>
-        <div class="online-row">
-          <label for="profile-name">Name</label>
-          <input id="profile-name" type="text" maxlength="16" placeholder="Player" />
-        </div>
-        <div class="online-row">
-          <label for="profile-color">Accent</label>
-          <input id="profile-color" type="color" value="#6de38c" />
-        </div>
-      </div>
-
-      <div class="online-section online-players">
-        <div class="online-section-title">Players</div>
-        <div id="online-players"></div>
-      </div>
-
-      <div class="online-section online-chat">
-        <div class="online-section-title">Lobby Chat</div>
-        <div id="online-chat-log"></div>
-        <div class="online-row">
-          <input id="online-chat-input" type="text" placeholder="Type a message" />
-          <button id="online-chat-send" type="button">Send</button>
-        </div>
-      </div>
-
-      <div class="online-section online-settings">
-        <div class="online-section-title">Online Settings (Host)</div>
-        <div class="online-row">
-          <label for="online_hole_points">Hole Points</label>
-          <select id="online_hole_points">
-            <option>None</option>
-            <option>One</option>
-          </select>
-        </div>
-        <div class="online-row">
-          <label for="online_speed">Speed</label>
-          <select id="online_speed">
-            <option>Slow</option>
-            <option>Normal</option>
-            <option>Frantic</option>
-          </select>
-        </div>
-        <div class="online-row">
-          <label for="online_gap_spacing">Gap Spacing</label>
-          <select id="online_gap_spacing">
-            <option>Close</option>
-            <option>Normal</option>
-            <option>Far Apart</option>
-          </select>
-        </div>
-        <div class="online-row">
-          <label for="online_gap_sizing">Gap Size</label>
-          <select id="online_gap_sizing">
-            <option>Small</option>
-            <option>Normal</option>
-            <option>Large</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="online-section online-rooms">
-        <div class="online-section-title">Lobby</div>
-        <div class="online-row">
-          <button id="refresh-rooms-btn" type="button">Refresh Rooms</button>
-        </div>
-        <div id="online-rooms"></div>
-      </div>
-
-      <div class="online-section online-history">
-        <div class="online-section-title">Match History</div>
-        <div class="online-row">
-          <button id="refresh-history-btn" type="button">Refresh History</button>
-        </div>
-        <div id="online-history"></div>
       </div>
     </div>
 

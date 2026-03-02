@@ -68,10 +68,24 @@ function sendRoomState(roomCode) {
     players.push({ id, ready: false, name: profile.name, color: profile.color, role: "spectator" });
   }
   for (const [id, client] of room.players.entries()) {
-    safeSend(client, { type: "room-state", players, selfReady: room.ready.get(id) || false, hostId: room.hostId, spectator: false });
+    safeSend(client, {
+      type: "room-state",
+      players,
+      selfReady: room.ready.get(id) || false,
+      hostId: room.hostId,
+      spectator: false,
+      settings: room.state.settings,
+    });
   }
   for (const [id, client] of room.spectators.entries()) {
-    safeSend(client, { type: "room-state", players, selfReady: false, hostId: room.hostId, spectator: true });
+    safeSend(client, {
+      type: "room-state",
+      players,
+      selfReady: false,
+      hostId: room.hostId,
+      spectator: true,
+      settings: room.state.settings,
+    });
   }
 }
 
@@ -148,6 +162,10 @@ function stopRoomTick(roomCode) {
 }
 
 function initWorms(room) {
+  const prevScores = new Map();
+  for (const w of room.state.worms) {
+    prevScores.set(w.id, w.score);
+  }
   room.state.worms = [];
   let i = 0;
   for (const id of room.players.keys()) {
@@ -161,7 +179,7 @@ function initWorms(room) {
       speed: getStartingSpeed(room.state.settings),
       alive: true,
       playing: true,
-      score: 0,
+      score: prevScores.get(id) ?? 0,
       length: 0,
       holeScore: 0,
       trail: [],
@@ -247,6 +265,8 @@ function tickRoom(roomCode) {
   const room = rooms.get(roomCode);
   if (!room || !room.state.started) return;
 
+  let deathsThisTick = 0;
+
   for (const worm of room.state.worms) {
     if (!worm.playing || !worm.alive) continue;
     const input = room.inputs.get(worm.id) || { left: false, right: false };
@@ -259,11 +279,13 @@ function tickRoom(roomCode) {
 
     if (nextX < 0 || nextX > WORLD.w || nextY < 0 || nextY > WORLD.h) {
       worm.alive = false;
+      deathsThisTick += 1;
       continue;
     }
 
     if (isOccupied(room, nextX, nextY)) {
       worm.alive = false;
+      deathsThisTick += 1;
       continue;
     }
 
@@ -295,10 +317,27 @@ function tickRoom(roomCode) {
     }
   }
 
+  if (deathsThisTick > 0) {
+    for (let i = 0; i < deathsThisTick; i++) addScoreToAlive(room);
+    computeWinningWorm(room);
+    broadcast(roomCode, {
+      type: "score-update",
+      players: room.state.worms.map((w) => ({
+        id: w.id,
+        score: w.score,
+        playing: w.playing,
+        alive: w.alive,
+        color: w.color,
+      })),
+    });
+  }
+
   const aliveCount = getWormsAliveCount(room);
   if (aliveCount < 2) {
-    addScoreToAlive(room);
-    computeWinningWorm(room);
+    if (deathsThisTick === 0) {
+      addScoreToAlive(room);
+      computeWinningWorm(room);
+    }
     const scoreToWin = getScoreToWin(room);
     if (room.state.maxScore >= scoreToWin) {
       room.state.started = false;
@@ -415,6 +454,7 @@ wss.on("connection", (ws) => {
       sessions.get(ws.sessionId).roomCode = code;
       sessions.get(ws.sessionId).role = "player";
       safeSend(ws, { type: "room-created", room: code, host: true, spectator: false });
+        safeSend(ws, { type: "room-created", room: code, host: true, spectator: false, settings: rooms.get(code).state.settings });
       sendRoomState(code);
       return;
     }
@@ -439,6 +479,7 @@ wss.on("connection", (ws) => {
         sessions.get(ws.sessionId).role = "player";
         broadcastRoomList();
         safeSend(ws, { type: "room-created", room: code, host: true, spectator: false });
+          safeSend(ws, { type: "room-created", room: code, host: true, spectator: false, settings: rooms.get(code).state.settings });
         sendRoomState(code);
         return;
       }
@@ -453,6 +494,7 @@ wss.on("connection", (ws) => {
       sessions.get(ws.sessionId).roomCode = existing;
       sessions.get(ws.sessionId).role = "player";
       safeSend(ws, { type: "room-joined", room: existing, host: room.hostId === clientId, spectator: false });
+        safeSend(ws, { type: "room-joined", room: existing, host: room.hostId === clientId, spectator: false, settings: room.state.settings });
       safeSend(ws, { type: "state", state: room.state, t: Date.now() });
       broadcast(existing, { type: "player-joined", clientId }, clientId);
       broadcastRoomList();
@@ -472,6 +514,7 @@ wss.on("connection", (ws) => {
         sessions.get(ws.sessionId).roomCode = code;
         sessions.get(ws.sessionId).role = "spectator";
         safeSend(ws, { type: "room-joined", room: code, host: false, spectator: true });
+          safeSend(ws, { type: "room-joined", room: code, host: false, spectator: true, settings: room.state.settings });
         safeSend(ws, { type: "state", state: room.state, t: Date.now() });
         sendRoomState(code);
         return;
@@ -484,6 +527,7 @@ wss.on("connection", (ws) => {
       sessions.get(ws.sessionId).roomCode = code;
       sessions.get(ws.sessionId).role = "player";
       safeSend(ws, { type: "room-joined", room: code, host: room.hostId === clientId, spectator: false });
+        safeSend(ws, { type: "room-joined", room: code, host: room.hostId === clientId, spectator: false, settings: room.state.settings });
       safeSend(ws, { type: "state", state: room.state, t: Date.now() });
       broadcast(code, { type: "player-joined", clientId }, clientId);
       sendRoomState(code);
@@ -501,6 +545,7 @@ wss.on("connection", (ws) => {
       sessions.get(ws.sessionId).roomCode = code;
       sessions.get(ws.sessionId).role = "spectator";
       safeSend(ws, { type: "room-joined", room: code, host: false, spectator: true });
+        safeSend(ws, { type: "room-joined", room: code, host: false, spectator: true, settings: room.state.settings });
       safeSend(ws, { type: "state", state: room.state, t: Date.now() });
       sendRoomState(code);
       return;
@@ -598,6 +643,29 @@ wss.on("connection", (ws) => {
       initWorms(room);
       startRoomTick(ws.roomCode);
       return broadcast(ws.roomCode, { type: "start" });
+    }
+
+    if (msg.type === "settings-update") {
+      if (!ws.roomCode) return;
+      const room = rooms.get(ws.roomCode);
+      if (!room || room.hostId !== clientId) return;
+      if (room.state.started) return;
+      room.state.settings = {
+        holePoints: msg.settings?.holePoints || room.state.settings.holePoints || "None",
+        modalSpeed: msg.settings?.modalSpeed || room.state.settings.modalSpeed || "Normal",
+        gapSpacing: msg.settings?.gapSpacing || room.state.settings.gapSpacing || "Normal",
+        gapSizing: msg.settings?.gapSizing || room.state.settings.gapSizing || "Normal",
+      };
+      broadcast(ws.roomCode, { type: "settings-update", settings: room.state.settings });
+      sendRoomState(ws.roomCode);
+      return;
+    }
+
+    if (msg.type === "settings-sync") {
+      if (!ws.roomCode) return;
+      const room = rooms.get(ws.roomCode);
+      if (!room) return;
+      return safeSend(ws, { type: "settings-update", settings: room.state.settings });
     }
 
     if (msg.type === "switch-role") {

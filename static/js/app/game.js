@@ -260,23 +260,25 @@ function isWormHit(currentWorm) {
   state.x = currentWorm.x + (cosValue * (Math.PI * 2));
   state.y = currentWorm.y + (sinValue * (Math.PI * 2));
 
-  if (isOccupied(state.x, state.y)) return true;
-
+  if (isOccupied(state.x, state.y)) {
+    console.log(`Worm hit detected at position: (${state.x.toFixed(2)}, ${state.y.toFixed(2)})`);
+    return true;
+  }
+  
   const inHole = isHole(currentWorm);
   const wasInHole = currentWorm.inHole;
+  
+  console.log(`Worm position: (${state.x.toFixed(2)}, ${state.y.toFixed(2)}), Occupied: ${isOccupied(state.x, state.y)}, In hole: ${inHole}, Was in hole: ${wasInHole}`);
+  
   currentWorm.inHole = inHole;
-  if (inHole) {
-    if (!wasInHole) playSound("yabass");
+  
+  if (wasInHole && !inHole) {
+    playSound("yabass");
     if (state.holePoints == "One") {
-      currentWorm.holeScore += 1;
-      if (currentWorm.holeScore > 3) {
-        currentWorm.holeScore = 0;
-        currentWorm.score += 1;
-        drawMarkers();
-        drawScore();
-      }
+      currentWorm.score += 1;
+      drawMarkers();
+      drawScore();
     }
-  } else {
     currentWorm.holeScore = 0;
   }
 
@@ -375,8 +377,20 @@ function storePreviuosCoordinates(currentWorm) {
 }
 
 function isHole(currentWorm) {
-  const module = currentWorm.length % (state.holeSize + state.spaceBetweenHoles);
-  return module <= state.holeSize;
+	// const module = currentWorm.length%(holeSize+spaceBetweenHoles)
+	// if(module <= holeSize)
+	// 	return true
+	// return false  
+
+  const holeSize = Number(state.holeSize) || 0;
+  const spacing = Number(state.spaceBetweenHoles) || 0;
+  const cycle = holeSize + spacing;
+  if (cycle <= 0) return false;
+  const module = currentWorm.length % cycle;
+
+  // console.log(`Worm length: ${currentWorm.length}, Hole size: ${holeSize}, Spacing: ${spacing}, Module: ${module}, Cycle: ${cycle}, isHole: ${module <= holeSize}`);
+
+  return module <= holeSize;
 }
 
 // Speeding

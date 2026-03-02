@@ -2,7 +2,8 @@
 
 import { $, show, hide } from "./dom.js";
 import { lockModeSelection, showMatchSummary, hideMatchSummary } from "./ui.js";
-import { renderOnlineWorms } from "./renderer.js";
+import { renderOnlineWorms, updateScoreDisplay } from "./renderer.js";
+import { state } from "./state.js";
 
 export const online = {
   ws: null,
@@ -25,6 +26,7 @@ export const online = {
   chatSendEl: null,
   leaveBtn: null,
   settingsSectionEl: null,
+  copyRoomBtnEl: null,
   reconnectTimer: null,
   chatMuteUntil: 0,
   chatRateWindow: [],
@@ -43,6 +45,14 @@ export const online = {
   connectedOnce: false,
 };
 
+function updateOnlineMobileClass() {
+  const isMobile = window.matchMedia("(pointer: coarse)").matches
+    || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+  const inOnlineMode = document.body.classList.contains("show-online-setup")
+    || document.body.classList.contains("online-active");
+  document.body.classList.toggle("online-mobile", isMobile && inOnlineMode);
+}
+
 function setOnlineStatus(text) {
   if (online.statusEl) online.statusEl.textContent = text;
 }
@@ -51,6 +61,44 @@ function updateHostControls() {
   if (online.settingsSectionEl) {
     online.settingsSectionEl.style.display = online.isHost ? "block" : "none";
   }
+  const settingsFields = [
+    $("#online_hole_points"),
+    $("#online_speed"),
+    $("#online_gap_spacing"),
+    $("#online_gap_sizing"),
+  ];
+  settingsFields.forEach((field) => {
+    if (field) field.disabled = !online.isHost;
+  });
+}
+
+function updateCopyRoomButton() {
+  if (!online.copyRoomBtnEl) return;
+  online.copyRoomBtnEl.disabled = !(online.isHost && online.room);
+}
+
+function updateRoomControls() {
+  const joinBtn = $("#join-room-btn");
+  const pasteBtn = $("#paste-room-btn");
+  const createBtn = $("#create-room-btn");
+  const copyBtn = $("#copy-room-btn");
+  const input = $("#room-code");
+  const matchTitle = $(".match-title");
+  const matchRow = $("#start-online-btn")?.closest(".online-row");
+  const matchDivider = $(".online-action-divider");
+  if (input && online.room) input.value = online.room;
+  const hideJoin = online.isHost && !!online.room;
+  document.body.classList.toggle("online-host", hideJoin);
+  const hideCreateCopy = !online.isHost && !!online.room;
+  document.body.classList.toggle("online-guest", hideCreateCopy);
+  if (joinBtn) joinBtn.style.display = hideJoin ? "none" : "";
+  if (pasteBtn) pasteBtn.style.display = hideJoin ? "none" : "";
+  if (createBtn) createBtn.style.display = hideCreateCopy ? "none" : "";
+  if (copyBtn) copyBtn.style.display = hideCreateCopy ? "none" : "";
+  const hideMatch = hideCreateCopy;
+  if (matchTitle) matchTitle.style.display = hideMatch ? "none" : "";
+  if (matchRow) matchRow.style.display = hideMatch ? "none" : "";
+//   if (matchDivider) matchDivider.style.display = hideMatch ? "none" : "";
 }
 
 function loadProfile() {
@@ -69,6 +117,38 @@ function persistProfile() {
 function sendProfile() {
   if (!online.ws || online.ws.readyState !== 1) return;
   online.ws.send(JSON.stringify({ type: "profile", name: online.profile.name, color: online.profile.color }));
+}
+
+function requestSettingsSync() {
+  if (!online.ws || online.ws.readyState !== 1) return;
+  if (!online.room) return;
+  online.ws.send(JSON.stringify({ type: "settings-sync" }));
+}
+
+function applyOnlineSettings(settings) {
+  if (!settings) return;
+  const holePoints = $("#online_hole_points");
+  const speed = $("#online_speed");
+  const gapSpacing = $("#online_gap_spacing");
+  const gapSizing = $("#online_gap_sizing");
+  const setSelect = (el, value) => {
+    if (!el || value == null) return;
+    const normalized = String(value).trim();
+    if (!normalized) return;
+    el.value = normalized;
+    if (el.value !== normalized) {
+      const match = normalized.toLowerCase();
+      const option = Array.from(el.options).find((opt) => {
+        const optValue = String(opt.value || opt.textContent || "").trim();
+        return optValue === normalized || optValue.toLowerCase() === match;
+      });
+      if (option) option.selected = true;
+    }
+  };
+  setSelect(holePoints, settings.holePoints);
+  setSelect(speed, settings.modalSpeed);
+  setSelect(gapSpacing, settings.gapSpacing);
+  setSelect(gapSizing, settings.gapSizing);
 }
 
 function showReconnectBanner() {
@@ -141,7 +221,19 @@ function connectOnline() {
       if (online.chatInputEl) online.chatInputEl.disabled = false;
       if (online.chatSendEl) online.chatSendEl.disabled = false;
       setOnlineStatus("Room created");
+      if (msg.settings) {
+        online.lastSettings = msg.settings;
+        applyOnlineSettings(msg.settings);
+      }
+      if (!online.spectator) {
+        online.ready = true;
+        online.ws.send(JSON.stringify({ type: "ready", ready: true }));
+      }
       updateHostControls();
+      updateRoomControls();
+      updateCopyRoomButton();
+      updateOnlineMobileClass();
+      requestSettingsSync();
     }
 
     if (msg.type === "room-joined") {
@@ -157,7 +249,20 @@ function connectOnline() {
       setOnlineStatus(msg.reconnected ? "Reconnected" : "Room joined");
       if (msg.reconnected) showReconnectBanner();
       if (online.spectator) setOnlineStatus("Spectating");
+      if (msg.settings) {
+        online.lastSettings = msg.settings;
+        applyOnlineSettings(msg.settings);
+      }
+      if (!online.spectator) {
+        online.ready = true;
+        online.ws.send(JSON.stringify({ type: "ready", ready: true }));
+      }
       updateHostControls();
+      updateRoomControls();
+      updateStartButton();
+      updateCopyRoomButton();
+      updateOnlineMobileClass();
+      requestSettingsSync();
     }
 
     if (msg.type === "start") {
@@ -171,6 +276,7 @@ function connectOnline() {
       hide($("#online-setup"));
       show($("#canvas_div"));
       show($("#background"));
+      updateOnlineMobileClass();
     }
 
     if (msg.type === "match-over") {
@@ -199,15 +305,27 @@ function connectOnline() {
       show($("#online-setup"));
       hide($("#background"));
       hide($("#canvas_div"));
+      updateCopyRoomButton();
+      updateOnlineMobileClass();
     }
 
     if (msg.type === "room-list") renderRoomList(msg.rooms || []);
     if (msg.type === "history") renderHistory(msg.history || []);
     if (msg.type === "room-state") {
       online.spectator = !!msg.spectator;
+      if (msg.hostId != null) online.isHost = msg.hostId === online.clientId;
+      if (msg.settings) {
+        online.lastSettings = msg.settings;
+        applyOnlineSettings(msg.settings);
+      }
       renderPlayers(msg.players || [], msg.selfReady, msg.hostId);
       updateRoleToggle();
       updateHostControls();
+      updateRoomControls();
+      if (!online.spectator && !msg.selfReady && online.ws?.readyState === 1) {
+        online.ready = true;
+        online.ws.send(JSON.stringify({ type: "ready", ready: true }));
+      }
     }
 
     if (msg.type === "host-changed") {
@@ -219,7 +337,25 @@ function connectOnline() {
     if (msg.type === "state") {
       online.state = msg.state;
       online.lastSettings = msg.state?.settings || online.lastSettings;
+      if (msg.state?.settings) applyOnlineSettings(msg.state.settings);
       renderOnline();
+    }
+
+    if (msg.type === "settings-update") {
+      online.lastSettings = msg.settings || online.lastSettings;
+      applyOnlineSettings(msg.settings);
+    }
+
+    if (msg.type === "score-update") {
+      const players = msg.players || [];
+      if (online.state?.worms && players.length) {
+        const scoreMap = new Map(players.map((p) => [p.id, p]));
+        online.state.worms = online.state.worms.map((w) => {
+          const next = scoreMap.get(w.id);
+          return next ? { ...w, score: next.score, playing: next.playing, alive: next.alive } : w;
+        });
+      }
+      updateScoreDisplay(players.length ? players : (online.state?.worms || []), state.score_x, state.score_y, state.yMax);
     }
 
     if (msg.type === "chat") {
@@ -263,6 +399,19 @@ function startOnlineGame() {
   online.ws.send(JSON.stringify({ type: "start", settings }));
 }
 
+function sendSettingsUpdate() {
+  if (!online.ws || online.ws.readyState !== 1) return;
+  if (!online.isHost || online.started || !online.room) return;
+  const settings = {
+    holePoints: $("#online_hole_points").value || "None",
+    modalSpeed: $("#online_speed").value || "Normal",
+    gapSpacing: $("#online_gap_spacing").value || "Normal",
+    gapSizing: $("#online_gap_sizing").value || "Normal",
+  };
+  online.lastSettings = settings;
+  online.ws.send(JSON.stringify({ type: "settings-update", settings }));
+}
+
 function rematchOnline() {
   if (!online.ws || !online.isHost || !online.lastSettings) return;
   online.ws.send(JSON.stringify({ type: "start", settings: online.lastSettings }));
@@ -304,7 +453,9 @@ function sendInput() {
 
 function renderOnline() {
   if (!online.state) return;
-  renderOnlineWorms(online.state.worms || []);
+  const worms = online.state.worms || [];
+  renderOnlineWorms(worms);
+  updateScoreDisplay(worms, state.score_x, state.score_y, state.yMax);
 }
 
 function renderRoomList(rooms) {
@@ -347,8 +498,8 @@ function renderHistory(history) {
 function renderPlayers(players, selfReady = false, hostId = null) {
   online.ready = !!selfReady;
   updateReadyButton();
-  const allReady = players.length > 0 && players.every((p) => p.ready);
-  online.canStart = online.isHost && allReady && players.length >= 2;
+  const readyCount = players.filter((p) => p.ready).length;
+  online.canStart = online.isHost && readyCount >= 2;
   updateStartButton();
   updateRoleToggle();
   if (!online.playersEl) return;
@@ -398,17 +549,24 @@ function toggleRole() {
 function updateStartButton() {
   if (!online.startBtn) return;
   online.startBtn.disabled = !online.canStart || online.spectator;
+  const matchRow = online.startBtn.closest(".online-row");
+  const showStart = online.isHost && !!online.room && online.canStart && !online.spectator;
+  if (matchRow) matchRow.style.display = showStart ? "" : "none";
+  online.startBtn.style.display = showStart ? "" : "none";
 }
 
 function appendChatMessage(msg) {
   if (!online.chatLogEl) return;
   const row = document.createElement("div");
+  row.className = "chat-message";
   const name = msg.name || "Player";
   const color = msg.color || "#ffffff";
   const nameSpan = document.createElement("span");
+  nameSpan.className = "chat-name";
   nameSpan.style.color = color;
   nameSpan.textContent = name;
   const textSpan = document.createElement("span");
+  textSpan.className = "chat-text";
   textSpan.textContent = `: ${msg.text}`;
   row.appendChild(nameSpan);
   row.appendChild(textSpan);
@@ -458,6 +616,9 @@ function leaveRoom() {
   updateReadyButton();
   updateStartButton();
   updateRoleToggle();
+  updateRoomControls();
+  updateCopyRoomButton();
+  updateOnlineMobileClass();
 }
 
 function bindOnlineKeys() {
@@ -529,8 +690,8 @@ export function bindOnline() {
   online.chatLogEl = $("#online-chat-log");
   online.chatInputEl = $("#online-chat-input");
   online.chatSendEl = $("#online-chat-send");
-  online.leaveBtn = $("#leave-room");
   online.settingsSectionEl = $(".online-settings");
+  online.copyRoomBtnEl = $("#copy-room-btn");
 
   const createRoomBtn = $("#create-room-btn");
   const joinRoomBtn = $("#join-room-btn");
@@ -538,15 +699,57 @@ export function bindOnline() {
   const autojoinBtn = $("#autojoin-room-btn");
   const refreshRooms = $("#refresh-rooms-btn");
   const refreshHistory = $("#refresh-history-btn");
+  const copyRoomBtn = $("#copy-room-btn");
+  const pasteRoomBtn = $("#paste-room-btn");
+  const roomCodeInput = $("#room-code");
 
   if (createRoomBtn) createRoomBtn.addEventListener("click", createRoom);
   if (joinRoomBtn) joinRoomBtn.addEventListener("click", joinRoom);
   if (startOnlineBtn) startOnlineBtn.addEventListener("click", startOnlineGame);
   if (autojoinBtn) autojoinBtn.addEventListener("click", autoJoinRoom);
-  if (online.readyBtn) online.readyBtn.addEventListener("click", toggleReady);
-  if (online.roleToggleEl) online.roleToggleEl.addEventListener("click", toggleRole);
   if (refreshRooms) refreshRooms.addEventListener("click", () => online.ws?.send(JSON.stringify({ type: "list-rooms" })));
   if (refreshHistory) refreshHistory.addEventListener("click", () => online.ws?.send(JSON.stringify({ type: "history" })));
+  if (copyRoomBtn) copyRoomBtn.addEventListener("click", async () => {
+    const code = online.room || (online.roomEl ? online.roomEl.textContent : "");
+    if (!code || code === "-") {
+      setOnlineStatus("No room code to copy");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(code);
+      setOnlineStatus("Room code copied");
+      const normalized = String(code).trim().toUpperCase();
+      if (/^[A-Z0-9]{5}$/.test(normalized) && roomCodeInput) {
+        roomCodeInput.value = normalized;
+        joinRoom();
+      }
+    } catch (e) {
+      const fallback = document.createElement("input");
+      fallback.value = code;
+      document.body.appendChild(fallback);
+      fallback.select();
+      document.execCommand("copy");
+      document.body.removeChild(fallback);
+      setOnlineStatus("Room code copied");
+      const normalized = String(code).trim().toUpperCase();
+      if (/^[A-Z0-9]{5}$/.test(normalized) && roomCodeInput) {
+        roomCodeInput.value = normalized;
+        joinRoom();
+      }
+    }
+  });
+  if (pasteRoomBtn) pasteRoomBtn.addEventListener("click", async () => {
+    if (!roomCodeInput) return;
+    try {
+      const text = await navigator.clipboard.readText();
+      const normalized = (text || "").trim().toUpperCase().slice(0, 5);
+      roomCodeInput.value = normalized;
+      setOnlineStatus("Room code pasted");
+      if (/^[A-Z0-9]{5}$/.test(normalized)) joinRoom();
+    } catch (e) {
+      setOnlineStatus("Paste failed");
+    }
+  });
 
   if (online.roomsEl) {
     online.roomsEl.addEventListener("click", (event) => {
@@ -577,8 +780,28 @@ export function bindOnline() {
       sendProfile();
     });
   }
+  const holePoints = $("#online_hole_points");
+  const speed = $("#online_speed");
+  const gapSpacing = $("#online_gap_spacing");
+  const gapSizing = $("#online_gap_sizing");
+  if (holePoints) {
+    holePoints.addEventListener("change", sendSettingsUpdate);
+    holePoints.addEventListener("input", sendSettingsUpdate);
+  }
+  if (speed) {
+    speed.addEventListener("change", sendSettingsUpdate);
+    speed.addEventListener("input", sendSettingsUpdate);
+  }
+  if (gapSpacing) {
+    gapSpacing.addEventListener("change", sendSettingsUpdate);
+    gapSpacing.addEventListener("input", sendSettingsUpdate);
+  }
+  if (gapSizing) {
+    gapSizing.addEventListener("change", sendSettingsUpdate);
+    gapSizing.addEventListener("input", sendSettingsUpdate);
+  }
+  if (online.lastSettings) applyOnlineSettings(online.lastSettings);
   if (online.chatSendEl) online.chatSendEl.addEventListener("click", sendChat);
-  if (online.leaveBtn) online.leaveBtn.addEventListener("click", leaveRoom);
   if (online.chatInputEl) {
     online.chatInputEl.disabled = true;
     online.chatInputEl.addEventListener("keydown", (event) => {
@@ -591,6 +814,11 @@ export function bindOnline() {
   if (online.chatSendEl) online.chatSendEl.disabled = true;
 
   updateHostControls();
+  updateRoomControls();
+  updateCopyRoomButton();
+  updateOnlineMobileClass();
+  window.addEventListener("resize", updateOnlineMobileClass);
+  document.addEventListener("pune-online-mode-change", updateOnlineMobileClass);
 
   document.addEventListener("pune-online-rematch", rematchOnline);
 
