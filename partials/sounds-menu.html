@@ -1,82 +1,100 @@
-<div id="sounds-menu" style="display: none;">
-  <div>
-    <div>Worms Winning Shouts</div>
-    <hr/>
-    <div id="red-winning-shout">
-      <a href="#" id="play-red-winning-shout">
-        <div id="red-image"></div>
-        <div id="red-text">Red</div>
-      </a>
+<div id="sounds-menu" class="modal-shell" style="display: none;">
+  <div class="modal-card sounds-card">
+    <div class="modal-header">
+      <div class="modal-title">Sounds</div>
+      <button type="button" class="close-panel-btn modal-close" id="sounds-close-btn" aria-label="Close">×</button>
     </div>
-    <div id="blue-winning-shout">
-      <a href="#" id="play-blue-winning-shout">
-        <div id="blue-image"></div>
-        <div id="blue-text">Blue</div>
-      </a>
-    </div>
-    <div id="green-winning-shout">
-      <a href="#" id="play-green-winning-shout">
-        <div id="green-image"></div>
-        <div id="green-text">Green</div>
-      </a>
-    </div>
-    <div id="purple-winning-shout">
-      <a href="#" id="play-purple-winning-shout">
-        <div id="purple-image"></div>
-        <div id="purple-text">Purple</div>
-      </a>
-    </div>
-    <div id="yellow-winning-shout">
-      <a href="#" id="play-yellow-winning-shout">
-        <div id="yellow-image"></div>
-        <div id="yellow-text">Yellow</div>
-      </a>
-    </div>
-    <div id="cyan-winning-shout">
-      <a href="#" id="play-cyan-winning-shout">
-        <div id="cyan-image"></div>
-        <div id="cyan-text">Cyan</div>
-      </a>
-    </div>
+    <div class="modal-body">
+      <div class="sounds-controls">
+        <div class="sounds-row">
+          <label for="sounds-volume">SFX</label>
+          <input id="sounds-volume" type="range" min="0" max="100" step="1" value="25" />
+          <span id="sounds-volume-value">25%</span>
+        </div>
+        <div class="sounds-row">
+          <label for="music-volume">Music</label>
+          <input id="music-volume" type="range" min="0" max="100" step="1" value="20" />
+          <span id="music-volume-value">20%</span>
+        </div>
+        <div class="sounds-row">
+          <label for="music-track">Track</label>
+          <select id="music-track">
+            <option value="synthwave">Synthwave Drive</option>
+            <option value="outrun">Neon Outrun</option>
+            <option value="arcade">Arcade Rush</option>
+            <option value="noir">Noir Midnight</option>
+            <option value="pulse">Crystal Pulse</option>
+            <option value="midnight">Midnight Echoes</option>
+            <option value="drift">Slow Drift</option>
+            <option value="signal">Signal Glow</option>
+            <option value="haze">Velvet Haze</option>
+            <option value="aurora">Aurora Calm</option>
+          </select>
+        </div>
+        <div class="sounds-row">
+          <span class="sounds-toggle-label">Music</span>
+          <button id="toggle-synth" type="button" class="sounds-toggle-btn" aria-pressed="false">Off</button>
+        </div>
+      </div>
+      <div class="sounds-section">
+        <div class="sounds-title">Worms Winning Shouts</div>
+        <div class="sounds-grid">
+          <button type="button" class="sound-item" id="play-red-winning-shout">
+            <span id="red-image" class="sound-dot"></span>
+            <span class="sound-label">Red</span>
+          </button>
+          <button type="button" class="sound-item" id="play-blue-winning-shout">
+            <span id="blue-image" class="sound-dot"></span>
+            <span class="sound-label">Blue</span>
+          </button>
+          <button type="button" class="sound-item" id="play-green-winning-shout">
+            <span id="green-image" class="sound-dot"></span>
+            <span class="sound-label">Green</span>
+          </button>
+          <button type="button" class="sound-item" id="play-purple-winning-shout">
+            <span id="purple-image" class="sound-dot"></span>
+            <span class="sound-label">Purple</span>
+          </button>
+          <button type="button" class="sound-item" id="play-yellow-winning-shout">
+            <span id="yellow-image" class="sound-dot"></span>
+            <span class="sound-label">Yellow</span>
+          </button>
+          <button type="button" class="sound-item" id="play-cyan-winning-shout">
+            <span id="cyan-image" class="sound-dot"></span>
+            <span class="sound-label">Cyan</span>
+          </button>
+        </div>
+      </div>
 
-    <div>Game Funny Sounds</div>
-    <hr/>
-    <div id="die-shout">
-      <a href="#" id="die-shout">
-        <div id="die-image"></div>
-        <div id="die-text">Die</div>
-      </a>
-    </div>
-    <div id="yabass-shout">
-      <a href="#" id="yabass-shout">
-        <div id="yabass-image"></div>
-        <div id="yabass-text">Yabass</div>
-      </a>
-    </div>
-    <div id="speeding-shout">
-      <a href="#" id="speeding-shout">
-        <div id="speeding-image"></div>
-        <div id="speeding-text">Speed</div>
-      </a>
-    </div>
-    <div id="winning-shout">
-      <a href="#" id="winning-shout">
-        <div id="winning-image"></div>
-        <div id="winning-text">Win</div>
-      </a>
-    </div>
-    <div id="pause-shout">
-      <a href="#" id="pause-shout">
-        <div id="pause-image"></div>
-        <div id="pause-text">Pause</div>
-      </a>
-    </div>
-    <div id="burp-shout">
-      <a href="#" id="burp-shout">
-        <div id="burp-image"></div>
-        <div id="burp-text">Burp</div>
-      </a>
+      <div class="sounds-section">
+        <div class="sounds-title">Game Funny Sounds</div>
+        <div class="sounds-grid">
+          <button type="button" class="sound-item" id="play-die-shout">
+            <span id="die-image" class="sound-dot"></span>
+            <span class="sound-label">Die</span>
+          </button>
+          <button type="button" class="sound-item" id="play-yabass-shout">
+            <span id="yabass-image" class="sound-dot"></span>
+            <span class="sound-label">Yabass</span>
+          </button>
+          <button type="button" class="sound-item" id="play-speeding-shout">
+            <span id="speeding-image" class="sound-dot"></span>
+            <span class="sound-label">Speed</span>
+          </button>
+          <button type="button" class="sound-item" id="play-winning-shout">
+            <span id="winning-image" class="sound-dot"></span>
+            <span class="sound-label">Win</span>
+          </button>
+          <button type="button" class="sound-item" id="play-pause-shout">
+            <span id="pause-image" class="sound-dot"></span>
+            <span class="sound-label">Pause</span>
+          </button>
+          <button type="button" class="sound-item" id="play-burp-shout">
+            <span id="burp-image" class="sound-dot"></span>
+            <span class="sound-label">Burp</span>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-  <input type="button" class="close-panel-btn" id="sounds-close-btn" value="Hide Panel" />
 </div>

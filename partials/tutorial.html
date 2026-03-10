@@ -1,16 +1,46 @@
-<div id="tutorial-overlay" class="tutorial-overlay" style="display: none;">
-  <div class="tutorial-card">
-    <div class="tutorial-title">How to play</div>
-    <ul class="tutorial-list">
-      <li><strong>Local:</strong> select at least 2 worms, assign left/right keys, then press “Create a game.”</li>
-      <li><strong>Online:</strong> create, join, or autojoin a room, then “Ready Up.” Host can start the match.</li>
-      <li><strong>Controls:</strong> each worm has its own left/right keys to steer continuously.</li>
-      <li><strong>Scoring:</strong> last worm alive scores a point each round. First to the target wins.</li>
-      <li><strong>Holes:</strong> gaps appear in trails; if “Hole Points” is enabled, passing holes can score.</li>
-      <li><strong>Speed:</strong> speed can ramp up randomly; use Pause to breathe.</li>
-      <li><strong>Spectate:</strong> in online rooms you can switch to spectator anytime.</li>
-      <li><strong>Mobile:</strong> use the on-screen left/right buttons; press and hold to steer.</li>
-    </ul>
-    <button id="tutorial-close" type="button">Got it</button>
+<div id="tutorial-overlay" class="modal-shell tutorial-overlay" style="display: none;">
+  <div class="modal-card tutorial-card">
+    <div class="modal-header">
+      <div class="modal-title">How to play</div>
+      <button id="tutorial-close" type="button" class="modal-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body tutorial-body">
+      <p class="tutorial-intro">Survive longer than everyone else. Keep turning to avoid trails, collect points, and reach the target score first.</p>
+
+      <div class="tutorial-section">
+        <div class="tutorial-section-title">Quick Start</div>
+        <ul class="tutorial-list">
+          <li><strong>Local:</strong> pick at least 2 worms, assign left/right keys, then press “Create a game.”</li>
+          <li><strong>Online:</strong> create or join a room, then “Ready Up.” The host starts the match.</li>
+          <li><strong>Mobile:</strong> use the on-screen left/right buttons and press-and-hold to steer.</li>
+        </ul>
+      </div>
+
+      <div class="tutorial-section">
+        <div class="tutorial-section-title">Controls</div>
+        <ul class="tutorial-list">
+          <li>Each worm has its own left/right keys to steer continuously.</li>
+          <li>Tap <strong>Pause</strong> to freeze the action and bring up overlays.</li>
+        </ul>
+      </div>
+
+      <div class="tutorial-section">
+        <div class="tutorial-section-title">Scoring & Rounds</div>
+        <ul class="tutorial-list">
+          <li>Last worm alive scores a point each round.</li>
+          <li>First to the target score wins the match.</li>
+          <li>If <strong>Hole Points</strong> are enabled, passing holes can score too.</li>
+        </ul>
+      </div>
+
+      <div class="tutorial-section">
+        <div class="tutorial-section-title">Gameplay Tips</div>
+        <ul class="tutorial-list">
+          <li>Speed can ramp up randomly—plan wider turns early.</li>
+          <li>Use holes to slip through tight situations without crashing.</li>
+          <li>Spectators can switch in and out anytime in online rooms.</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>

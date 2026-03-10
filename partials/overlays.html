@@ -1,42 +1,109 @@
 <div id="match-summary" class="match-summary" style="display: none;">
+  <div class="match-fireworks" aria-hidden="true">
+    <span class="match-firework"></span>
+    <span class="match-firework"></span>
+    <span class="match-firework"></span>
+    <span class="match-firework"></span>
+    <span class="match-firework"></span>
+    <span class="match-firework"></span>
+  </div>
   <div class="match-summary-card">
     <div id="match-summary-title" class="match-summary-title">Match Over</div>
     <div id="match-summary-winner" class="match-summary-winner"></div>
     <div id="match-summary-list" class="match-summary-list"></div>
     <div class="match-summary-actions">
       <button id="match-rematch" type="button">Rematch</button>
-      <button id="match-close" type="button">Close</button>
+      <button id="match-close" type="button" class="modal-close" aria-label="Close">×</button>
     </div>
   </div>
 </div>
 
-<div id="game-info-div" class="info-modal" style="display: none;">
-  <div class="info-card">
-    <div class="info-header">
-      <div id="info_title">Game Info</div>
-      <button id="info-close-btn" type="button">Close</button>
+<div id="game-info-div" class="modal-shell info-modal" style="display: none;">
+  <div class="modal-card info-card">
+    <div class="modal-header">
+      <div id="info_title" class="modal-title">Game Info</div>
+      <button id="info-close-btn" type="button" class="modal-close" aria-label="Close">×</button>
     </div>
-    <div id="info">Game details will appear here.</div>
+    <div class="modal-body">
+      <div id="info">Game details will appear here.</div>
+    </div>
   </div>
 </div>
 
-<div id="keys">
-  <div class="key-row" id="redKeyHelpRow" style="display:none;">
-    <div id="red-image-small"></div>&nbsp;Red:&nbsp;<input type="button" class="key-btn" id="redRightButton"><input type="button" class="key-btn" id="redLeftButton">
+<div id="game-details-div" class="modal-shell info-modal" style="display: none;">
+  <div class="modal-card info-card log-card">
+    <div class="modal-header">
+      <div class="modal-title">Game Log</div>
+      <button id="log-close-btn" type="button" class="modal-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="log-list" id="log-list"></div>
+      <pre id="log" style="display: none;"></pre>
+    </div>
   </div>
-  <div class="key-row" id="blueKeyHelpRow" style="display:none;">
-    <div id="blue-image-small"></div>&nbsp;Blue:&nbsp;<input type="button" class="key-btn" id="blueRightButton"><input type="button" class="key-btn" id="blueLeftButton">
+</div>
+
+<div id="show-keys-div" class="modal-shell info-modal" style="display: none;">
+  <div class="modal-card info-card">
+    <div class="modal-header">
+      <div class="modal-title">Keys In Use</div>
+      <button id="keys-close-btn" type="button" class="modal-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="keys">
+        <div class="key-row" id="redKeyHelpRow" style="display:none;">
+          <div id="red-image-small"></div>&nbsp;Red:&nbsp;<input type="button" class="key-btn" id="redRightButton"><input type="button" class="key-btn" id="redLeftButton">
+        </div>
+        <div class="key-row" id="blueKeyHelpRow" style="display:none;">
+          <div id="blue-image-small"></div>&nbsp;Blue:&nbsp;<input type="button" class="key-btn" id="blueRightButton"><input type="button" class="key-btn" id="blueLeftButton">
+        </div>
+        <div class="key-row" id="greenKeyHelpRow" style="display:none;">
+          <div id="green-image-small"></div>&nbsp;Green:&nbsp;<input type="button" class="key-btn" id="greenRightButton"><input type="button" class="key-btn" id="greenLeftButton">
+        </div>
+        <div class="key-row" id="purpleKeyHelpRow" style="display:none;">
+          <div id="purple-image-small"></div>&nbsp;Purple:&nbsp;<input type="button" class="key-btn" id="purpleRightButton"><input type="button" class="key-btn" id="purpleLeftButton">
+        </div>
+        <div class="key-row" id="yellowKeyHelpRow" style="display:none;">
+          <div id="yellow-image-small"></div>&nbsp;Yellow:&nbsp;<input type="button" class="key-btn" id="yellowRightButton"><input type="button" class="key-btn" id="yellowLeftButton">
+        </div>
+        <div class="key-row" id="cyanKeyHelpRow" style="display:none;">
+          <div id="cyan-image-small"></div>&nbsp;Cyan:&nbsp;<input type="button" class="key-btn" id="cyanRightButton"><input type="button" class="key-btn" id="cyanLeftButton">
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="key-row" id="greenKeyHelpRow" style="display:none;">
-    <div id="green-image-small"></div>&nbsp;Green:&nbsp;<input type="button" class="key-btn" id="greenRightButton"><input type="button" class="key-btn" id="greenLeftButton">
+</div>
+
+<div id="abandon-confirm" class="modal-shell" style="display: none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">Abandon game?</div>
+      <button id="abandon-close" type="button" class="modal-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-text">The current match will end and progress for this round will be lost. Where do you want to go next?</p>
+      <div class="modal-actions">
+        <button id="abandon-continue" type="button">Continue</button>
+        <button id="abandon-local" type="button">Local Settings</button>
+        <button id="abandon-lobby" type="button" class="danger-btn">Lobby</button>
+      </div>
+    </div>
   </div>
-  <div class="key-row" id="purpleKeyHelpRow" style="display:none;">
-    <div id="purple-image-small"></div>&nbsp;Purple:&nbsp;<input type="button" class="key-btn" id="purpleRightButton"><input type="button" class="key-btn" id="purpleLeftButton">
-  </div>
-  <div class="key-row" id="yellowKeyHelpRow" style="display:none;">
-    <div id="yellow-image-small"></div>&nbsp;Yellow:&nbsp;<input type="button" class="key-btn" id="yellowRightButton"><input type="button" class="key-btn" id="yellowLeftButton">
-  </div>
-  <div class="key-row" id="cyanKeyHelpRow" style="display:none;">
-    <div id="cyan-image-small"></div>&nbsp;Cyan:&nbsp;<input type="button" class="key-btn" id="cyanRightButton"><input type="button" class="key-btn" id="cyanLeftButton">
+</div>
+
+<div id="about-modal" class="modal-shell" style="display: none;">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">About Pune</div>
+      <button id="about-close" type="button" class="modal-close" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <p class="modal-text"><strong>Creator:</strong> Guido Alloatti</p>
+      <p class="modal-text">Pune is a fast-paced, multiplayer light‑cycle game built for local and online play. It blends classic snake-style movement with modern UI, holes, and speed boosts for chaotic rounds.</p>
+      <p class="modal-text">Thanks for playing and sharing feedback — it helps make the game sharper and more fun.</p>
+      <div class="modal-actions">
+        <a class="nav-button-link" href="https://github.com/guidoalloatti/pune_html/tree/working" target="_blank" rel="noreferrer">Open GitHub Repo</a>
+      </div>
+    </div>
   </div>
 </div>

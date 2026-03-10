@@ -31,6 +31,10 @@ export const state = {
   wormHasCrush: false,
   imageArray: null,
   soundOn: true,
+  soundVolume: 0.25,
+  musicVolume: 0.2,
+  backgroundMusicOn: false,
+  musicTrack: "synthwave",
   winningWorm: "",
   longestWormSize: 0,
   longestWorm: null,
@@ -63,7 +67,7 @@ export const state = {
   marker: null,
   keyCode: null,
   i: 0,
-  score_x: 13,
+  score_x: 24,
   score_y: 42,
 
   // Math Vars
@@ -81,7 +85,7 @@ export const state = {
   // Marker Vars
   xMarker: 0,
   yMarker: 0,
-  wMarker: 80,
+  wMarker: 100,
   hMarker: 80,
 
   // Arrays

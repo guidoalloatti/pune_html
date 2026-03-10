@@ -2,9 +2,10 @@
 
 import { $, $$, show, hide, toggle } from "./dom.js";
 import { state } from "./state.js";
-import { playSound } from "./sounds.js";
+import { playSound, pause, setSoundVolume, setMusicVolume, toggleBackgroundMusic, setMusicTrack } from "./sounds.js";
+import { logEvent, updateLogUI } from "./logs.js";
 import { saveKeysData, saveSettingsData, loadSettingsData, recordMatchStats, loadStatsData } from "./storage.js";
-import { startNewGame, find_duplicates } from "./game.js";
+import { startNewGame, find_duplicates, abandonGame, handleGameKeyDown, handleGameKeyUp } from "./game.js";
 
 function setModeStatus(text) {
   const status = $("#mode-status");
@@ -39,15 +40,23 @@ export function showMatchSummary({ mode, winner, maxScore, players, canRematch }
   if (!overlay || !title || !winnerEl || !list || !rematch || !close) return;
   overlay.dataset.mode = mode;
   title.textContent = "Match Over";
-  const winnerLabel = winner ? `${winner} wins with ${maxScore} points.` : "It\'s a tie.";
+  const winnerLabel = winner ? `🏆 ${winner} wins with ${maxScore} points!` : "It\'s a tie.";
   winnerEl.textContent = winnerLabel;
   const statsData = recordMatchStats({ winner, players });
   list.innerHTML = "";
-  players.forEach((p) => {
+  const header = document.createElement("div");
+  header.className = "match-summary-row match-summary-header";
+  header.innerHTML = "<span>#</span><span>Player</span><span>Pts</span><span>Stats</span>";
+  list.appendChild(header);
+
+  const sorted = [...players].sort((a, b) => (b.score || 0) - (a.score || 0));
+  sorted.forEach((p, i) => {
     const row = document.createElement("div");
-    row.className = "match-summary-row";
+    row.className = "match-summary-row" + (winner && (p.color === winner || p.name === winner) ? " match-summary-winner-row" : "");
     const name = p.name || p.color || `Player ${p.id}`;
     const stats = statsData.players[name] || { games: 0, wins: 0, best: 0 };
+    const posSpan = document.createElement("span");
+    posSpan.textContent = String(i + 1);
     const nameSpan = document.createElement("span");
     nameSpan.textContent = name;
     const scoreSpan = document.createElement("span");
@@ -55,6 +64,7 @@ export function showMatchSummary({ mode, winner, maxScore, players, canRematch }
     const statsSpan = document.createElement("span");
     statsSpan.className = "match-summary-stats";
     statsSpan.textContent = `W:${stats.wins} G:${stats.games} Best:${stats.best}`;
+    row.appendChild(posSpan);
     row.appendChild(nameSpan);
     row.appendChild(scoreSpan);
     row.appendChild(statsSpan);
@@ -72,12 +82,16 @@ export function hideMatchSummary() {
 
 function showTutorial() {
   const overlay = $("#tutorial-overlay");
-  if (overlay) overlay.style.display = "flex";
+  if (overlay && getComputedStyle(overlay).display === "none") {
+    toggleWithPause(overlay);
+  }
 }
 
 function hideTutorial() {
   const overlay = $("#tutorial-overlay");
-  if (overlay) overlay.style.display = "none";
+  if (overlay && getComputedStyle(overlay).display !== "none") {
+    toggleWithPause(overlay);
+  }
   window.localStorage.setItem("puneTutorialSeen", "1");
 }
 
@@ -92,6 +106,26 @@ function toggleFullscreen() {
     document.exitFullscreen?.();
   } else {
     document.documentElement.requestFullscreen?.();
+  }
+}
+
+function toggleWithPause(el) {
+  if (!el) return;
+  const isHidden = getComputedStyle(el).display === "none";
+  toggle(el);
+  if (isHidden) {
+    if (!state.onPause) pause();
+  } else {
+    const stillOpen = [
+      $("#game-info-div"),
+      $("#game-details-div"),
+      $("#show-keys-div"),
+      $("#sounds-menu"),
+      $("#tutorial-overlay"),
+      $("#abandon-confirm"),
+      $("#about-modal"),
+    ].some((panel) => panel && getComputedStyle(panel).display !== "none");
+    if (!stillOpen && state.onPause) pause();
   }
 }
 
@@ -180,6 +214,57 @@ export function setMoveKey(color, direction, code) {
       input.setAttribute("name", code);
     }
   }
+}
+
+function getKeyCodeFromEvent(event) {
+  const direct = event?.keyCode ?? event?.which;
+  if (Number.isFinite(direct) && direct > 0) return direct;
+  const code = event?.code;
+  const key = event?.key;
+  const codeMap = {
+    ArrowLeft: 37,
+    ArrowUp: 38,
+    ArrowRight: 39,
+    ArrowDown: 40,
+    Backquote: 192,
+    Digit0: 48,
+    Digit1: 49,
+    Digit2: 50,
+    Digit3: 51,
+    Digit4: 52,
+    Digit5: 53,
+    Digit6: 54,
+    Digit7: 55,
+    Digit8: 56,
+    Digit9: 57,
+    Minus: 189,
+    Equal: 187,
+    BracketLeft: 219,
+    BracketRight: 221,
+    Backslash: 220,
+    Semicolon: 186,
+    Quote: 222,
+    Comma: 188,
+    Period: 190,
+    Slash: 191,
+    Space: 32,
+    Tab: 9,
+  };
+  if (code && codeMap[code]) return codeMap[code];
+  const keyMap = {
+    ArrowLeft: 37,
+    ArrowUp: 38,
+    ArrowRight: 39,
+    ArrowDown: 40,
+    Escape: 27,
+    " ": 32,
+  };
+  if (key && keyMap[key]) return keyMap[key];
+  if (key && key.length === 1) {
+    const upper = key.toUpperCase();
+    return upper.charCodeAt(0);
+  }
+  return null;
 }
 
 export function saveSettings() {
@@ -395,9 +480,9 @@ function bindSettingsKeyInputs() {
 
 function resetSettingsDefaults() {
   $("#settings_hole_points").value = "None";
-  $("#settings_speed").value = "Normal";
-  $("#settings_gap_spacing").value = "Normal";
-  $("#settings_gap_sizing").value = "Normal";
+  $("#settings_speed").value = "Frantic";
+  $("#settings_gap_spacing").value = "Far Apart";
+  $("#settings_gap_sizing").value = "Large";
 
   state.colors.forEach((color, idx) => {
     const leftInput = $("#settings_" + color + "_left");
@@ -463,7 +548,45 @@ function updateInfoModal() {
   info.textContent = lines.join("\n");
 }
 
+function initModalInteractions() {
+  const cards = document.querySelectorAll(".modal-card, .match-summary-card");
+  cards.forEach((card) => {
+    if (card.dataset.puneDraggable === "true") return;
+    const header = card.querySelector(".modal-header, .match-summary-title");
+    if (!header) return;
+    const onMouseDown = (event) => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      const rect = card.getBoundingClientRect();
+      const startX = event.clientX;
+      const startY = event.clientY;
+      const offsetX = startX - rect.left;
+      const offsetY = startY - rect.top;
+      card.style.position = "fixed";
+      card.style.left = `${rect.left}px`;
+      card.style.top = `${rect.top}px`;
+      card.style.margin = "0";
+      card.style.transform = "none";
+      const onMove = (moveEvent) => {
+        const nextLeft = Math.max(8, Math.min(window.innerWidth - rect.width - 8, moveEvent.clientX - offsetX));
+        const nextTop = Math.max(8, Math.min(window.innerHeight - rect.height - 8, moveEvent.clientY - offsetY));
+        card.style.left = `${nextLeft}px`;
+        card.style.top = `${nextTop}px`;
+      };
+      const onUp = () => {
+        window.removeEventListener("mousemove", onMove);
+        window.removeEventListener("mouseup", onUp);
+      };
+      window.addEventListener("mousemove", onMove);
+      window.addEventListener("mouseup", onUp);
+    };
+    header.addEventListener("mousedown", onMouseDown);
+    card.dataset.puneDraggable = "true";
+  });
+}
+
 export function bindUI() {
+  initModalInteractions();
   const wormCards = document.querySelectorAll(".worm-card");
   wormCards.forEach((card) => {
     card.addEventListener("click", (event) => {
@@ -479,18 +602,65 @@ export function bindUI() {
   });
 
   document.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape") return;
-    const tutorial = $("#tutorial-overlay");
-    if (tutorial && tutorial.style.display !== "none") {
+    // if (event.code === "Space" || event.key === " ") {
+    if (event.code === "Space") {
+      const target = event.target;
+      if (target instanceof HTMLElement && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
+        return;
+      }
+      if (state.gameHasStarted && !state.onPause) {
+        event.preventDefault();
+        pause();
+        return;
+      }
+      if (state.gameHasStarted && state.onPause) {
+        event.preventDefault();
+        pause();
+        return;
+      }
+    }
+
+    if (event.key === "Escape") {
+      const abandonConfirm = $("#abandon-confirm");
+      if (abandonConfirm && abandonConfirm.style.display !== "none") {
+        event.preventDefault();
+        toggleWithPause(abandonConfirm);
+        return;
+      }
+
+      const tutorial = $("#tutorial-overlay");
+      if (tutorial && tutorial.style.display !== "none") {
+        event.preventDefault();
+        hideTutorial();
+        return;
+      }
+
+      const background = $("#background");
+      const canvasDiv = $("#canvas_div");
+      const inGameView = !!background && !!canvasDiv
+        && getComputedStyle(background).display !== "none"
+        && getComputedStyle(canvasDiv).display !== "none";
+
+      if (inGameView && abandonConfirm) {
+        event.preventDefault();
+        toggleWithPause(abandonConfirm);
+        return;
+      }
+      const inSetup = document.body.classList.contains("show-local-setup")
+        || document.body.classList.contains("show-online-setup");
+      if (!inSetup) {
+        return;
+      }
       event.preventDefault();
-      hideTutorial();
+      showModeSelect();
       return;
     }
-    const inSetup = document.body.classList.contains("show-local-setup")
-      || document.body.classList.contains("show-online-setup");
-    if (!inSetup) return;
-    event.preventDefault();
-    showModeSelect();
+
+    handleGameKeyDown(event);
+  });
+
+  document.addEventListener("keyup", (event) => {
+    handleGameKeyUp(event);
   });
 
   // Dialog open events
@@ -518,6 +688,8 @@ export function bindUI() {
   const tutorialClose = $("#tutorial-close");
   if (openHelp) openHelp.addEventListener("click", showTutorial);
   if (tutorialClose) tutorialClose.addEventListener("click", hideTutorial);
+  const openAbout = $("#open-about");
+  if (openAbout) openAbout.addEventListener("click", () => toggleWithPause($("#about-modal")));
   const fullscreenToggle = $("#fullscreen-toggle");
   if (fullscreenToggle) fullscreenToggle.addEventListener("click", (e) => {
     e.preventDefault();
@@ -554,23 +726,104 @@ export function bindUI() {
   const logClose = $("#log-close-btn");
   const keysClose = $("#keys-close-btn");
   const soundsClose = $("#sounds-close-btn");
-  if (infoClose) infoClose.addEventListener("click", () => toggle($("#game-info-div")));
-  if (logClose) logClose.addEventListener("click", () => toggle($("#game-details-div")));
-  if (keysClose) keysClose.addEventListener("click", () => toggle($("#show-keys-div")));
-  if (soundsClose) soundsClose.addEventListener("click", () => toggle($("#sounds-menu")));
+  const abandonClose = $("#abandon-close");
+  const abandonContinue = $("#abandon-continue");
+  const abandonLocal = $("#abandon-local");
+  const abandonLobby = $("#abandon-lobby");
+  const aboutClose = $("#about-close");
+  if (infoClose) infoClose.addEventListener("click", () => toggleWithPause($("#game-info-div")));
+  if (logClose) logClose.addEventListener("click", () => toggleWithPause($("#game-details-div")));
+  if (keysClose) keysClose.addEventListener("click", () => toggleWithPause($("#show-keys-div")));
+  if (soundsClose) soundsClose.addEventListener("click", () => toggleWithPause($("#sounds-menu")));
+  if (aboutClose) aboutClose.addEventListener("click", () => toggleWithPause($("#about-modal")));
+  if (abandonClose) abandonClose.addEventListener("click", () => toggleWithPause($("#abandon-confirm")));
+  if (abandonContinue) abandonContinue.addEventListener("click", () => toggleWithPause($("#abandon-confirm")));
+  if (abandonLocal) {
+    abandonLocal.addEventListener("click", () => {
+      abandonGame();
+      if (state.onPause) pause();
+      if ($("#abandon-confirm")) toggleWithPause($("#abandon-confirm"));
+      showModeSelect();
+      showLocalSetup();
+    });
+  }
+  if (abandonLobby) {
+    abandonLobby.addEventListener("click", () => {
+      abandonGame();
+      if (state.onPause) pause();
+      if ($("#abandon-confirm")) toggleWithPause($("#abandon-confirm"));
+      showModeSelect();
+    });
+  }
 
   // Nav bar buttons action
   const toggleLog = $("#toggle-log");
   const toggleInfo = $("#toggle-info");
   const toggleKeys = $("#toggle-keys");
   const soundsNav = $("#sounds-nav-bar");
-  if (toggleLog) toggleLog.addEventListener("click", () => toggle($("#game-details-div")));
+  const soundsVolume = $("#sounds-volume");
+  const soundsVolumeValue = $("#sounds-volume-value");
+  const musicVolume = $("#music-volume");
+  const musicVolumeValue = $("#music-volume-value");
+  const musicTrack = $("#music-track");
+  const synthToggle = $("#toggle-synth");
+  if (toggleLog) toggleLog.addEventListener("click", () => {
+    updateLogUI();
+    toggleWithPause($("#game-details-div"));
+    logEvent({ actor: "System", action: "Log opened" });
+  });
   if (toggleInfo) toggleInfo.addEventListener("click", () => {
     updateInfoModal();
-    toggle($("#game-info-div"));
+    toggleWithPause($("#game-info-div"));
   });
-  if (toggleKeys) toggleKeys.addEventListener("click", () => toggle($("#show-keys-div")));
-  if (soundsNav) soundsNav.addEventListener("click", () => toggle($("#sounds-menu")));
+  if (toggleKeys) toggleKeys.addEventListener("click", () => toggleWithPause($("#show-keys-div")));
+  if (soundsNav) soundsNav.addEventListener("click", () => toggleWithPause($("#sounds-menu")));
+  if (synthToggle) {
+    const syncSynth = () => {
+      const isOn = !!state.backgroundMusicOn;
+      synthToggle.textContent = isOn ? "On" : "Off";
+      synthToggle.classList.toggle("is-on", isOn);
+      synthToggle.setAttribute("aria-pressed", isOn ? "true" : "false");
+    };
+    syncSynth();
+    synthToggle.addEventListener("click", () => {
+      toggleBackgroundMusic();
+      syncSynth();
+    });
+  }
+  if (soundsVolume) {
+    const syncVolumeLabel = () => {
+      if (soundsVolumeValue) soundsVolumeValue.textContent = `${soundsVolume.value}%`;
+    };
+    const initial = Math.round((state.soundVolume ?? 0.25) * 100);
+    soundsVolume.value = String(initial);
+    syncVolumeLabel();
+    soundsVolume.addEventListener("input", () => {
+      const vol = Number(soundsVolume.value) / 100;
+      setSoundVolume(vol);
+      syncVolumeLabel();
+    });
+  }
+  if (musicVolume) {
+    const syncMusicLabel = () => {
+      if (musicVolumeValue) musicVolumeValue.textContent = `${musicVolume.value}%`;
+    };
+    const initial = Math.round((state.musicVolume ?? 0.2) * 100);
+    musicVolume.value = String(initial);
+    syncMusicLabel();
+    musicVolume.addEventListener("input", () => {
+      const vol = Number(musicVolume.value) / 100;
+      setMusicVolume(vol);
+      syncMusicLabel();
+    });
+  }
+  if (musicTrack) {
+    const initialTrack = state.musicTrack || "synthwave";
+    musicTrack.value = initialTrack;
+    musicTrack.addEventListener("change", () => {
+      setMusicTrack(musicTrack.value);
+    });
+  }
 
   // Sounds triggers
   const soundMap = [
@@ -580,12 +833,12 @@ export function bindUI() {
     ["#play-green-winning-shout", "green"],
     ["#play-yellow-winning-shout", "yellow"],
     ["#play-cyan-winning-shout", "cyan"],
-    ["#die-shout", "die"],
-    ["#yabass-shout", "yabass"],
-    ["#winning-shout", "win"],
-    ["#speeding-shout", "speeding"],
-    ["#pause-shout", "pause"],
-    ["#burp-shout", "burp"],
+    ["#play-die-shout", "die"],
+    ["#play-yabass-shout", "yabass"],
+    ["#play-winning-shout", "win"],
+    ["#play-speeding-shout", "speeding"],
+    ["#play-pause-shout", "pause"],
+    ["#play-burp-shout", "burp"],
   ];
   soundMap.forEach(([sel, sound]) => {
     const el = $(sel);
@@ -602,8 +855,18 @@ export function bindUI() {
     if (play) play.addEventListener("click", () => labelClicked(color, "check"));
     if (label) label.addEventListener("click", () => labelClicked(color, "label"));
 
-    if (leftInput) leftInput.addEventListener("keydown", (e) => { e.preventDefault(); setMoveKey(color, "left", e.keyCode); });
-    if (rightInput) rightInput.addEventListener("keydown", (e) => { e.preventDefault(); setMoveKey(color, "right", e.keyCode); });
+    if (leftInput) leftInput.addEventListener("keydown", (e) => {
+      e.preventDefault();
+      const code = getKeyCodeFromEvent(e);
+      if (!Number.isFinite(code)) return;
+      setMoveKey(color, "left", code);
+    });
+    if (rightInput) rightInput.addEventListener("keydown", (e) => {
+      e.preventDefault();
+      const code = getKeyCodeFromEvent(e);
+      if (!Number.isFinite(code)) return;
+      setMoveKey(color, "right", code);
+    });
 
     if (leftInput) hide(leftInput);
     if (rightInput) hide(rightInput);

@@ -9,63 +9,119 @@
 }
 
 /*
-/ This are the styles for the keys showing in the nav bar activated div
+/ Shared modal template styles
 */
-#show-keys-div {
-  font-size: 14px;  
-  left: 948px;
-  top: 43px;
-  width: 150px;
-  height: 250px;
-  background: #272727;
-  border: 1px solid white;
-  border-radius: 10px;
-  padding: 7px;
+.modal-shell {
   position: fixed;
-}
-#keys-title {
-  color: #B5B5B5;
-  text-decoration: none;
-  font-family: sans-serif;
-  font-weight: normal;
-  position: fixed;
-  font-size: 18px;
-  margin-bottom: 40px;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 30;
 }
 
+.modal-card {
+  background: linear-gradient(160deg, rgba(36, 41, 56, 0.98), rgba(20, 24, 35, 0.98));
+  color: #fff;
+  border-radius: 16px;
+  width: min(680px, 94vw);
+  max-height: 80vh;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.modal-title {
+  color: #cdd4ff;
+  font-family: sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.modal-body {
+  padding: 16px 18px;
+  overflow: auto;
+}
+
+.modal-actions {
+  padding: 12px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-actions .nav-button-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #2b2f3b;
+  color: #fff;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.modal-text {
+  margin: 0 0 16px 0;
+  color: #e6ecff;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/*
+/ This are the styles for the keys showing in the nav bar activated div
+*/
 #keys, .key-row{
-  width: 130px;
-  margin-top: 12px;
-  margin-left: 10px;
+  width: 100%;
+  margin-top: 10px;
   position: relative;
   clear: both;
   color: #B5B5B5;
   text-decoration: none;  
   font-weight: normal;
   font-size: 16px;
-  display: table-cell;
-  vertical-align: middle;
+  display: flex;
+  align-items: center;
   font-family: sans-serif;
 }
+
 #keys {
-  padding-top: 35px;
+  padding-top: 4px;
 }
+
 .key-btn {
   text-align: right;
-  float: right;
+  margin-left: auto;
 }
 
 .close-panel-btn {
-  position: absolute;  
-  border: 1px solid black;
-  top: 240px;
-  left: 4px;
-  border-radius: 5px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: #2b2f3b;
+  color: #fff;
+  font-size: 14px;
+  padding: 8px 12px;
 }
 
 .close-panel-btn:hover {
-  color: white;
-  border: 1px solid white;
+  color: #fff;
+  border: 1px solid #666;
 }
 
 /*
@@ -86,53 +142,209 @@
 }
 
 .info-modal {
-  position: fixed;
-  inset: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(4px);
-  z-index: 30;
 }
 
 .info-card {
-  background: linear-gradient(160deg, rgba(36, 41, 56, 0.98), rgba(20, 24, 35, 0.98));
-  color: #fff;
-  padding: 22px;
-  border-radius: 16px;
-  max-width: 640px;
-  width: 94%;
-  text-align: left;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+  width: min(680px, 94vw);
+}
+
+.log-card {
+  width: min(760px, 94vw);
+}
+
+.log-list {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+  max-height: 360px;
+  overflow: auto;
+  padding-right: 4px;
+}
+
+.log-row {
+  display: grid;
+  grid-template-columns: 72px 1fr 1fr 1.5fr;
+  gap: 10px;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+.log-time {
+  font-family: "Digital-7", "Digital-7 Mono", monospace;
+  font-size: 14px;
+  color: #ffe79a;
+}
+
+.log-action {
+  font-weight: 700;
+  color: #e6ecff;
+}
+
+.log-actor {
+  color: #a9c4ff;
+}
+
+.log-detail {
+  color: #cdd4ff;
 }
 
 .info-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-bottom: 10px;
-}
-
-#info_title {
-  color: #cdd4ff;
-  font-family: sans-serif;
-  font-weight: 600;
-  font-size: 22px;
 }
 
 #info {
   white-space: pre-wrap;
   display: block;
-  overflow: auto;
-  max-height: 360px;
   color: #e3e8ff;
   font-family: sans-serif;
   font-size: 15px;
   line-height: 1.5;
 }
 
-.info-header button {
+.sounds-controls {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.sounds-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 52px;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #e6ecff;
+}
+
+.sounds-row label {
+  color: #9fb0e3;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 11px;
+}
+
+.sounds-row input[type="range"],
+.sounds-row select {
+  width: 100%;
+}
+
+.sounds-row select {
+  background: rgba(20, 24, 36, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e6ecff;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 12px;
+}
+
+.sounds-row span {
+  text-align: right;
+  color: #cdd4ff;
+}
+
+.sounds-toggle-label {
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9fb0e3;
+  font-size: 11px;
+}
+
+.sounds-toggle-btn {
+  justify-self: end;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(140, 170, 255, 0.35);
+  background: rgba(24, 30, 46, 0.9);
+  color: #e9edff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+}
+
+.sounds-toggle-btn.is-on {
+  background: rgba(56, 98, 210, 0.5);
+  border-color: rgba(140, 170, 255, 0.7);
+  color: #ffffff;
+}
+
+.sounds-section {
+  margin-top: 14px;
+}
+
+.sounds-title {
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9fb0e3;
+  margin-bottom: 8px;
+}
+
+.sounds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.sound-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(17, 20, 30, 0.8);
+  color: #eef1ff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.12s ease, border-color 0.12s ease, transform 0.12s ease;
+}
+
+.sound-item:hover {
+  background: rgba(28, 33, 48, 0.9);
+  border-color: rgba(140, 170, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.sound-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.55);
+}
+
+.sound-label {
+  color: inherit;
+}
+
+.sounds-card {
+  width: min(520px, 92vw);
+  max-height: 70vh;
+}
+
+.sounds-card .modal-body {
+  padding: 12px 14px;
+}
+
+.sounds-card .sounds-section {
+  margin-top: 10px;
+}
+
+.sounds-card .sounds-grid {
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+}
+
+.modal-header {
+  cursor: move;
+}
+
+.modal-header button,
+.modal-actions button,
+.modal-header .close-panel-btn {
   padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid #444;
@@ -141,41 +353,34 @@
   font-size: 14px;
 }
 
+.modal-actions .danger-btn {
+  border-color: rgba(255, 110, 110, 0.6);
+  background: rgba(140, 36, 36, 0.9);
+}
+
+.modal-close {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  line-height: 1;
+}
+
 /*
 / This are the styles for the logs showing in the nav bar activated div
 */
-#game-details-div {
-  font-size: 14px;  
-  left: 780px;
-  top: 310px;
-  width: 150px;
-  height: 250px;
-  background: #272727;
-  border: 1px solid white;
-  border-radius: 10px;
-  padding: 7px;
-  position: fixed;
-}
-#log_title {
-  color: #B5B5B5;
-  text-decoration: none;
-  font-family: sans-serif;
-  font-weight: normal;
-  position: fixed;
-  font-size: 18px;
-}
 #log {
   white-space: pre;
   clear: both;
   display: block;
   overflow: auto;
-  width: 140px;
-  height: 200px;
-  margin-top: 40px;
   color: #B5B5B5;
   text-decoration: none;
   font-family: sans-serif;
   font-weight: normal;
-  position: fixed;
   font-size: 12px;
 }

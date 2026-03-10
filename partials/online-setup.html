@@ -29,8 +29,8 @@
               <button id="join-room-btn" class="room-action-btn" type="button">Join Game</button>
             </div>
             <div class="online-row room-actions-row">
-              <button id="copy-room-btn" class="room-action-btn" type="button">📋 Copy Game Code</button>
-              <button id="paste-room-btn" class="room-action-btn" type="button">📥 Paste Game Code</button>
+              <button id="copy-room-btn" class="room-action-btn" type="button">📋 Copy</button>
+              <button id="paste-room-btn" class="room-action-btn" type="button">📥 Paste & Join</button>
             </div>
             <br>
             <div class="online-row">
@@ -41,7 +41,7 @@
             <div class="online-row">
               <label for="online_hole_points">Hole Points</label>
               <select id="online_hole_points">
-                <option>None</option>
+                <option selected>None</option>
                 <option>One</option>
               </select>
             </div>
@@ -50,7 +50,7 @@
               <select id="online_speed">
                 <option>Slow</option>
                 <option>Normal</option>
-                <option>Frantic</option>
+                <option selected>Frantic</option>
               </select>
             </div>
             <div class="online-row">
@@ -58,7 +58,7 @@
               <select id="online_gap_spacing">
                 <option>Close</option>
                 <option>Normal</option>
-                <option>Far Apart</option>
+                <option selected>Far Apart</option>
               </select>
             </div>
             <div class="online-row">
@@ -66,8 +66,12 @@
               <select id="online_gap_sizing">
                 <option>Small</option>
                 <option>Normal</option>
-                <option>Large</option>
+                <option selected>Large</option>
               </select>
+            </div>
+            <div class="online-row room-actions-row">
+              <button id="online-settings-reset" class="room-action-btn" type="button">Reset Defaults</button>
+              <button id="online-settings-save" class="room-action-btn" type="button">Save Settings</button>
             </div>
             <div class="online-action-divider"></div>
             <div class="online-action-title">Players & Chat</div>

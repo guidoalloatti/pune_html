@@ -3,7 +3,8 @@
 import { $, $$, show, hide } from "./dom.js";
 import { state } from "./state.js";
 import { addMessage } from "./messages.js";
-import { playSound, pause } from "./sounds.js";
+import { logEvent } from "./logs.js";
+import { playSound, pause, playBeep } from "./sounds.js";
 import { loadKeysData } from "./storage.js";
 import { online } from "./online.js";
 import { clearScreen, drawCircle, drawHole, drawMarkerBlocks, updateScoreDisplay } from "./renderer.js";
@@ -35,19 +36,56 @@ function markOccupied(x, y) {
   state.occupied.add(key);
 }
 
+function unmarkOccupied(x, y) {
+  const key = `${Math.round(x)}:${Math.round(y)}`;
+  state.occupied.delete(key);
+}
+
+function markHole(x, y, ownerIndex) {
+  const key = `${Math.round(x)}:${Math.round(y)}`;
+  if (!state.holes) state.holes = new Map();
+  state.holes.set(key, ownerIndex);
+}
+
 function isOccupied(x, y) {
   const key = `${Math.round(x)}:${Math.round(y)}`;
   return state.occupied.has(key);
 }
 
+function isHoleCell(x, y) {
+  const key = `${Math.round(x)}:${Math.round(y)}`;
+  return !!(state.holes && state.holes.has(key));
+}
+
+function isOccupiedAt(x, y) {
+  if (isHoleCell(x, y)) return false;
+  return isOccupied(x, y);
+}
+
+function isOccupiedNear(x, y, radius) {
+  if (isOccupiedAt(x, y)) return true;
+  const steps = 8;
+  for (let i = 0; i < steps; i++) {
+    const angle = (Math.PI * 2 * i) / steps;
+    const px = x + Math.cos(angle) * radius;
+    const py = y + Math.sin(angle) * radius;
+    if (isOccupiedAt(px, py)) return true;
+  }
+  return false;
+}
+
 function drawWorm(currentWorm) {
   drawCircle(currentWorm.color, currentWorm.x, currentWorm.y, state.wormSize);
+  markOccupied(currentWorm.x, currentWorm.y);
   if (isHole(currentWorm)) {
-    drawHole(currentWorm.previousX[8], currentWorm.previousY[8], state.wormSize + 1, 2);
+    const holeX = currentWorm.previousX[8];
+    const holeY = currentWorm.previousY[8];
+    drawHole(holeX, holeY, state.wormSize + 1, 2);
+    markHole(holeX, holeY, currentWorm.index);
+    unmarkOccupied(holeX, holeY);
     currentWorm.previousHole[currentWorm.length] = true;
   } else {
     currentWorm.previousHole[currentWorm.length] = false;
-    markOccupied(currentWorm.x, currentWorm.y);
   }
   currentWorm.length += 1;
 }
@@ -70,6 +108,7 @@ export function startGame(selectedColors) {
     return !key || !Number.isFinite(key.left) || !Number.isFinite(key.right) || key.left < 0 || key.right < 0;
   });
   if (needsKeys) getDbKeys(state.source);
+  normalizeKeys();
   state.context = loadCanvasContext();
 
   if (state.context) {
@@ -87,6 +126,8 @@ export function startGame(selectedColors) {
     addMessage(state.currentRound, "rounds");
     changeInterval(state.speed);
     setKeyHelp();
+    const players = (state.playingColors || []).join(", ") || "(auto)";
+    logEvent({ actor: "System", action: "Game started", detail: `Players: ${players}` });
   } else {
     alert("Cannot Load Canvas");
   }
@@ -126,6 +167,7 @@ function Worm() {
   this.index = 0;
   this.holeScore = 0;
   this.inHole = false;
+  this.inScreenHole = false;
 }
 
 function start(selectedColors) {
@@ -133,6 +175,7 @@ function start(selectedColors) {
   setContextProperties();
   clearScreen();
   state.occupied = new Set();
+  state.holes = new Map();
   drawMarkers();
   addMessage(state.speed / 5, "speed");
   startWorms(selectedColors);
@@ -188,10 +231,27 @@ function startWorm(color) {
   state.players[state.i].playing = true;
   state.players[state.i].length = 0;
 
-  if (!state.players[state.i].leftKey) state.players[state.i].leftKey = state.currentKeys[state.i].left;
-  if (!state.players[state.i].rightKey) state.players[state.i].rightKey = state.currentKeys[state.i].right;
+  if (!Number.isFinite(state.currentKeys[state.i].left) || state.currentKeys[state.i].left < 0) {
+    state.currentKeys[state.i].left = state.defaultKeys[state.i].left;
+  }
+  if (!Number.isFinite(state.currentKeys[state.i].right) || state.currentKeys[state.i].right < 0) {
+    state.currentKeys[state.i].right = state.defaultKeys[state.i].right;
+  }
+  state.players[state.i].leftKey = Number(state.currentKeys[state.i].left);
+  state.players[state.i].rightKey = Number(state.currentKeys[state.i].right);
   state.players[state.i].index = state.i;
   markOccupied(state.players[state.i].x, state.players[state.i].y);
+}
+
+function normalizeKeys() {
+  state.colors.forEach((color, idx) => {
+    const entry = state.currentKeys[idx];
+    if (!entry) return;
+    const left = Number(entry.left);
+    const right = Number(entry.right);
+    entry.left = Number.isFinite(left) && left > 0 ? left : state.defaultKeys[idx].left;
+    entry.right = Number.isFinite(right) && right > 0 ? right : state.defaultKeys[idx].right;
+  });
 }
 
 function getLongestWorm() {
@@ -260,29 +320,28 @@ function isWormHit(currentWorm) {
   state.x = currentWorm.x + (cosValue * (Math.PI * 2));
   state.y = currentWorm.y + (sinValue * (Math.PI * 2));
 
-  if (isOccupied(state.x, state.y)) {
-    console.log(`Worm hit detected at position: (${state.x.toFixed(2)}, ${state.y.toFixed(2)})`);
-    return true;
-  }
-  
-  const inHole = isHole(currentWorm);
-  const wasInHole = currentWorm.inHole;
-  
-  console.log(`Worm position: (${state.x.toFixed(2)}, ${state.y.toFixed(2)}), Occupied: ${isOccupied(state.x, state.y)}, In hole: ${inHole}, Was in hole: ${wasInHole}`);
-  
-  currentWorm.inHole = inHole;
-  
-  if (wasInHole && !inHole) {
+  const radius = Math.max(1, state.wormSize);
+  if (isOccupiedNear(state.x, state.y, radius)) return true;
+
+  if (passedThroughHole(currentWorm, state.x, state.y)) {
     playSound("yabass");
     if (state.holePoints == "One") {
       currentWorm.score += 1;
       drawMarkers();
       drawScore();
     }
-    currentWorm.holeScore = 0;
+    return false; // Worm is safe if it passed through a hole
   }
 
   return false;
+}
+
+function passedThroughHole(currentWorm, nextX, nextY) {
+  const key = `${Math.round(nextX)}:${Math.round(nextY)}`;
+  const inScreenHole = !!(state.holes && state.holes.has(key));
+  const wasInScreenHole = !!currentWorm.inScreenHole;
+  currentWorm.inScreenHole = inScreenHole;
+  return wasInScreenHole && !inScreenHole;
 }
 
 function setRound() {
@@ -291,6 +350,7 @@ function setRound() {
   state.currentRound += 1;
   addMessage(state.currentRound, "rounds");
   addMessage(state.speed / 5, "speed");
+  logEvent({ actor: "System", action: "New round", detail: `Round ${state.currentRound}` });
 }
 
 function moveWorm(currentWorm) {
@@ -322,6 +382,7 @@ function wormIsAlive(currentWorm) {
 function wormCrushes(currentWorm) {
   playSound("die");
   currentWorm.alive = false;
+  logEvent({ actor: currentWorm.color || "Worm", action: "Crashed", detail: `Round ${state.currentRound}` });
   getLongestWorm();
   addScore();
   getWormsAlive();
@@ -349,8 +410,8 @@ function matchOver(currentWorm) {
   const summaryPlayers = state.players
     .filter((p) => p.playing)
     .map((p) => ({ id: p.index, color: p.color, name: p.color, score: p.score }));
-  alert("Winner!\nThe champion worm with " + state.maxScore + " points is....\nThe glorious " + state.winningWorm + " worm!!");
   pause();
+  logEvent({ actor: "System", action: "Match over", detail: `Winner: ${state.winningWorm || "Tie"}` });
   document.dispatchEvent(new CustomEvent("pune-local-match-summary", {
     detail: {
       winner: state.winningWorm,
@@ -377,20 +438,11 @@ function storePreviuosCoordinates(currentWorm) {
 }
 
 function isHole(currentWorm) {
-	// const module = currentWorm.length%(holeSize+spaceBetweenHoles)
-	// if(module <= holeSize)
-	// 	return true
-	// return false  
-
   const holeSize = Number(state.holeSize) || 0;
   const spacing = Number(state.spaceBetweenHoles) || 0;
-  const cycle = holeSize + spacing;
-  if (cycle <= 0) return false;
-  const module = currentWorm.length % cycle;
-
-  // console.log(`Worm length: ${currentWorm.length}, Hole size: ${holeSize}, Spacing: ${spacing}, Module: ${module}, Cycle: ${cycle}, isHole: ${module <= holeSize}`);
-
-  return module <= holeSize;
+  const module = currentWorm.length % (holeSize + spacing);
+  if (module <= holeSize) return true;
+  return false;
 }
 
 // Speeding
@@ -399,6 +451,7 @@ function doSpeeding() {
   state.speed += state.speedingIncrementSpeed;
   changeInterval(state.speed);
   addMessage(state.speed / 5, "speed");
+  logEvent({ actor: "System", action: "Speed up", detail: `Speed ${state.speed / 5}` });
 }
 
 function reduceSpeeding() {
@@ -406,6 +459,7 @@ function reduceSpeeding() {
   state.speed -= state.speedingIncrementSpeed;
   changeInterval(state.speed);
   addMessage(state.speed / 5, "speed");
+  logEvent({ actor: "System", action: "Speed down", detail: `Speed ${state.speed / 5}` });
 }
 
 function speeding() {
@@ -424,22 +478,113 @@ function clearKeys() {
   });
 }
 
-function onEventPress(event) {
+export function abandonGame() {
+  clearInterval(state.interval);
+  state.interval = null;
+  clearKeys();
+  state.gameHasStarted = false;
+  state.isNewRound = false;
+  state.currentRound = 0;
+  state.wormsAlive = 0;
+  state.maxScore = 0;
+  state.maxScorePlayers = 0;
+  state.winningWorm = "";
+  logEvent({ actor: "System", action: "Game abandoned" });
+}
+
+function onEventPress(event) {  
   if (online.active) return;
-  state.keyCode = event?.keyCode ?? window.event.keyCode;
+  if (!state.gameHasStarted) {
+    const target = event?.target;
+    if (target instanceof HTMLElement) {
+      const tag = target.tagName;
+        if (tag === "INPUT" || tag === "TEXTAREA" || target.isContentEditable) return; 
+    }
+  }
+  const keyCode = getKeyCodeFromEvent(event);
+  if (!Number.isFinite(keyCode)) return;
+  state.keyCode = keyCode;
 
   if (state.keyCode == 32) pause();
   else if (state.keyCode == 34) doSpeeding();
   else if (state.keyCode == 33) reduceSpeeding();
-  if (!state.onPause && state.gameHasStarted && keyIsDefined(state.keyCode)) {
+  if (!state.onPause && state.gameHasStarted) {
     state.keysBeenPressed[state.keyCode] = true;
   }
 }
 
 function onEventUp(event) {
   if (online.active) return;
-  state.keyCode = event?.keyCode ?? window.event.keyCode;
-  state.keysBeenPressed[state.keyCode] = false;
+  if (!state.gameHasStarted) {
+    const target = event?.target;
+    if (target instanceof HTMLElement) {
+      const tag = target.tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA" || target.isContentEditable) return;
+    }
+  }
+  const keyCode = getKeyCodeFromEvent(event);
+  if (!Number.isFinite(keyCode)) return;
+  state.keyCode = keyCode;
+  state.keysBeenPressed[state.keyCode] = false; 
+}
+
+export function handleGameKeyDown(event) {
+  onEventPress(event);
+}
+
+export function handleGameKeyUp(event) {
+  onEventUp(event);
+}
+
+function getKeyCodeFromEvent(event) {
+  const direct = event?.keyCode ?? event?.which;
+  if (Number.isFinite(direct) && direct > 0) return direct;
+  const code = event?.code;
+  const key = event?.key;
+  const codeMap = {
+    ArrowLeft: 37,
+    ArrowUp: 38,
+    ArrowRight: 39,
+    ArrowDown: 40,
+    Backquote: 192,
+    Digit0: 48,
+    Digit1: 49,
+    Digit2: 50,
+    Digit3: 51,
+    Digit4: 52,
+    Digit5: 53,
+    Digit6: 54,
+    Digit7: 55,
+    Digit8: 56,
+    Digit9: 57,
+    Minus: 189,
+    Equal: 187,
+    BracketLeft: 219,
+    BracketRight: 221,
+    Backslash: 220,
+    Semicolon: 186,
+    Quote: 222,
+    Comma: 188,
+    Period: 190,
+    Slash: 191,
+    Space: 32,
+    Tab: 9,
+  };
+  if (code && codeMap[code]) return codeMap[code];
+  const keyMap = {
+    ArrowLeft: 37,
+    ArrowUp: 38,
+    ArrowRight: 39,
+    ArrowDown: 40,
+    Escape: 27,
+    " ": 32,
+  };
+  if (key && keyMap[key]) return keyMap[key];
+  if (key && key.length === 1) {
+    const upper = key.toUpperCase();
+    return upper.charCodeAt(0);
+  }
+  return null;
 }
 
 function getKey(currentWorm, direction) {
@@ -629,6 +774,18 @@ export function find_duplicates(arr) {
 
 export function startNewGame() {
   if (validateNewGame()) {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    online.active = false;
+    online.started = false;
+    online.ready = false;
+    online.spectator = false;
+    if (state.onPause) {
+      state.onPause = false;
+      const background = $("#background");
+      if (background) background.classList.remove("game-paused");
+    }
     hide($("#start-body"));
     hide($(".demo"));
     hide($("#dialog-form"));
@@ -643,16 +800,68 @@ export function startNewGame() {
     show($("#toggle-info"));
     show($("#toggle-keys"));
 
-    show($("#count_3"));
-    setTimeout(() => { hide($("#count_3")); show($("#count_2")); }, 1000);
-    setTimeout(() => { hide($("#count_2")); show($("#count_1")); }, 2000);
-    setTimeout(() => { hide($("#count_1")); }, 3000);
-    setTimeout(() => { startGame(state.playingColors); state.gameHasStarted = true; }, 3000);
+    const countdownModal = $("#countdown-modal");
+    const count3 = $("#count_3");
+    const count2 = $("#count_2");
+    const count1 = $("#count_1");
+    const status = $("#countdown-status");
+    const lightsWrap = $(".countdown-lights");
+    const lights = lightsWrap ? Array.from(lightsWrap.querySelectorAll(".countdown-light")) : [];
+    const counts = [count3, count2, count1];
+    const lightClasses = ["countdown-light-red", "countdown-light-yellow", "countdown-light-green", "countdown-light-off"];
+
+    counts.forEach((el) => el && (el.style.display = "none"));
+    if (countdownModal) countdownModal.style.display = "flex";
+
+    let step = 0;
+    const setLights = (activeClass) => {
+      lights.forEach((lightEl) => {
+        lightClasses.forEach((cls) => lightEl.classList.remove(cls));
+        lightEl.classList.add(activeClass);
+      });
+    };
+
+    const showStep = () => {
+      counts.forEach((el, idx) => {
+        if (!el) return;
+        el.style.display = idx === step ? "block" : "none";
+      });
+      if (status) {
+        status.classList.remove("countdown-go", "countdown-go-blink");
+        if (step === 0) {
+          status.textContent = "Ready";
+          setLights("countdown-light-red");
+          playBeep(620, 160, 0.8);
+        } else if (step === 1) {
+          status.textContent = "Set";
+          setLights("countdown-light-yellow");
+          playBeep(760, 180, 1.0);
+        } else {
+          status.textContent = "Go";
+          status.classList.add("countdown-go", "countdown-go-blink");
+          setLights("countdown-light-green");
+          playBeep(920, 360, 1.2);
+        }
+      }
+    };
+
+    showStep();
+    const countdown = setInterval(() => {
+      step += 1;
+      if (step >= counts.length) {
+        clearInterval(countdown);
+        counts.forEach((el) => el && (el.style.display = "none"));
+        if (countdownModal) countdownModal.style.display = "none";
+        startGame(state.playingColors);
+        state.gameHasStarted = true;
+        return;
+      }
+      showStep();
+    }, 1000);
     document.dispatchEvent(new Event("pune-local-game-start"));
   }
 }
 
 export function bindGameKeys() {
-  document.onkeydown = onEventPress;
-  document.onkeyup = onEventUp;
+  // Key handling is centralized in ui.js via handleGameKeyDown/Up.
 }

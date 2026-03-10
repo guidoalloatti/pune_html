@@ -4,6 +4,10 @@ import { $, show, hide } from "./dom.js";
 import { lockModeSelection, showMatchSummary, hideMatchSummary } from "./ui.js";
 import { renderOnlineWorms, updateScoreDisplay } from "./renderer.js";
 import { state } from "./state.js";
+import { playBeep, playSound } from "./sounds.js";
+
+const onlineSettingsReset = $("#online-settings-reset");
+const onlineSettingsSave = $("#online-settings-save");
 
 export const online = {
   ws: null,
@@ -45,6 +49,65 @@ export const online = {
   connectedOnce: false,
 };
 
+function showOnlineCountdown() {
+  const countdownModal = $("#countdown-modal");
+  const count3 = $("#count_3");
+  const count2 = $("#count_2");
+  const count1 = $("#count_1");
+  const status = $("#countdown-status");
+  const lightsWrap = $(".countdown-lights");
+  const lights = lightsWrap ? Array.from(lightsWrap.querySelectorAll(".countdown-light")) : [];
+  const counts = [count3, count2, count1];
+  const lightClasses = ["countdown-light-red", "countdown-light-yellow", "countdown-light-green", "countdown-light-off"];
+
+  counts.forEach((el) => el && (el.style.display = "none"));
+  if (countdownModal) countdownModal.style.display = "flex";
+
+  let step = 0;
+  const setLights = (activeClass) => {
+    lights.forEach((lightEl) => {
+      lightClasses.forEach((cls) => lightEl.classList.remove(cls));
+      lightEl.classList.add(activeClass);
+    });
+  };
+
+  const showStep = () => {
+    counts.forEach((el, idx) => {
+      if (!el) return;
+      el.style.display = idx === step ? "block" : "none";
+    });
+    if (status) {
+      status.classList.remove("countdown-go", "countdown-go-blink");
+      if (step === 0) {
+        status.textContent = "Ready";
+        setLights("countdown-light-red");
+        playBeep(620, 160, 0.8);
+      } else if (step === 1) {
+        status.textContent = "Set";
+        setLights("countdown-light-yellow");
+        playBeep(760, 180, 1.0);
+      } else {
+        status.textContent = "Go";
+        status.classList.add("countdown-go", "countdown-go-blink");
+        setLights("countdown-light-green");
+        playBeep(920, 360, 1.2);
+      }
+    }
+  };
+
+  showStep();
+  const countdown = setInterval(() => {
+    step += 1;
+    if (step >= counts.length) {
+      clearInterval(countdown);
+      counts.forEach((el) => el && (el.style.display = "none"));
+      if (countdownModal) countdownModal.style.display = "none";
+      return;
+    }
+    showStep();
+  }, 1000);
+}
+
 function updateOnlineMobileClass() {
   const isMobile = window.matchMedia("(pointer: coarse)").matches
     || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
@@ -66,6 +129,8 @@ function updateHostControls() {
     $("#online_speed"),
     $("#online_gap_spacing"),
     $("#online_gap_sizing"),
+    $("#online-settings-reset"),
+    $("#online-settings-save"),
   ];
   settingsFields.forEach((field) => {
     if (field) field.disabled = !online.isHost;
@@ -131,6 +196,7 @@ function applyOnlineSettings(settings) {
   const speed = $("#online_speed");
   const gapSpacing = $("#online_gap_spacing");
   const gapSizing = $("#online_gap_sizing");
+  
   const setSelect = (el, value) => {
     if (!el || value == null) return;
     const normalized = String(value).trim();
@@ -276,11 +342,13 @@ function connectOnline() {
       hide($("#online-setup"));
       show($("#canvas_div"));
       show($("#background"));
+      showOnlineCountdown();
       updateOnlineMobileClass();
     }
 
     if (msg.type === "match-over") {
       online.started = false;
+      playSound("win");
       if (msg.winner) {
         setOnlineStatus("Match over. Winner: " + msg.winner);
       } else {
@@ -335,9 +403,19 @@ function connectOnline() {
     }
 
     if (msg.type === "state") {
+      const prevWorms = online.state?.worms ? [...online.state.worms] : [];
       online.state = msg.state;
       online.lastSettings = msg.state?.settings || online.lastSettings;
       if (msg.state?.settings) applyOnlineSettings(msg.state.settings);
+      if (prevWorms.length && online.state?.worms?.length) {
+        const prevMap = new Map(prevWorms.map((w) => [w.id, w]));
+        online.state.worms.forEach((w) => {
+          const prev = prevMap.get(w.id);
+          if (prev && prev.alive && !w.alive) {
+            playSound("die");
+          }
+        });
+      }
       renderOnline();
     }
 
@@ -391,9 +469,9 @@ function startOnlineGame() {
   if (!online.ws || !online.isHost || !online.canStart) return;
   const settings = {
     holePoints: $("#online_hole_points").value || $("#hole_points").value || "None",
-    modalSpeed: $("#online_speed").value || $("#modal_speed").value || "Normal",
-    gapSpacing: $("#online_gap_spacing").value || $("#gap_spacing").value || "Normal",
-    gapSizing: $("#online_gap_sizing").value || $("#gap_sizing").value || "Normal",
+    modalSpeed: $("#online_speed").value || $("#modal_speed").value || "Frantic",
+    gapSpacing: $("#online_gap_spacing").value || $("#gap_spacing").value || "Far Apart",
+    gapSizing: $("#online_gap_sizing").value || $("#gap_sizing").value || "Large",
   };
   online.lastSettings = settings;
   online.ws.send(JSON.stringify({ type: "start", settings }));
@@ -404,9 +482,9 @@ function sendSettingsUpdate() {
   if (!online.isHost || online.started || !online.room) return;
   const settings = {
     holePoints: $("#online_hole_points").value || "None",
-    modalSpeed: $("#online_speed").value || "Normal",
-    gapSpacing: $("#online_gap_spacing").value || "Normal",
-    gapSizing: $("#online_gap_sizing").value || "Normal",
+    modalSpeed: $("#online_speed").value || "Frantic",
+    gapSpacing: $("#online_gap_spacing").value || "Far Apart",
+    gapSizing: $("#online_gap_sizing").value || "Large",
   };
   online.lastSettings = settings;
   online.ws.send(JSON.stringify({ type: "settings-update", settings }));
@@ -799,6 +877,18 @@ export function bindOnline() {
   if (gapSizing) {
     gapSizing.addEventListener("change", sendSettingsUpdate);
     gapSizing.addEventListener("input", sendSettingsUpdate);
+  }
+  if (onlineSettingsReset) {
+    onlineSettingsReset.addEventListener("click", () => {
+      if (holePoints) holePoints.value = "None";
+      if (speed) speed.value = "Frantic";
+      if (gapSpacing) gapSpacing.value = "Far Apart";
+      if (gapSizing) gapSizing.value = "Large";
+      sendSettingsUpdate();
+    });
+  }
+  if (onlineSettingsSave) {
+    onlineSettingsSave.addEventListener("click", sendSettingsUpdate);
   }
   if (online.lastSettings) applyOnlineSettings(online.lastSettings);
   if (online.chatSendEl) online.chatSendEl.addEventListener("click", sendChat);

@@ -145,9 +145,12 @@ export function drawMarkerBlocks(colors, x, y, w, h) {
   if (!markerLayer) return;
   markerLayer.clear();
   let yPos = y;
+
+//   console.log("Drawing marker blocks with colors:", colors, "at position:", x, y, "with size:", w, h, "and markerLayer:", markerLayer, "and COLOR_MAP:", COLOR_MAP, "and toHex results:", colors.map(c => toHex(c)));
+
   for (let i = 0; i < colors.length; i++) {
     const hex = toHex(colors[i]);
-    markerLayer.beginFill(hex);
+    markerLayer.beginFill(hex); 
     markerLayer.drawRect(x, yPos, w, h);
     markerLayer.endFill();
     yPos += h;
@@ -157,39 +160,128 @@ export function drawMarkerBlocks(colors, x, y, w, h) {
 export function updateScoreDisplay(players, scoreX, scoreY, yMax) {
   if (!markerApp) return;
 
+  const orderedColors = Array.isArray(state.colors) && state.colors.length ? state.colors : [];
+  const orderedPlayers = orderedColors.length
+    ? orderedColors.map((color) => (players || []).find((p) => p && p.color === color))
+    : (players || []);
+
   const availableHeight = markerApp.renderer?.height || yMax;
   const compact = availableHeight < 120;
-  const fontSize = compact ? 18 : 40;
-  const strokeSize = compact ? 2 : 3;
+  const fontSize = compact ? 30 : 68;
+  const strokeSize = compact ? 1 : 1;
 
-  const style = new PIXI.TextStyle({
-    fontFamily: "serif",
+  const fontFamily = "Digital-7, 'Digital-7 Mono', monospace";
+  const baseStyleOptions = {
+    fontFamily,
+    fontWeight: 400,
     fontSize,
-    fill: 0xffffff,
     stroke: 0x000000,
     strokeThickness: strokeSize,
+  };
+  const style = new PIXI.TextStyle({
+    ...baseStyleOptions,
+    fill: 0xffffff,
+    dropShadow: true,
+    dropShadowColor: 0x000000,
+    dropShadowBlur: compact ? 4 : 6,
+    dropShadowDistance: 2,
+    dropShadowAlpha: 0.7,
   });
 
-  if (scoreTexts.length < players.length) {
-    for (let i = scoreTexts.length; i < players.length; i++) {
-      const text = new PIXI.Text("00", style);
+  const makeReadableFill = (hex) => {
+    const r = (hex >> 16) & 0xff;
+    const g = (hex >> 8) & 0xff;
+    const b = hex & 0xff;
+    const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+    if (luminance < 0.45) {
+      const mix = 0.5;
+      const rr = Math.round(r + (255 - r) * mix);
+      const gg = Math.round(g + (255 - g) * mix);
+      const bb = Math.round(b + (255 - b) * mix);
+      return (rr << 16) + (gg << 8) + bb;
+    }
+    return hex;
+  };
+
+  if (document.fonts && !updateScoreDisplay.fontReady) {
+    updateScoreDisplay.fontReady = true;
+    document.fonts.load(`10px ${fontFamily}`).then(() => {
+      scoreTexts.forEach((text, i) => {
+        const p = orderedPlayers[i];
+        if (!p || p.playing === false) {
+          text.text = "";
+          text.alpha = 0;
+          return;
+        }
+        const rawHex = toHex(p?.color || p?.name || "#ffffff");
+        const fill = makeReadableFill(rawHex);
+        text.style = new PIXI.TextStyle({
+          ...baseStyleOptions,
+          fill,
+          dropShadow: true,
+          dropShadowColor: 0x000000,
+          dropShadowBlur: compact ? 4 : 6,
+          dropShadowDistance: 2,
+        });
+        text.text = text.text;
+      });
+    });
+  }
+
+  const desiredCount = orderedPlayers.length || orderedColors.length || 0;
+  if (scoreTexts.length < desiredCount) {
+    for (let i = scoreTexts.length; i < desiredCount; i++) {
+      const p = orderedPlayers[i];
+      const rawHex = toHex(p?.color || p?.name || "#ffffff");
+      const fill = makeReadableFill(rawHex);
+      const initialStyle = new PIXI.TextStyle({
+        ...baseStyleOptions,
+        fill,
+        dropShadow: true,
+        dropShadowColor: 0x000000,
+        dropShadowBlur: compact ? 4 : 6,
+        dropShadowDistance: 2,
+        dropShadowAlpha: 0.7,
+      });
+      const text = new PIXI.Text("00", initialStyle);
       text.anchor.set(0, 0.5);
+      text.alpha = 0.92;
       markerApp.stage.addChild(text);
       scoreTexts.push(text);
     }
   }
 
-  const rowCount = Math.max(players.length, 1);
+  const rowCount = Math.max(desiredCount, 1);
   const rowHeight = compact ? (availableHeight / rowCount) : (yMax / 6);
   const baseY = compact ? (rowHeight / 2) : scoreY;
-  const baseX = compact ? 8 : scoreX;
+  const baseX = compact ? 4 : Math.max(0, scoreX - 8);
 
-  players.forEach((p, i) => {
+  orderedPlayers.forEach((p, i) => {
     const idx = i;
-    const score = p.playing && p.score < 10 ? "0" + p.score : String(p.score);
     const text = scoreTexts[idx];
     if (!text) return;
-    if (text.style?.fontSize !== fontSize) text.style = style;
+    if (!p || p.playing === false) {
+      text.text = "";
+      text.alpha = 0;
+      text.x = baseX;
+      text.y = baseY + (idx * rowHeight);
+      return;
+    }
+    const score = p.score < 10 ? "0" + p.score : String(p.score);
+    const rawHex = toHex(p.color || p.name || "#ffffff");
+    const fill = makeReadableFill(rawHex);
+    if (text.style?.fontSize !== fontSize || text.style?.fontFamily !== fontFamily || text.style?.fill !== fill) {
+      text.style = new PIXI.TextStyle({
+        ...baseStyleOptions,
+        fill,
+        dropShadow: true,
+        dropShadowColor: 0x000000,
+        dropShadowBlur: compact ? 4 : 6,
+        dropShadowDistance: 2,
+        dropShadowAlpha: 0.7,
+      });
+    }
+    text.alpha = 0.92;
     text.text = score;
     text.x = baseX;
     text.y = baseY + (idx * rowHeight);

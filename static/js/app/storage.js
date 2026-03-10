@@ -45,9 +45,9 @@ const buildDefaultSettings = () => ([
     player_5: 0,
     player_6: 0,
     hole_points: "None",
-    gap_space: "Normal",
-    start_speed: "Normal",
-    gap_size: "Normal",
+    gap_space: "Far Apart",
+    start_speed: "Frantic",
+    gap_size: "Large",
   },
 ]);
 
@@ -69,6 +69,16 @@ export function loadSettingsData() {
   if (!data || !data.length) {
     data = buildDefaultSettings();
     setLocal("pune_settings", data);
+  } else if (data[0]) {
+    const current = data[0];
+    const looksLikeOldDefaults = current.hole_points === "None"
+      && current.start_speed === "Normal"
+      && current.gap_space === "Normal"
+      && current.gap_size === "Normal";
+    if (looksLikeOldDefaults) {
+      data = buildDefaultSettings();
+      setLocal("pune_settings", data);
+    }
   }
   return data;
 }

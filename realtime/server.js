@@ -17,6 +17,7 @@ const TICK_MS = 1000 / TICK_RATE;
 const WORLD = { w: 640, h: 480 };
 const COLORS = ["red", "blue", "green", "purple", "cyan", "yellow"];
 const WORM_SIZE = 4;
+const BORDER_SEPARATION = 100;
 const HISTORY_LIMIT = 1000;
 const MAX_PLAYERS = 6;
 const HISTORY_FILE = path.join(process.cwd(), "match-history.json");
@@ -161,6 +162,20 @@ function stopRoomTick(roomCode) {
   room.tickTimer = null;
 }
 
+function randomSpawn(room, attempts = 20) {
+  for (let i = 0; i < attempts; i++) {
+    let x = Math.floor(Math.random() * WORLD.w);
+    let y = Math.floor(Math.random() * WORLD.h);
+    if (x < BORDER_SEPARATION) x += BORDER_SEPARATION;
+    if (x > (WORLD.w - BORDER_SEPARATION)) x -= BORDER_SEPARATION;
+    if (y < BORDER_SEPARATION) y += BORDER_SEPARATION;
+    if (y > (WORLD.h - BORDER_SEPARATION)) y -= BORDER_SEPARATION;
+    const key = `${Math.round(x)}:${Math.round(y)}`;
+    if (!room.occupied.has(key)) return { x, y };
+  }
+  return { x: BORDER_SEPARATION, y: BORDER_SEPARATION };
+}
+
 function initWorms(room) {
   const prevScores = new Map();
   for (const w of room.state.worms) {
@@ -168,13 +183,15 @@ function initWorms(room) {
   }
   room.state.worms = [];
   let i = 0;
+  room.occupied = new Set();
   for (const id of room.players.keys()) {
     const color = COLORS[i % COLORS.length];
+    const spawn = randomSpawn(room);
     room.state.worms.push({
       id,
       color,
-      x: 80 + i * 60,
-      y: 80 + i * 40,
+      x: spawn.x,
+      y: spawn.y,
       angle: Math.random() * 360,
       speed: getStartingSpeed(room.state.settings),
       alive: true,
@@ -188,7 +205,6 @@ function initWorms(room) {
     i++;
   }
   room.state.round += 1;
-  room.occupied = new Set();
 }
 
 function getStartingSpeed(settings) {
@@ -224,6 +240,18 @@ function markOccupied(room, x, y) {
 function isOccupied(room, x, y) {
   const key = `${Math.round(x)}:${Math.round(y)}`;
   return room.occupied.has(key);
+}
+
+function isOccupiedNear(room, x, y, radius) {
+  if (isOccupied(room, x, y)) return true;
+  const steps = 8;
+  for (let i = 0; i < steps; i++) {
+    const angle = (Math.PI * 2 * i) / steps;
+    const px = x + Math.cos(angle) * radius;
+    const py = y + Math.sin(angle) * radius;
+    if (isOccupied(room, px, py)) return true;
+  }
+  return false;
 }
 
 function getWormsAliveCount(room) {
@@ -277,13 +305,13 @@ function tickRoom(roomCode) {
     const nextX = worm.x + Math.cos(rad) * worm.speed;
     const nextY = worm.y + Math.sin(rad) * worm.speed;
 
-    if (nextX < 0 || nextX > WORLD.w || nextY < 0 || nextY > WORLD.h) {
+    if (nextX + WORM_SIZE > WORLD.w || nextX - WORM_SIZE < 0 || nextY + WORM_SIZE > WORLD.h || nextY - WORM_SIZE < 0) {
       worm.alive = false;
       deathsThisTick += 1;
       continue;
     }
 
-    if (isOccupied(room, nextX, nextY)) {
+    if (isOccupiedNear(room, nextX, nextY, WORM_SIZE + 1)) {
       worm.alive = false;
       deathsThisTick += 1;
       continue;

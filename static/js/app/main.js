@@ -2,7 +2,6 @@
 
 import { bindUI } from "./ui.js";
 import { bindOnline } from "./online.js";
-import { bindGameKeys } from "./game.js";
 import { initRenderer } from "./renderer.js";
 import { soundSwitcher, pauseSwitcher } from "./sounds.js";
 import { loadPartials } from "./partials.js";
@@ -16,6 +15,5 @@ document.addEventListener("DOMContentLoaded", async () => {
   initRenderer();
   bindUI();
   bindOnline();
-  bindGameKeys();
 });
 
