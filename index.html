@@ -20,15 +20,23 @@
     <link href="static/css/game-details.css" rel="stylesheet" type="text/css">
   </head>
   <body>
-    <div data-include="partials/nav.html"></div>
+    <!-- Shared -->
+    <div data-include="partials/shared/nav.html"></div>
     <div data-include="partials/start-body.html"></div>
     <div data-include="partials/tutorial.html"></div>
-    <div data-include="partials/local-setup.html"></div>
-    <div data-include="partials/countdown.html"></div>
-    <div data-include="partials/game-area.html"></div>
-    <div data-include="partials/online-setup.html"></div>
-    <div data-include="partials/overlays.html"></div>
-    <div data-include="partials/sounds-menu.html"></div>
-    <div data-include="partials/footer.html"></div>
+    <div data-include="partials/shared/countdown.html"></div>
+    <div data-include="partials/shared/game-area.html"></div>
+
+    <!-- Local game -->
+    <div data-include="partials/local/local-setup.html"></div>
+    <div data-include="partials/local/settings-dialog.html"></div>
+
+    <!-- Online game -->
+    <div data-include="partials/online/online-setup.html"></div>
+
+    <!-- Shared overlays -->
+    <div data-include="partials/shared/overlays.html"></div>
+    <div data-include="partials/shared/sounds-menu.html"></div>
+    <div data-include="partials/shared/footer.html"></div>
   </body>
 </html>

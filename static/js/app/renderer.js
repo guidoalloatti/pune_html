@@ -6,9 +6,11 @@ import { state } from "./state.js";
 let app;
 let localLayer;
 let onlineLayer;
+let explosionLayer;
 let markerApp;
 let markerLayer;
 let scoreTexts = [];
+let explosions = []; // active explosion animations
 
 const COLOR_MAP = {
   red: 0xff3b30,
@@ -53,8 +55,10 @@ export function initRenderer() {
 
   localLayer = new PIXI.Graphics();
   onlineLayer = new PIXI.Graphics();
+  explosionLayer = new PIXI.Graphics();
   app.stage.addChild(localLayer);
   app.stage.addChild(onlineLayer);
+  app.stage.addChild(explosionLayer);
 
   container.prepend(app.view);
 
@@ -288,19 +292,85 @@ export function updateScoreDisplay(players, scoreX, scoreY, yMax) {
   });
 }
 
+export function resetOnlineTrails() {
+  clearOnlineLayer();
+  explosions = [];
+}
+
+export function spawnExplosion(x, y, color) {
+  const hex = toHex(color);
+  const particles = [];
+  const count = 12;
+  for (let i = 0; i < count; i++) {
+    const angle = (Math.PI * 2 * i) / count + (Math.random() - 0.5) * 0.5;
+    const speed = 1.5 + Math.random() * 2.5;
+    particles.push({
+      x, y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed,
+      radius: 2 + Math.random() * 3, alpha: 1,
+    });
+  }
+  explosions.push({ hex, particles, life: 30 });
+}
+
+function tickExplosions() {
+  if (!explosionLayer) return;
+  explosionLayer.clear();
+  for (let i = explosions.length - 1; i >= 0; i--) {
+    const e = explosions[i];
+    e.life -= 1;
+    if (e.life <= 0) { explosions.splice(i, 1); continue; }
+    const fade = e.life / 30;
+    for (const p of e.particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vx *= 0.94;
+      p.vy *= 0.94;
+      p.radius *= 0.97;
+      explosionLayer.beginFill(e.hex, fade);
+      explosionLayer.drawCircle(p.x, p.y, p.radius);
+      explosionLayer.endFill();
+    }
+  }
+}
+
+let prevAliveMap = new Map();
+
 export function renderOnlineWorms(worms) {
   if (!onlineLayer) return;
   clearOnlineLayer();
+
+  // Detect deaths and spawn explosions
+  for (let wi = 0; wi < worms.length; wi++) {
+    const w = worms[wi];
+    const wasAlive = prevAliveMap.get(w.id);
+    if (wasAlive && !w.alive) {
+      spawnExplosion(w.x, w.y, w.color);
+    }
+  }
+  prevAliveMap = new Map(worms.map((w) => [w.id, w.alive]));
+
+  // Draw trails
   for (let wi = 0; wi < worms.length; wi++) {
     const w = worms[wi];
     const trail = w.trail || [];
-    for (let ti = 0; ti < trail.length; ti++) {
+    const hex = toHex(w.color);
+    for (let ti = trail.length - 1; ti >= 0; ti--) {
       const p = trail[ti];
       if (p.hole) {
-        drawOnlineCircle("#020202", p.x, p.y, 4);
+        onlineLayer.beginFill(0x020202);
       } else {
-        drawOnlineCircle(w.color, p.x, p.y, 4);
+        onlineLayer.beginFill(hex);
       }
+      onlineLayer.drawCircle(p.x, p.y, 4);
+      onlineLayer.endFill();
+    }
+    // Draw worm head even during grace period
+    if (w.alive && w.playing !== false) {
+      onlineLayer.beginFill(hex);
+      onlineLayer.drawCircle(w.x, w.y, 4);
+      onlineLayer.endFill();
     }
   }
+
+  tickExplosions();
 }

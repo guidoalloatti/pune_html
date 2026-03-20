@@ -123,7 +123,6 @@ export function startGame(selectedColors) {
     doSpeeding();
     state.isNewRound = true;
     state.speed = state.startingSpeed;
-    addMessage(state.currentRound, "rounds");
     changeInterval(state.speed);
     setKeyHelp();
     const players = (state.playingColors || []).join(", ") || "(auto)";

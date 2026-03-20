@@ -1,1 +1,21 @@
-[]
+[
+  {
+    "room": "2XYZ8",
+    "winner": "red",
+    "maxScore": 10,
+    "round": 18,
+    "players": [
+      {
+        "id": 1,
+        "color": "red",
+        "score": 10
+      },
+      {
+        "id": 2,
+        "color": "blue",
+        "score": 8
+      }
+    ],
+    "timestamp": 1773955818585
+  }
+]

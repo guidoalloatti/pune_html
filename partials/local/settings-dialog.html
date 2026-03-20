@@ -1,0 +1,68 @@
+<div id="settings-backdrop" class="settings-backdrop"></div>
+<div id="settings-dialog" title="Settings">
+  <div class="settings-modal-header">
+    <span class="settings-modal-title">Game Settings</span>
+    <button id="settings-close" type="button" class="settings-close-btn" aria-label="Close">&times;</button>
+  </div>
+  <div class="settings-modal-body">
+    <div class="settings-modal-col">
+      <div class="settings-modal-section-title">Options</div>
+      <div class="settings-modal-grid">
+        <label for="settings_hole_points">Hole Points</label>
+        <select id="settings_hole_points">
+          <option selected>None</option>
+          <option>One</option>
+        </select>
+        <label for="settings_speed">Speed</label>
+        <select id="settings_speed">
+          <option>Slow</option>
+          <option>Normal</option>
+          <option selected>Frantic</option>
+        </select>
+        <label for="settings_gap_spacing">Gap Spacing</label>
+        <select id="settings_gap_spacing">
+          <option>Close</option>
+          <option>Normal</option>
+          <option selected>Far Apart</option>
+        </select>
+        <label for="settings_gap_sizing">Gap Size</label>
+        <select id="settings_gap_sizing">
+          <option>Small</option>
+          <option>Normal</option>
+          <option selected>Large</option>
+        </select>
+      </div>
+    </div>
+    <div class="settings-modal-col">
+      <div class="settings-modal-section-title">Player Keys</div>
+      <div class="settings-keys-grid">
+        <span class="settings-keys-header">Worm</span>
+        <span class="settings-keys-header">Left</span>
+        <span class="settings-keys-header">Right</span>
+        <span class="settings-key-worm" style="color:#ff3b30">Red</span>
+        <input id="settings_red_left" type="text" size="1" />
+        <input id="settings_red_right" type="text" size="1" />
+        <span class="settings-key-worm" style="color:#3b82f6">Blue</span>
+        <input id="settings_blue_left" type="text" size="1" />
+        <input id="settings_blue_right" type="text" size="1" />
+        <span class="settings-key-worm" style="color:#22c55e">Green</span>
+        <input id="settings_green_left" type="text" size="1" />
+        <input id="settings_green_right" type="text" size="1" />
+        <span class="settings-key-worm" style="color:#a855f7">Purple</span>
+        <input id="settings_purple_left" type="text" size="1" />
+        <input id="settings_purple_right" type="text" size="1" />
+        <span class="settings-key-worm" style="color:#facc15">Yellow</span>
+        <input id="settings_yellow_left" type="text" size="1" />
+        <input id="settings_yellow_right" type="text" size="1" />
+        <span class="settings-key-worm" style="color:#22d3ee">Cyan</span>
+        <input id="settings_cyan_left" type="text" size="1" />
+        <input id="settings_cyan_right" type="text" size="1" />
+      </div>
+      <div class="settings-hint">Click a box and press a key.</div>
+    </div>
+  </div>
+  <div class="settings-modal-actions">
+    <button id="settings-reset" type="button" class="settings-btn settings-btn-secondary">Reset Defaults</button>
+    <button id="settings-save" type="button" class="settings-btn settings-btn-primary">Save Settings</button>
+  </div>
+</div>

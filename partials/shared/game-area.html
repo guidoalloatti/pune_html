@@ -1,0 +1,37 @@
+<div id="background" style="display: none;">
+  <div id="paused-overlay" aria-hidden="true">
+    <div class="paused-card">
+      <div class="paused-label">Paused</div>
+      <div id="online-pause-banner" class="paused-who"></div>
+
+      <div class="paused-divider"></div>
+
+      <div class="paused-sound-section">
+        <div class="paused-section-title">Sound</div>
+        <div class="paused-sound-row">
+          <button id="online-sound-toggle" type="button" class="osb-toggle" title="Toggle sound">🔊</button>
+          <label class="osb-label">SFX</label>
+          <input id="online-sfx-volume" type="range" min="0" max="100" value="80" class="osb-slider" />
+        </div>
+        <div class="paused-sound-row">
+          <span class="osb-spacer"></span>
+          <label class="osb-label">Music</label>
+          <input id="online-music-volume" type="range" min="0" max="100" value="50" class="osb-slider" />
+        </div>
+      </div>
+
+      <div class="paused-divider"></div>
+
+      <div class="paused-actions online-only-pause">
+        <button id="pause-resume" type="button" class="paused-btn paused-btn-primary">Resume</button>
+        <button id="pause-abandon-local" type="button" class="paused-btn paused-btn-secondary">Local Settings</button>
+        <button id="pause-abandon-lobby" type="button" class="paused-btn paused-btn-danger">Leave Game</button>
+      </div>
+
+      <div class="paused-hint">Press Escape to resume</div>
+    </div>
+  </div>
+  <div id="canvas_div">
+    <div id="marker-container"></div>
+  </div>
+</div>

@@ -17,7 +17,7 @@ const TICK_MS = 1000 / TICK_RATE;
 const WORLD = { w: 640, h: 480 };
 const COLORS = ["red", "blue", "green", "purple", "cyan", "yellow"];
 const WORM_SIZE = 4;
-const BORDER_SEPARATION = 100;
+const TRAIL_SAFE_TICKS = 10; // recent trail points ignored for self-collision
 const HISTORY_LIMIT = 1000;
 const MAX_PLAYERS = 6;
 const HISTORY_FILE = path.join(process.cwd(), "match-history.json");
@@ -78,7 +78,7 @@ function sendRoomState(roomCode) {
       settings: room.state.settings,
     });
   }
-  for (const [id, client] of room.spectators.entries()) {
+  for (const [, client] of room.spectators.entries()) {
     safeSend(client, {
       type: "room-state",
       players,
@@ -128,9 +128,15 @@ function broadcastRoomList() {
   });
 }
 
+function escapeHtml(str) {
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 function makeSessionId() {
   return Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
+
+const GRACE_TICKS = 90; // ~3 seconds at 30fps — countdown before worms move
 
 function createInitialState() {
   return {
@@ -146,6 +152,9 @@ function createInitialState() {
     maxScore: 0,
     winningWorm: "",
     lastUpdate: Date.now(),
+    graceTicks: 0,
+    paused: false,
+    pausedBy: null,
   };
 }
 
@@ -163,17 +172,23 @@ function stopRoomTick(roomCode) {
 }
 
 function randomSpawn(room, attempts = 20) {
+  const speed = getStartingSpeed(room.state.settings);
+  // Minimum ticks of travel before hitting a wall (~3 seconds at 30fps)
+  const safeDistance = Math.ceil(speed * 90);
+  const minX = safeDistance;
+  const maxX = WORLD.w - safeDistance;
+  const minY = safeDistance;
+  const maxY = WORLD.h - safeDistance;
   for (let i = 0; i < attempts; i++) {
-    let x = Math.floor(Math.random() * WORLD.w);
-    let y = Math.floor(Math.random() * WORLD.h);
-    if (x < BORDER_SEPARATION) x += BORDER_SEPARATION;
-    if (x > (WORLD.w - BORDER_SEPARATION)) x -= BORDER_SEPARATION;
-    if (y < BORDER_SEPARATION) y += BORDER_SEPARATION;
-    if (y > (WORLD.h - BORDER_SEPARATION)) y -= BORDER_SEPARATION;
+    const x = minX + Math.floor(Math.random() * (maxX - minX));
+    const y = minY + Math.floor(Math.random() * (maxY - minY));
     const key = `${Math.round(x)}:${Math.round(y)}`;
-    if (!room.occupied.has(key)) return { x, y };
+    if (!room.occupied.has(key)) {
+      const angle = Math.random() * 360;
+      return { x, y, angle };
+    }
   }
-  return { x: BORDER_SEPARATION, y: BORDER_SEPARATION };
+  return { x: WORLD.w / 2, y: WORLD.h / 2, angle: Math.random() * 360 };
 }
 
 function initWorms(room) {
@@ -192,7 +207,7 @@ function initWorms(room) {
       color,
       x: spawn.x,
       y: spawn.y,
-      angle: Math.random() * 360,
+      angle: spawn.angle,
       speed: getStartingSpeed(room.state.settings),
       alive: true,
       playing: true,
@@ -205,6 +220,7 @@ function initWorms(room) {
     i++;
   }
   room.state.round += 1;
+  room.state.graceTicks = GRACE_TICKS;
 }
 
 function getStartingSpeed(settings) {
@@ -293,6 +309,19 @@ function tickRoom(roomCode) {
   const room = rooms.get(roomCode);
   if (!room || !room.state.started) return;
 
+  // Server-side pause — don't move worms, still broadcast state
+  if (room.state.paused) {
+    broadcast(roomCode, { type: "state", state: room.state, t: Date.now() });
+    return;
+  }
+
+  // Grace period after round init (countdown)
+  if (room.state.graceTicks > 0) {
+    room.state.graceTicks -= 1;
+    broadcast(roomCode, { type: "state", state: room.state, t: Date.now() });
+    return;
+  }
+
   let deathsThisTick = 0;
 
   for (const worm of room.state.worms) {
@@ -325,9 +354,16 @@ function tickRoom(roomCode) {
     worm.holes.unshift(hole);
     worm.length += 1;
 
-    if (!hole) {
-      markOccupied(room, worm.x, worm.y);
-    } else if (room.state.settings.holePoints === "One") {
+    // Delay marking as occupied so the worm doesn't collide with its own recent trail
+    const solidIdx = TRAIL_SAFE_TICKS;
+    if (worm.trail.length > solidIdx) {
+      const solidPoint = worm.trail[solidIdx];
+      if (solidPoint && !solidPoint.hole) {
+        markOccupied(room, solidPoint.x, solidPoint.y);
+      }
+    }
+
+    if (hole && room.state.settings.holePoints === "One") {
       worm.holeScore += 1;
       if (worm.holeScore > 3) {
         worm.holeScore = 0;
@@ -366,6 +402,14 @@ function tickRoom(roomCode) {
       addScoreToAlive(room);
       computeWinningWorm(room);
     }
+    // Broadcast the dead state before resetting so clients can show the death
+    broadcast(roomCode, { type: "state", state: room.state, t: Date.now() });
+
+    // Brief pause so clients see the death before next round
+    room.state.roundEndDelay = (room.state.roundEndDelay || 0) + 1;
+    if (room.state.roundEndDelay < 45) return; // ~1.5s pause — lets explosion finish
+    room.state.roundEndDelay = 0;
+
     const scoreToWin = getScoreToWin(room);
     if (room.state.maxScore >= scoreToWin) {
       room.state.started = false;
@@ -481,8 +525,7 @@ wss.on("connection", (ws) => {
       ws.roomCode = code;
       sessions.get(ws.sessionId).roomCode = code;
       sessions.get(ws.sessionId).role = "player";
-      safeSend(ws, { type: "room-created", room: code, host: true, spectator: false });
-        safeSend(ws, { type: "room-created", room: code, host: true, spectator: false, settings: rooms.get(code).state.settings });
+      safeSend(ws, { type: "room-created", room: code, host: true, spectator: false, settings: rooms.get(code).state.settings });
       sendRoomState(code);
       return;
     }
@@ -506,8 +549,7 @@ wss.on("connection", (ws) => {
         sessions.get(ws.sessionId).roomCode = code;
         sessions.get(ws.sessionId).role = "player";
         broadcastRoomList();
-        safeSend(ws, { type: "room-created", room: code, host: true, spectator: false });
-          safeSend(ws, { type: "room-created", room: code, host: true, spectator: false, settings: rooms.get(code).state.settings });
+        safeSend(ws, { type: "room-created", room: code, host: true, spectator: false, settings: rooms.get(code).state.settings });
         sendRoomState(code);
         return;
       }
@@ -521,8 +563,7 @@ wss.on("connection", (ws) => {
       ws.roomCode = existing;
       sessions.get(ws.sessionId).roomCode = existing;
       sessions.get(ws.sessionId).role = "player";
-      safeSend(ws, { type: "room-joined", room: existing, host: room.hostId === clientId, spectator: false });
-        safeSend(ws, { type: "room-joined", room: existing, host: room.hostId === clientId, spectator: false, settings: room.state.settings });
+      safeSend(ws, { type: "room-joined", room: existing, host: room.hostId === clientId, spectator: false, settings: room.state.settings });
       safeSend(ws, { type: "state", state: room.state, t: Date.now() });
       broadcast(existing, { type: "player-joined", clientId }, clientId);
       broadcastRoomList();
@@ -541,8 +582,7 @@ wss.on("connection", (ws) => {
         ws.roomCode = code;
         sessions.get(ws.sessionId).roomCode = code;
         sessions.get(ws.sessionId).role = "spectator";
-        safeSend(ws, { type: "room-joined", room: code, host: false, spectator: true });
-          safeSend(ws, { type: "room-joined", room: code, host: false, spectator: true, settings: room.state.settings });
+        safeSend(ws, { type: "room-joined", room: code, host: false, spectator: true, settings: room.state.settings });
         safeSend(ws, { type: "state", state: room.state, t: Date.now() });
         sendRoomState(code);
         return;
@@ -554,8 +594,7 @@ wss.on("connection", (ws) => {
       ws.roomCode = code;
       sessions.get(ws.sessionId).roomCode = code;
       sessions.get(ws.sessionId).role = "player";
-      safeSend(ws, { type: "room-joined", room: code, host: room.hostId === clientId, spectator: false });
-        safeSend(ws, { type: "room-joined", room: code, host: room.hostId === clientId, spectator: false, settings: room.state.settings });
+      safeSend(ws, { type: "room-joined", room: code, host: room.hostId === clientId, spectator: false, settings: room.state.settings });
       safeSend(ws, { type: "state", state: room.state, t: Date.now() });
       broadcast(code, { type: "player-joined", clientId }, clientId);
       sendRoomState(code);
@@ -572,8 +611,7 @@ wss.on("connection", (ws) => {
       ws.roomCode = code;
       sessions.get(ws.sessionId).roomCode = code;
       sessions.get(ws.sessionId).role = "spectator";
-      safeSend(ws, { type: "room-joined", room: code, host: false, spectator: true });
-        safeSend(ws, { type: "room-joined", room: code, host: false, spectator: true, settings: room.state.settings });
+      safeSend(ws, { type: "room-joined", room: code, host: false, spectator: true, settings: room.state.settings });
       safeSend(ws, { type: "state", state: room.state, t: Date.now() });
       sendRoomState(code);
       return;
@@ -592,8 +630,8 @@ wss.on("connection", (ws) => {
     }
 
     if (msg.type === "profile") {
-      const name = String(msg.name || "Player").slice(0, 16);
-      const color = String(msg.color || "#6de38c");
+      const name = escapeHtml(String(msg.name || "Player").slice(0, 16));
+      const color = String(msg.color || "#6de38c").replace(/[^#a-fA-F0-9]/g, "").slice(0, 7);
       const profile = { name, color };
       const session = sessions.get(ws.sessionId);
       if (session) session.profile = profile;
@@ -604,6 +642,27 @@ wss.on("connection", (ws) => {
           room.profiles.set(clientId, profile);
           sendRoomState(ws.roomCode);
         }
+      }
+      return;
+    }
+
+    if (msg.type === "pause") {
+      if (!ws.roomCode) return;
+      const room = rooms.get(ws.roomCode);
+      if (!room || !room.state.started) return;
+      if (!room.players.has(clientId)) return;
+      const profile = room.profiles?.get(clientId) || { name: `Player ${clientId}`, color: "#ffffff" };
+      if (!room.state.paused) {
+        room.state.paused = true;
+        room.state.pausedBy = profile.name;
+        room.state.pausedById = clientId;
+        broadcast(ws.roomCode, { type: "pause", name: profile.name, color: profile.color, pausedById: clientId });
+      } else if (room.state.pausedById === clientId) {
+        // Only the player who paused can resume
+        room.state.paused = false;
+        room.state.pausedBy = null;
+        room.state.pausedById = null;
+        broadcast(ws.roomCode, { type: "resume" });
       }
       return;
     }
@@ -638,7 +697,7 @@ wss.on("connection", (ws) => {
         return safeSend(ws, { type: "error", message: "Chat muted for 10s" });
       }
       const profile = room.profiles.get(clientId) || sessions.get(ws.sessionId)?.profile || { name: `Player ${clientId}`, color: "#6de38c" };
-      broadcast(ws.roomCode, { type: "chat", text, name: profile.name, color: profile.color, t: Date.now() });
+      broadcast(ws.roomCode, { type: "chat", text: escapeHtml(text), name: escapeHtml(profile.name), color: profile.color, t: Date.now() });
       return;
     }
 
@@ -749,15 +808,26 @@ function handleDisconnect(ws) {
   }
 
   if (room.hostId === ws.clientId) {
-    const [nextHostId] = room.players.keys();
+    const [nextHostId] = room.players.size > 0
+      ? room.players.keys()
+      : room.spectators.keys();
     room.hostId = nextHostId;
-    broadcast(code, { type: "host-changed", hostId: nextHostId });
+    if (nextHostId) broadcast(code, { type: "host-changed", hostId: nextHostId });
   }
 
   broadcast(code, { type: "player-left", clientId: ws.clientId });
   broadcastRoomList();
   sendRoomState(code);
 }
+
+// Clean up stale sessions every 5 minutes
+setInterval(() => {
+  const now = Date.now();
+  const STALE_MS = 30 * 60 * 1000; // 30 minutes
+  for (const [id, session] of sessions.entries()) {
+    if (now - session.lastSeen > STALE_MS) sessions.delete(id);
+  }
+}, 5 * 60 * 1000);
 
 server.listen(PORT, () => {
   console.log(`Realtime server listening on :${PORT}`);

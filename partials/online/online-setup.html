@@ -1,0 +1,84 @@
+<div id="online-setup" class="setup-screen">
+  <div id="online-setup-backdrop" class="online-setup-backdrop"></div>
+  <div id="online-lobby">
+
+    <!-- Top bar: profile + status -->
+    <div class="ol-topbar">
+      <div class="ol-profile">
+        <input id="profile-name" type="text" maxlength="16" placeholder="Your Name" />
+        <input id="profile-color" type="color" value="#6de38c" title="Worm color" />
+      </div>
+      <div class="ol-status-bar">
+        <span id="online-status" class="ol-status">Disconnected</span>
+        <span class="ol-room-badge">Room: <strong id="online-room">-</strong></span>
+        <span id="reconnect-banner" class="reconnect-banner" style="display: none;">Reconnected</span>
+      </div>
+    </div>
+
+    <!-- Main two-column layout -->
+    <div class="ol-body">
+
+      <!-- Left column: Game actions -->
+      <div class="ol-col ol-col-game">
+        <div class="ol-section">
+          <div class="ol-section-title">Game</div>
+          <div class="ol-btn-row">
+            <button id="create-room-btn" class="ol-btn ol-btn-create" type="button">Create Game</button>
+          </div>
+          <div class="ol-join-row">
+            <input id="room-code" type="text" placeholder="CODE" maxlength="5" class="ol-room-input" />
+            <button id="join-room-btn" class="ol-btn ol-btn-join" type="button">Join</button>
+          </div>
+          <div class="ol-btn-row ol-btn-row-sm">
+            <button id="copy-room-btn" class="ol-btn ol-btn-sm" type="button">Copy Code</button>
+            <button id="paste-room-btn" class="ol-btn ol-btn-sm" type="button">Paste & Join</button>
+          </div>
+        </div>
+
+        <div class="ol-section ol-section-settings">
+          <div class="ol-section-title">Settings <span class="ol-host-badge">Host only</span></div>
+          <div class="ol-settings-grid">
+            <label for="online_hole_points">Holes</label>
+            <select id="online_hole_points"><option selected>None</option><option>One</option></select>
+            <label for="online_speed">Speed</label>
+            <select id="online_speed"><option>Slow</option><option>Normal</option><option selected>Frantic</option></select>
+            <label for="online_gap_spacing">Gap Space</label>
+            <select id="online_gap_spacing"><option>Close</option><option>Normal</option><option selected>Far Apart</option></select>
+            <label for="online_gap_sizing">Gap Size</label>
+            <select id="online_gap_sizing"><option>Small</option><option>Normal</option><option selected>Large</option></select>
+          </div>
+        </div>
+
+        <div class="ol-section ol-section-controls">
+          <div class="ol-section-title">Controls</div>
+          <div class="ol-controls-hint">← → Arrow keys to steer · Escape to pause</div>
+          <div class="ol-mobile-btns">
+            <button id="mobile-left" type="button" class="ol-btn ol-btn-mobile">◀ Left</button>
+            <button id="mobile-right" type="button" class="ol-btn ol-btn-mobile">Right ▶</button>
+          </div>
+        </div>
+
+
+        <button id="start-online-btn" class="ol-btn ol-btn-start" type="button" style="display: none;">Start Game</button>
+      </div>
+
+      <!-- Right column: Players + Chat -->
+      <div class="ol-col ol-col-social">
+        <div class="ol-section ol-section-players">
+          <div class="ol-section-title">Players</div>
+          <div id="online-players" class="ol-players-list"></div>
+        </div>
+
+        <div class="ol-section ol-section-chat">
+          <div class="ol-section-title">Chat</div>
+          <div id="online-chat-log" class="ol-chat-log"></div>
+          <div class="ol-chat-input-row">
+            <input id="online-chat-input" type="text" placeholder="Type a message..." class="ol-chat-input" />
+            <button id="online-chat-send" type="button" class="ol-btn ol-btn-send">Send</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

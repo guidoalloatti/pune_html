@@ -1,0 +1,116 @@
+<div id="local-setup" class="setup-screen">
+  <div class="setup-header">Local Game Setup</div>
+  <div class="demo">
+    <div id="local-setup-backdrop" class="local-setup-backdrop"></div>
+    <div id="dialog-form">
+      <div class="ls-header">
+        <img src="./static/images/pune3.png" alt="Pune worms" class="ls-logo" />
+        <div>
+          <div class="ls-title">Local Game</div>
+          <div class="ls-subtitle">Click a worm to enable it and press keys to assign left/right.</div>
+        </div>
+      </div>
+
+      <div class="ls-body">
+        <div class="ls-col ls-col-players">
+          <div class="ls-section-title">Players</div>
+          <div class="worm-grid">
+            <div class="worm-card worm-row worm-red">
+              <div class="worm-header">
+                <div class="worm-label" id="red_label">Red</div>
+                <label class="worm-toggle"><input type="checkbox" id="red_play" name="red" checked/> Play</label>
+              </div>
+              <div class="worm-keys">
+                <label>L</label><input type="text" id="redLeftInput" size="1"/>
+                <label>R</label><input type="text" id="redRightInput" size="1"/>
+              </div>
+            </div>
+            <div class="worm-card worm-row worm-blue">
+              <div class="worm-header">
+                <div class="worm-label" id="blue_label">Blue</div>
+                <label class="worm-toggle"><input type="checkbox" id="blue_play" name="blue" checked/> Play</label>
+              </div>
+              <div class="worm-keys">
+                <label>L</label><input type="text" id="blueLeftInput" size="1" />
+                <label>R</label><input type="text" id="blueRightInput" size="1" />
+              </div>
+            </div>
+            <div class="worm-card worm-row worm-green">
+              <div class="worm-header">
+                <div class="worm-label" id="green_label">Green</div>
+                <label class="worm-toggle"><input type="checkbox" id="green_play" name="green"/> Play</label>
+              </div>
+              <div class="worm-keys">
+                <label>L</label><input type="text" id="greenLeftInput" size="1"/>
+                <label>R</label><input type="text" id="greenRightInput" size="1"/>
+              </div>
+            </div>
+            <div class="worm-card worm-row worm-purple">
+              <div class="worm-header">
+                <div class="worm-label" id="purple_label">Purple</div>
+                <label class="worm-toggle"><input type="checkbox" id="purple_play" name="purple"/> Play</label>
+              </div>
+              <div class="worm-keys">
+                <label>L</label><input type="text" id="purpleLeftInput" size="1"/>
+                <label>R</label><input type="text" id="purpleRightInput" size="1"/>
+              </div>
+            </div>
+            <div class="worm-card worm-row worm-yellow">
+              <div class="worm-header">
+                <div class="worm-label" id="yellow_label">Yellow</div>
+                <label class="worm-toggle"><input type="checkbox" id="yellow_play" name="yellow"/> Play</label>
+              </div>
+              <div class="worm-keys">
+                <label>L</label><input type="text" id="yellowLeftInput" size="1"/>
+                <label>R</label><input type="text" id="yellowRightInput" size="1"/>
+              </div>
+            </div>
+            <div class="worm-card worm-row worm-cyan">
+              <div class="worm-header">
+                <div class="worm-label" id="cyan_label">Cyan</div>
+                <label class="worm-toggle"><input type="checkbox" id="cyan_play" name="cyan"/> Play</label>
+              </div>
+              <div class="worm-keys">
+                <label>L</label><input type="text" id="cyanLeftInput" size="1"/>
+                <label>R</label><input type="text" id="cyanRightInput" size="1"/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ls-col ls-col-settings">
+          <div class="ls-section-title">Settings</div>
+          <div class="ls-settings-grid">
+            <label for="hole_points">Hole Points</label>
+            <select id="hole_points">
+              <option selected>None</option>
+              <option>One</option>
+            </select>
+            <label for="modal_speed">Speed</label>
+            <select id="modal_speed">
+              <option>Slow</option>
+              <option>Normal</option>
+              <option selected>Frantic</option>
+            </select>
+            <label for="gap_spacing">Gap Spacing</label>
+            <select id="gap_spacing">
+              <option>Close</option>
+              <option>Normal</option>
+              <option selected>Far Apart</option>
+            </select>
+            <label for="gap_sizing">Gap Size</label>
+            <select id="gap_sizing">
+              <option>Small</option>
+              <option>Normal</option>
+              <option selected>Large</option>
+            </select>
+          </div>
+          <button id="dialog-create" class="ls-start-btn" type="button">Start Game</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="users-contain" class="ui-widget"></div>
+  </div>
+  <div class="demo-description"></div>
+</div>

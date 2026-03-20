@@ -23,6 +23,22 @@ export function soundSwitcher() {
   }
 }
 
+// Unlock audio on first user gesture (browser autoplay policy)
+let audioUnlocked = false;
+function unlockAudio() {
+  if (audioUnlocked) return;
+  audioUnlocked = true;
+  const silent = new Audio();
+  silent.play().catch(() => {});
+  // Also resume any suspended AudioContext
+  if (playBeep.ctx && playBeep.ctx.state === "suspended") {
+    playBeep.ctx.resume().catch(() => {});
+  }
+}
+["click", "touchstart", "keydown"].forEach((evt) => {
+  document.addEventListener(evt, unlockAudio, { once: false, capture: true });
+});
+
 export function playSound(audio) {
   if (!state.soundOn || audio === "") return;
   const now = Date.now();
@@ -36,15 +52,13 @@ export function playSound(audio) {
   let sound = playSound.cache.get(audio);
   if (!sound) {
     sound = new Audio("./static/sounds/" + audio + ".mp3");
+    sound.preload = "auto";
     playSound.cache.set(audio, sound);
   }
-  try {
-    sound.volume = Math.max(0, Math.min(1, state.soundVolume ?? 1));
-    sound.currentTime = 0;
-    sound.play();
-  } catch (e) {
-    // ignore play errors
-  }
+  sound.volume = Math.max(0, Math.min(1, state.soundVolume ?? 1));
+  sound.currentTime = 0;
+  const p = sound.play();
+  if (p && p.catch) p.catch(() => {});
 }
 
 export function setSoundVolume(value) {

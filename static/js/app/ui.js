@@ -302,7 +302,7 @@ export function saveSettings() {
 
 function openSettingsDialog() {
   const dialog = $("#settings-dialog");
-  const backdrop = ensureBackdrop();
+  const backdrop = $("#settings-backdrop") || ensureBackdrop();
   if (dialog) dialog.style.display = "block";
   if (backdrop) backdrop.style.display = "block";
 
@@ -316,9 +316,11 @@ function openSettingsDialog() {
 
 function closeSettingsDialog() {
   const dialog = $("#settings-dialog");
-  const backdrop = $("#modal-backdrop");
+  const backdrop = $("#settings-backdrop");
+  const fallbackBackdrop = $("#modal-backdrop");
   if (dialog) dialog.style.display = "none";
   if (backdrop) backdrop.style.display = "none";
+  if (fallbackBackdrop) fallbackBackdrop.style.display = "none";
 }
 
 function showModeSelect() {
@@ -717,6 +719,8 @@ export function bindUI() {
   if (settingsSave) settingsSave.addEventListener("click", applySettingsFromDialog);
   if (settingsClose) settingsClose.addEventListener("click", closeSettingsDialog);
   if (settingsReset) settingsReset.addEventListener("click", resetSettingsDefaults);
+  const settingsBackdrop = $("#settings-backdrop");
+  if (settingsBackdrop) settingsBackdrop.addEventListener("click", closeSettingsDialog);
 
   const onlineBack = $("#online-back");
   if (onlineBack) onlineBack.addEventListener("click", showModeSelect);
